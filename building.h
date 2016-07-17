@@ -11,10 +11,22 @@ class Building : public Square {
   	bool mortgaged;
 
   public:
-  	Building(const int index, const std::string name, const int cost);
-  	virtual ~Destructor() = 0;
+  	Building(Game *game, const int index, const std::string name, const int cost);
+  	virtual ~Destructor();
 
-  	Player *getOwner()
+  	Player *getOwner() const;
+  	void setOwner(Player *newOwner);
+
+  	virtual int getFees() = 0;
+
+  	bool getMortgaged() const;
+  	void setMortgaged(bool isMortgaged);
+
+  	virtual int getValue() const;
+
+  	int getCost() const;
+
+  	virtual void notify(Player *landedPlayer) = 0;
 };
 
 #endif
