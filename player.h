@@ -6,7 +6,8 @@ class Game;
 class Player {
   int numGym;
   int numRes;
-
+  char symbol;
+  std::string playerName; 
   int balance;
   int position;
 
@@ -15,24 +16,28 @@ class Player {
   Game *g;
 
  public:
-  Player(int numGym, int numRes, int balance, int position, int DCTurn, Game *g);
+  Player(char symbol,std::string playerName, int numGym, int numRes, int balance, int position, int DCTurn, Game *g);
   ~Player();
 
   updateBalance(int n);
+  
+  char getSymbol();
+  
+  std::string getName();
 
   int getAssets();
   int getTotalValue();
 
-  setNumGym(int n);
+  void setNumGym(int n);
   int getNumGym();
 
-  setNumRes(int n);
+  void setNumRes(int n);
   int getNumRes();
 
-  setDCTurn(int n);
+  void setDCTurn(int n);
   int getDCTurn();
 
-  setPos(int n);
+  void setPos(int n);
   int getPos();
 
   bool isBankrupt();
