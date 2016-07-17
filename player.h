@@ -1,46 +1,50 @@
 #ifndef _PLAYER_H_
 #define _PLAYER_H_
+#include <string>
+#include <vector>
 
 class Game;
+class Building;
 
 class Player {
-  int numGym;
-  int numRes;
   char symbol;
   std::string playerName; 
+
+  int numGym;
+  int numRes;
+
   int balance;
   int position;
 
   int DCTurn;
 
   Game *g;
+  //std::vector <Building *> buildings;
 
  public:
-  Player(char symbol,std::string playerName, int numGym, int numRes, int balance, int position, int DCTurn, Game *g);
+  Player(int numGym, int numRes, int balance, int position, int DCTurn, Game *g);
   ~Player();
 
-  updateBalance(int n);
-  
-  char getSymbol();
-  
-  std::string getName();
+  char getSymbol() const;
+  std::string getName() const;
 
-  int getAssets();
-  int getTotalValue();
+  void updateBalance(int n);
+  //void addProperty(Building *b);
+
+  //int getAssets() const;
+  //int getTotalValue() const;
 
   void setNumGym(int n);
-  int getNumGym();
+  int getNumGym() const;
 
   void setNumRes(int n);
-  int getNumRes();
+  int getNumRes() const;
 
   void setDCTurn(int n);
-  int getDCTurn();
+  int getDCTurn() const;
 
   void setPos(int n);
-  int getPos();
-
-  bool isBankrupt();
+  int getPos() const;
 };
 
 #endif
