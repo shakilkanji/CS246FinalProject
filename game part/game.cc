@@ -10,7 +10,7 @@
 
 using namespace std;
 
-Game::Game():numplayer(0),currentplayer(0),rimcup(4),test(false),seed(0),rolled(false),
+Game::Game():numplayer(0),currentplayer(0),rimcup(4),test(false),seed(0),
 firstdeice(0),seconddice(0){
     // for(int i = 0 ; i < 8 ; i++){
     //     player[i] = nullptr;
@@ -63,15 +63,15 @@ void Game::normalinit(){
         }
         else{
         	playername[current] = temp_name;
-        	cout << endl;
         	break;
         }
         }
 
+
         //initial character 
         cout << "Hello! " << playername[current] << ", please choose an character whcih represents you." << endl;
-        cout << "You can choose from G(Goose), B(GRT BUS), D(Tim Hortons Doughnut), P(Professor) " <<endl;
-        cout << "S(Student), $ (Money), L (Laptop), T (Pink tie) " << endl;
+        cout << "You can choose from G(Goose) / B(GRT BUS) / D(Tim Hortons Doughnut)  " <<endl;
+        cout << "P(Professor) / S(Student) / $ (Money) / L (Laptop) / T (Pink tie) " << endl;
 
         char temp_symbol;
         
@@ -92,53 +92,102 @@ void Game::normalinit(){
 
             else{
             	chosensymbol[current] = temp_symbol;
-            	cout << endl;
         	    break;
             }
-
-         }
-          
+         }       
             else {
             	cout << "Please enter a valid character. " << endl;
             }
-
         }
-
+       }
+      
+       for(int i = 0 ; i < numplayer ; i++){
+        player[i] = new Player(chosensymbol[i], playername[i],this);
        }
 
-       
-       for(int i = 0 ; i < numplayer ; i++){
-        player[i] = new Player(chosensymbol[i], playername[i], 0, 0, 1500 , 0 , 0 , this);
-       	// cout << chosensymbol[i] << " " << playername[i] << endl;
-       }
-
-       for(int i = 0 ; i < numplayer ; i++){
-        
+       for(int i = 0 ; i < numplayer ; i++){       
         cout << player[i]->getSymbol() << " " << player[i]->getName() << endl;
        }
 
    }
 
    
-// void Game::run(){
-// 	string command;
+void Game::run(){
+	string command;
     
-//     while(true){
-//     cout << "Hello! it is " << player[current]->getName(); << "'s turn" << endl;
+    while(true){
+    cout << "Hello! it is " << player[currentplayer]->getName() << "'s turn" << endl;
+    bool rolled = false;
 
+    while(cin >> command){
+    if( command == "roll"){
+     
+     if(rolled == true){
+     cout << "You cannot roll the dice anymore in this turn" << endl;   
+     }
 
-//     while(cin >> command){
-//     if( command == "roll"){
-//      int dice_result = diceroll();
+     
+     else{
+     int dice_result = diceroll();
 
+     if(dicepair() == true){
+      cout << "You roll a double and you can roll a dice for another time" << endl; 
+     }
+     else{
+     cout << "you go to a square" << endl;
+     rolled = true;
+     }
+     }
+    }
 
-//     }
+    else if( command == "trade"){
+     cout << "you will do a trade" << endl;
+ 
+    }
+    
+    else if( command == "improve") {
+      cout << "you will do an improve" << endl;  
+    }
 
+    else if(command == "mortage") {
+      cout << "you will do a mortage" << endl;  
+    }
+    
+    else if(command == "unmortgage") {
+      cout << "you will do a unmortgage" << endl;  
+    }
 
+    else if(command == "bankrupt") {
+      cout << "you will do a bankrupt" << endl;  
+    }
+ 
+    else if(command == "assets") {
+      cout << "you will do a assets" << endl;  
+    }
 
+    else if(command == "all") {
+      cout << "you will do a all" << endl;  
+    }
 
+    else if(command == "save") {
+      cout << "you will do a save" << endl;  
+    }
 
-//     }
+    else if(command == "next") {
+      if(rolled == false){
+        cout << "You cannot finish this turn, you should roll the dice first" << endl;
+      }
+      else{
+        cout << "you will go to next turn" << endl;  
+      }
+    }
+
+    else if(command == "exit") {
+        cout << "You will exit the game in a few seconds" <<endl;
+        return;
+    }
+
+    }
 
 
     
@@ -146,18 +195,14 @@ void Game::normalinit(){
 
 
 
-//     }
+    }
 
-// }
+}
 
 
 // void Game::blockaction(){
     
 // }
-
-
-
-
 
 
 
@@ -193,6 +238,7 @@ void Game::settest(){
 
 
 int Game::diceroll(){
+    string n;
     srand(seed);
     if(test == false){
     firstdeice = 1+rand()%6;
@@ -208,5 +254,8 @@ int Game::diceroll(){
     cout << "first dice rolls " << firstdeice << endl;
     cout << "second dice rolls " << seconddice << endl;
     cout << "total is " << firstdeice+seconddice << endl;
+    cout << "Input any string to countinue" << endl;
+    cin >> n;
+    
     return firstdeice+seconddice;
 }

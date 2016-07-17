@@ -16,7 +16,6 @@ class Game {
   int rimcup;
   // BoardDisplay * display;
   int seed;
-  bool rolled;
 
 
 //dice part
@@ -28,7 +27,7 @@ class Game {
   	Game();
 	  ~Game();
 
-   // void run();
+   void run();
    void normalinit();
    void settest();
    bool dicepair();

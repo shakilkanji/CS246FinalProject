@@ -25,7 +25,7 @@ cout <<"                                "  <<endl;
 for ( int i = 0 ; i < argc ; i++){
 	string cur_argc = argv[i];
 	if( cur_argc == "-testing" ) {
-	   // g.settest();
+	   g.settest();
        // g.test == true;;
        cout << "Testing mode start" << endl;
 	}
@@ -36,7 +36,7 @@ for ( int i = 0 ; i < argc ; i++){
 }
     cout << "Game start" << endl;
 	g.normalinit();
-	// g.run();
+	g.run();
 
 }
 

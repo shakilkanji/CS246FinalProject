@@ -22,7 +22,7 @@ class Player {
   //std::vector <Building *> buildings;
 
  public:
-  Player(char symbol,std::string playerName,int numGym, int numRes, int balance, int position, int DCTurn, Game *g);
+  Player(char symbol,std::string playerName, Game *g);
   ~Player();
 
   char getSymbol() ;
