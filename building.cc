@@ -8,7 +8,7 @@ Building::Building(Game *game, int index, string name, int cost, Player *owner, 
 
 Building::~Building() {}
 
-Player* Building::getOwner() {
+Player* Building::getOwner() const {
 	return owner;
 }
 
@@ -16,7 +16,7 @@ void Building::setOwner(Player *newOwner) {
 	owner = newOwner;
 }
 
-bool Building::getMortgaged() {
+bool Building::getMortgaged() const {
 	return mortgaged;
 }
 
@@ -24,22 +24,22 @@ void Building::setMortgaged(bool isMortgaged) {
 	mortgaged = isMortgaged;
 }
 
-int Building::getValue() {
+int Building::getValue() const {
 	if (getMortgaged()) return cost/2;
 	return cost;
 }
 
-int Building::getCost() {
+int Building::getCost() const {
 	return cost;
 }
 
 void Building::notify(Player *landedPlayer) {
-	if (owner == nullptr) game->askToBuy();
+	if (owner == nullptr) ;//game->askToBuy();
 	else if (owner == landedPlayer) cout << "You own this property." << endl;
 	else {
-		fees = getFees();
+		int fees = getFees();
 		if (landedPlayer->getBalance() < fees) {
-			game->forceBankruptcy(landedPlayer, owner, fees);
+			// game->forceBankruptcy(landedPlayer, owner, fees);
 		} else {
 			landedPlayer->updateBalance(fees * -1);
 			owner->updateBalance(fees);

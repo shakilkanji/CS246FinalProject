@@ -2,9 +2,8 @@
 #define __SQUARE_H__
 #include <iostream>
 #include <string>
-
-class Player;
-class Game;
+#include "game.h"
+#include "player.h"
 
 class Square {
   protected:
