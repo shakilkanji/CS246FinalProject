@@ -5,11 +5,11 @@ Square::Square(Game *game, int index, string name) : game(game), index(index), n
 
 Square::~Square() {}
 
-int Square::getIndex() {
+int Square::getIndex() const {
 	return index;
 }
 
-string Square::getName() {
+string Square::getName() const {
 	return name;
 }
 
@@ -17,7 +17,7 @@ void Square::notify(Player *landedPlayer) {
 	if (index == 0) {	// Collect OSAP
 		landedPlayer->updateBalance(200);
 	} else if (index == 4) {	// Tuition
-		game->chooseTuition(landedPlayer);
+		// game->chooseTuition(landedPlayer);
 	} else if (index == 7 || index == 22 || index == 36) {	// Needles Hall
 		cout << "Landed on Needles Hall" << endl;
 	} else if (index == 10) {	// DC Tims
@@ -32,7 +32,7 @@ void Square::notify(Player *landedPlayer) {
 		// make sure to end landedPlayer's turn (if they rolled doubles)
 	} else if (index == 38) {	// Co-op Fee
 		if (landedPlayer->getBalance() < 150) {
-			game->forceBankruptcy(landedPlayer, 150);
+			// game->forceBankruptcy(landedPlayer, 150);
 		} else {
 			landedPlayer->updateBalance(-150);
 		}

@@ -29,6 +29,7 @@ class Player {
   std::string getName() ;
 
   void updateBalance(int n);
+  int getBalance() const;
   //void addProperty(Building *b);
 
   //int getAssets() const;

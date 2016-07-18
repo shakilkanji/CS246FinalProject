@@ -23,6 +23,9 @@ void Player::updateBalance(int n) {
   balance += n; 
 }
 
+int Player::getBalance() const {
+  return balance;
+}
 
 /*void Player::addProperty(Building *b) {
   buildings.emplace_back(b);

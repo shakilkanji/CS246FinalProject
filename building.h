@@ -14,12 +14,12 @@ class Building : public Square {
   	Building(Game *game, const int index, const std::string name, const int cost);
   	Building(Game *game, const int index, const std::string name, const int cost, 
   		Player *owner, bool mortgaged);		// Constructor for loaded games (not default)
-  	virtual ~Destructor();
+  	virtual ~Building();
 
   	Player *getOwner() const;
   	void setOwner(Player *newOwner);
 
-  	virtual int getFees() = 0;
+  	virtual int getFees() const = 0;
 
   	bool getMortgaged() const;
   	void setMortgaged(bool isMortgaged);
