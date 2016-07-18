@@ -8,7 +8,7 @@ class Game;
 
 class Square {
   protected:
-  	Game *game;			// pointer to the Game holding this square
+  Game *game;			// pointer to the Game holding this square
 	const int index;	// stores the square's location (0-39) on Gameboard
 	const std::string name;	// stores the name of the square to be displayed
 

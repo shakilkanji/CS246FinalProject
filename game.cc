@@ -38,7 +38,7 @@ void Game::normalinit(){
    }
 
    
-   //initial name
+   //initial player's name
    for( int current = 0 ; current < numplayer ; current++ ){
        cout << "Hello, player" << current + 1 << " !" <<" Please input your name" << endl;;
         
@@ -68,7 +68,7 @@ void Game::normalinit(){
         }
 
 
-        //initial character 
+        //initial player's character 
         cout << "Hello! " << playername[current] << ", please choose an character whcih represents you." << endl;
         cout << "You can choose from G(Goose) / B(GRT BUS) / D(Tim Hortons Doughnut)  " <<endl;
         cout << "P(Professor) / S(Student) / $ (Money) / L (Laptop) / T (Pink tie) " << endl;
@@ -120,23 +120,22 @@ void Game::run(){
 
     next();
 
-    // bool rolled = false;
-    // int roll_time = 0;
 
     while(cin >> command){
-    if( command == "roll"){
+    if( command == "roll" ){
      
-
+     //if the player has already roll the dice 
      if(rolled == true){
      cout << "You cannot roll the dice anymore in this turn" << endl;   
      }
 
-     
+     //player does not roll
      else{
      int dice_result = diceroll();
      roll_time += 1;
      
      if(dicepair() == true){
+      //if the player rolls 3 times, he'll be sent to DC tims line and cannot move
       if(roll_time == 3){
         cout << "You have rolled 3 doubles, as a result, you are moved to DC tims line" << endl;
         rolled = true;
@@ -145,12 +144,16 @@ void Game::run(){
         cout << "You roll a double and you can roll a dice for another time" << endl;
       }    
      }
+
+     //roll a nondouble dice 
      else{
      cout << "you go to a square" << endl;
+
      rolled = true;
      }
      }
     }
+
 
     else if( command == "trade"){
      cout << "you will do a trade" << endl;
@@ -191,7 +194,8 @@ void Game::run(){
       }
       else{
         cout << "you will go to next turn" << endl;  
-
+        
+        //find next player 
         do { 
             currentplayer = (currentplayer + 1) % 8;
         }        
