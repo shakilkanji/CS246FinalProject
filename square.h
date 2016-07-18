@@ -19,7 +19,7 @@ class Square {
   	int getIndex() const;
   	std::string getName() const;
 
-  	virtual void notify(Player *landedPlayer) = 0;
+  	virtual void notify(Player *landedPlayer);
 };
 
 

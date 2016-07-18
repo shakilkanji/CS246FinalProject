@@ -1,7 +1,10 @@
 #include "building.h"
 using namespace std;
 
-Building::Building(int index, string name, int cost) : index(index), name(name), cost(cost), mortgaged(false) {}
+Building::Building(Game *game, int index, string name, int cost) : Square(game, index, name), cost(cost) {}
+
+Building::Building(Game *game, int index, string name, int cost, Player *owner, bool mortgaged) : 
+	Square(game, index, name), cost(cost), owner(owner), mortgaged(mortgaged) {}
 
 Building::~Building() {}
 
@@ -28,4 +31,18 @@ int Building::getValue() {
 
 int Building::getCost() {
 	return cost;
+}
+
+void Building::notify(Player *landedPlayer) {
+	if (owner == nullptr) game->askToBuy();
+	else if (owner == landedPlayer) cout << "You own this property." << endl;
+	else {
+		fees = getFees();
+		if (landedPlayer->getBalance() < fees) {
+			game->forceBankruptcy(landedPlayer, owner, fees);
+		} else {
+			landedPlayer->updateBalance(fees * -1);
+			owner->updateBalance(fees);
+		}
+	}
 }

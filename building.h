@@ -12,6 +12,8 @@ class Building : public Square {
 
   public:
   	Building(Game *game, const int index, const std::string name, const int cost);
+  	Building(Game *game, const int index, const std::string name, const int cost, 
+  		Player *owner, bool mortgaged);		// Constructor for loaded games (not default)
   	virtual ~Destructor();
 
   	Player *getOwner() const;
@@ -26,7 +28,7 @@ class Building : public Square {
 
   	int getCost() const;
 
-  	virtual void notify(Player *landedPlayer) = 0;
+  	void notify(Player *landedPlayer) override;
 };
 
 #endif

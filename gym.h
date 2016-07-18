@@ -6,11 +6,10 @@
 class Gym : public Building {
   public:
   	Gym(Game *game, const int index, const std::string name);
+  	Gym(Game *game, const int index, const std::string name, Player *owner, bool mortgaged);
   	~Gym();
 
   	int getFees() const;
-
-  	void notify(Player *landedPlayer);
 };
 
 #endif

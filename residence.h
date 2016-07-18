@@ -6,11 +6,10 @@
 class Residence : public Building {
   public:
   	Residence(Game *game, const int index, const std::string name);
+  	Residence(Game *game, const int index, const std::string name, Player *owner, bool mortgaged);
   	~Residence();
 
   	int getFees() const;
-
-  	void notify(Player *landedPlayer);
 };
 
 #endif

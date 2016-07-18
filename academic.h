@@ -2,18 +2,24 @@
 #define __ACADEMIC_H__
 #include <iostream>
 #include <string>
+#include "building.h"
 
 class Academic : public Building {
-	int impLevel;
 	const int impCost;
 	const std::string monoBlock;
 	bool monopolized;
-	int Fees[6];
+	int impLevel;
+	int fees[6];
 
   public:
   	Academic(Game *game, const int index, const std::string name, const int cost, const int impCost, 
   		const std::string monoBlock, const int baseFee, const int oneImpFee, const int twoImpFee, 
   		const int threeImpFee, const int fourImpFee, const int fiveImpFee);
+  	Academic(Game *game, const int index, const std::string name, const int cost, Player *owner, 
+  		bool mortgaged, const int impCost, const std::string monoBlock, bool monopolized, int impLevel,
+  		const int baseFee, const int oneImpFee, const int twoImpFee, const int threeImpFee, 
+  		const int fourImpFee, const int fiveImpFee);
+
   	~Academic();
 
   	int getFees() const;
@@ -23,9 +29,7 @@ class Academic : public Building {
 
   	bool isMonopolized() const;
 
-  	int getValue() const;
-
-  	void notify(Player *landedPlayer);
+  	int getValue() const;	// during bankruptcy calculation, divide by 2
 };
 
 #endif
