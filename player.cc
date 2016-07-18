@@ -2,17 +2,18 @@
 #include <vector>
 #include "player.h"
 
-Player::Player(int numGym, int numRes, int balance, int position, int DCTurn, Game *g):
-  numGym{numGym}, numRes{numRes}, balance{balance}, position{position}, DCTurn{DCTurn}, g{g} {}
+using namespace std;
+Player::Player(char symbol, string playerName, Game *g):
+  symbol{symbol},playerName{playerName},numGym{numGym}, numRes{numRes}, balance{balance}, position{position}, DCTurn{DCTurn}, g{g} {}
 
 Player::~Player() { delete g; }
 
 
-char getSymbol() const { 
+char Player::getSymbol()  { 
   return symbol; 
 }
 
-string getName() const { 
+string Player::getName()  { 
   return playerName; 
 }
 

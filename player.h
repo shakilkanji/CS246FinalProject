@@ -4,7 +4,7 @@
 #include <vector>
 
 class Game;
-class Building;
+
 
 class Player {
   char symbol;
@@ -22,11 +22,11 @@ class Player {
   //std::vector <Building *> buildings;
 
  public:
-  Player(int numGym, int numRes, int balance, int position, int DCTurn, Game *g);
+  Player(char symbol,std::string playerName, Game *g);
   ~Player();
 
-  char getSymbol() const;
-  std::string getName() const;
+  char getSymbol() ;
+  std::string getName() ;
 
   void updateBalance(int n);
   //void addProperty(Building *b);

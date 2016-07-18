@@ -2,7 +2,7 @@
 #include <string>
 #include <iostream>
 #include <cstdlib>
-// #include <ctime>
+#include <ctime>
 #include <locale>
 #include <fstream>
 #include <sstream>
@@ -10,11 +10,11 @@
 
 using namespace std;
 
-Game::Game():numplayer(0),currentplayer(0),rimcup(4),test(false),seed(0),
+Game::Game():numplayer(0),currentplayer(0),rimcup(4),test(false),sumofdice(0),rolled(false),roll_time(0),
 firstdeice(0),seconddice(0){
-    // for(int i = 0 ; i < 8 ; i++){
-    //     player[i] = nullptr;
-    // }
+    for(int i = 0 ; i < 8 ; i++){
+        player[i] = nullptr;
+    }
 
 }
 
@@ -116,12 +116,17 @@ void Game::run(){
 	string command;
     
     while(true){
-    cout << "Hello! it is " << player[currentplayer]->getName() << "'s turn" << endl;
-    bool rolled = false;
+    
+
+    next();
+
+    // bool rolled = false;
+    // int roll_time = 0;
 
     while(cin >> command){
     if( command == "roll"){
      
+
      if(rolled == true){
      cout << "You cannot roll the dice anymore in this turn" << endl;   
      }
@@ -129,9 +134,16 @@ void Game::run(){
      
      else{
      int dice_result = diceroll();
-
+     roll_time += 1;
+     
      if(dicepair() == true){
-      cout << "You roll a double and you can roll a dice for another time" << endl; 
+      if(roll_time == 3){
+        cout << "You have rolled 3 doubles, as a result, you are moved to DC tims line" << endl;
+        rolled = true;
+      }
+      else{
+        cout << "You roll a double and you can roll a dice for another time" << endl;
+      }    
      }
      else{
      cout << "you go to a square" << endl;
@@ -179,6 +191,13 @@ void Game::run(){
       }
       else{
         cout << "you will go to next turn" << endl;  
+
+        do { 
+            currentplayer = (currentplayer + 1) % 8;
+        }        
+        while (player[currentplayer] == nullptr);
+
+        next();
       }
     }
 
@@ -186,10 +205,29 @@ void Game::run(){
         cout << "You will exit the game in a few seconds" <<endl;
         return;
     }
-
     }
-    }
+    }   
+}
 
+void Game::next(){
+    
+    cout << "Hello! it is " << player[currentplayer]->getName() << "'s turn!" << endl;
+    cout << endl;
+    cout<<"You can choose the following commands:"<<endl;
+    cout<<"roll: the player rolls two dice, moves the sum of the two dice and takes action on the square they landed on."<<endl;
+    cout<<"next: give the control to the next player. "<<endl;
+    cout<<"trade <player> <give> <receive>: having trade with player, offering give and requesting receive."<<endl;
+    cout<<"improve <property> buy/sell: attempts to buy or sell an improvement for property"<<endl;
+    cout<<"mortgage <property>: attempts to mortgage property."<<endl;
+    cout<<"unmortgage <property>: attempts to unmortgage property."<<endl;
+    cout<<"bankrupt: player declares bankruptcy."<<endl;
+    cout<<"assets: displays the assets of the current player."<<endl;
+    cout<<"all: displays the assets of every player.."<<endl;
+    cout<<"save <filename>: saves the current state of the game."<<endl<<endl;
+    
+    rolled = false;
+    roll_time = 0;
+   
 }
 
 
@@ -209,7 +247,9 @@ void Game::run(){
 
 
 
-
+int Game::getsumdice(){
+    return firstdeice+seconddice;
+}
 
 
 
@@ -232,7 +272,7 @@ void Game::settest(){
 
 int Game::diceroll(){
     string n;
-    srand(seed);
+    srand(time(0));
     if(test == false){
     firstdeice = 1+rand()%6;
     seconddice = 1+rand()%6;

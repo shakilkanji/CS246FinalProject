@@ -15,13 +15,13 @@ class Game {
   // Dice *dice;
   int rimcup;
   // BoardDisplay * display;
-  int seed;
-
-
+  int sumofdice;
 //dice part
    int firstdeice;
    int seconddice;
    bool test;
+   bool rolled;
+   int roll_time;
 
   public:
   	Game();
@@ -29,11 +29,12 @@ class Game {
 
    void run();
    void normalinit();
+   void next();
    void settest();
    bool dicepair();
-   
+   int getsumdice();
    int diceroll();
-
+   
 };
 
 /***************
