@@ -37,6 +37,10 @@ string Academic::getMonoBlock() const {
 	return monoBlock;
 }
 
+int Academic::getImpCost() const {
+	return impCost;
+}
+
 int Academic::getImpLevel() const {
 	return impLevel;
 }
