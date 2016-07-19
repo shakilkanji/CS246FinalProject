@@ -33,6 +33,7 @@ class Game {
    TextDisplay *td;
 
    int getAcademicIndex(std::string square);
+   int getBuildingIndex(std::string square);
    int getplayer(std::string name);
 
   public:
