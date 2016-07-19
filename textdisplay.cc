@@ -93,6 +93,17 @@ void setSquareDisplayInfo(int &info_h, int &info_w, int index) {
 }
 
 
+void replaceChar(int pos_h, int pos_w, char **theDisplay, char from, char to) {
+  for (int i = 0; i < maxPlayer; ++i) {
+    char c = theDisplay[pos_h - 1][pos_w - 1 + i];
+    if (c == from) {
+      theDisplay[pos_h - 1][pos_w - 1 + i] = to;
+      break;
+    }
+  }
+}
+
+
 void TextDisplay::removePlayer(Player *p) {
   /* --- notify the player --- */
   int pos_h;
@@ -102,14 +113,7 @@ void TextDisplay::removePlayer(Player *p) {
   char symbol = p->getSymbol();
 
   setPlayerDisplayPos(pos_h, pos_w, pos);
-
-  for (int i = 0; i < maxPlayer; ++i) {
-    char c = theDisplay[pos_h - 1][pos_w - 1 + i];
-    if (c == symbol) {
-      theDisplay[pos_h - 1][pos_w - 1 + i] = ' ';
-      break;
-    }
-  }
+  replaceChar(pos_h, pos_w, theDisplay, symbol, ' ');
 }
 
 
@@ -121,25 +125,11 @@ void TextDisplay::notify(Player *p, int oldPos) {
 
   char symbol = p->getSymbol();
 
-  setPlayerDisplayPos(pos_h, pos_w, oldPos);
+  setPlayerDisplayPos(&pos_h, &pos_w, oldPos);
+  replaceChar(pos_h, pos_w, theDisplay, symbol, ' ');
 
-  for (int i = 0; i < maxPlayer; ++i) {
-    char c = theDisplay[pos_h - 1][pos_w - 1 + i];
-    if (c == symbol) {
-      theDisplay[pos_h - 1][pos_w - 1 + i] = ' ';
-      break;
-    }
-  }
-
-  setPlayerDisplayPos(pos_h, pos_w, pos);
-
-  for (int i = 0; i < maxPlayer; ++i) {
-    char c = theDisplay[pos_h - 1][pos_w - 1 + i];
-    if (c == ' ') {
-      theDisplay[pos_h - 1][pos_w - 1 + i] = symbol;
-      break;
-    }
-  }
+  setPlayerDisplayPos(&pos_h, &pos_w, pos);
+  replaceChar(pos_h, pos_w, theDisplay, ' ', symbol);
 }
 
 
