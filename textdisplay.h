@@ -15,7 +15,7 @@ class TextDisplay {
 
   void display();
 
-  void notify(Player *p);
+  void notify(Player *p, int oldPos);
   void notify(Building *b);
 };
 
