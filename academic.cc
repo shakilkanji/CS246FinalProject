@@ -33,6 +33,10 @@ int Academic::getFees() const {
 	return fees[impLevel];
 }
 
+string Academic::getMonoBlock() const {
+	return monoBlock;
+}
+
 int Academic::getImpLevel() const {
 	return impLevel;
 }
@@ -46,6 +50,7 @@ bool Academic::isMonopolized() const {
 }
 
 int Academic::getValue() const {
+	if (mortgaged) return 0;
 	int impValue = impLevel * impCost;
 	return impValue + cost;
 }

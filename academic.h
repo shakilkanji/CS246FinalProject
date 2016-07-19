@@ -24,6 +24,8 @@ class Academic : public Building {
 
   	int getFees() const;
 
+    std::string getMonoBlock() const;
+
   	int getImpLevel() const;
   	void setImpLevel(int newImpLevel);
 
