@@ -48,6 +48,15 @@ void Building::notify(Player *landedPlayer) {
 	}
 }
 
+bool Building::isAcademic(){
+	if((index == 5 || index == 15 || index == 25 || index == 35)||(index == 28 || index == 12)){
+		return false;
+	}
+	return true;
+}
+
+
+
 ostream& operator<<(ostream& out, const Building& b) {
 	Player *owner = b.getOwner();
 	string ownerName = "Unowned";
