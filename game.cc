@@ -425,7 +425,7 @@ void Game::move(int move_blocks){
  player[currentplayer]->setPos(current_pos);
  td->notify(player[currentplayer],old_pos);
  td->display();
- gameboard[current_pos]->notify(player[currentplayer]);
+ // gameboard[current_pos]->notify(player[currentplayer]);
 }
 
 

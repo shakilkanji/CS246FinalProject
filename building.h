@@ -29,6 +29,8 @@ class Building : public Square {
   	int getCost() const;
 
   	void notify(Player *landedPlayer) override;
+
+    bool isAcademic();
 };
 
 std::ostream& operator<<(std::ostream& out, const Building& b);

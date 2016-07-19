@@ -2,7 +2,6 @@
 #include <string>
 #include <fstream>
 #include "textdisplay.h"
-#include "square.h"
 #include "player.h"
 #include "building.h"
 #include "academic.h"
@@ -150,8 +149,10 @@ void TextDisplay::notify(Building *b) {
   }
 
   int level = 0;
-  Academic *academic = dynamic_cast<Academic *>(b);
-  level = academic->getImpLevel();
+  if (b->isAcademic()) {
+    Academic *academic = dynamic_cast<Academic *>(b);
+    level = academic->getImpLevel();
+  }
 
   if (level != 0) {
     theDisplay[info_h - 1][info_w + 4] = 'L';
