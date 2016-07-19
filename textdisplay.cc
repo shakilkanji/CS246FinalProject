@@ -75,15 +75,15 @@ void setPlayerDisplayPos(int &pos_h, int &pos_w, int pos) {
 void setSquareDisplayInfo(int &info_h, int &info_w, int index) {
   if (index < 10) {
     info_h = 52;
-    info_w = width - (pos * 9) - 9;
+    info_w = width - (index * 9) - 9;
   } else if (index < 20) {
-    info_h = height - ((pos - 10) * 5) - 4;
+    info_h = height - ((index - 10) * 5) - 4;
     info_w = 2;
   } else if (index < 30) {
     info_h = 2;
-    info_w = ((pos - 20) * 9) + 2;
+    info_w = ((index - 20) * 9) + 2;
   } else if (index < 40) {
-    info_h = ((pos - 30) * 5) + 1;
+    info_h = ((index - 30) * 5) + 1;
     info_w = 92;
   }
 
