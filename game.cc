@@ -221,7 +221,7 @@ void Game::run(){
     }
  
     else if(command == "assets") {
-      cout << "you will do a assets" << endl;  
+      displayAssets(player[currentplayer]); 
     }
 
     else if(command == "all") {
@@ -295,7 +295,7 @@ void Game::asktobuy(Building *building, Player *buyer ) {
     cout << "Sorry you don't have enough money to buy this building. " << "You current balance is" << buyer->getBalance();
     cout << "The building will spend " << building->getCost() << endl;
     // cout << "Auctions will begin" << endl;
-    auction();
+    auctionProperty(building);
    }
    cout << "Do you want to buy " << building->getName() << "which will spend you " << building->getCost() << "$?" <<endl;
    cout << "[yes/no/assets]" << endl;
@@ -314,8 +314,7 @@ void Game::asktobuy(Building *building, Player *buyer ) {
         break;
     }
     else if( temp_askbuy == "assets" ){
-        assets();
-        auction();
+        displayAssets(buyer);
     }
     else{
         cout << "invaild command, please input yes/no/assets. " <<endl;
@@ -410,11 +409,21 @@ void Game::settest(){
 }
 
 
-void Game::assets(){
-
+void Game::displayAssets(Player *player){
+    for (int i = 0; i < 40; ++i) {
+        Academic *ap = dynamic_cast<Academic *>(gameboard[i]);
+        if (ap) {   // bp is null if gameboard[i] is not building
+            cout << *ap;
+        } else {
+            Building *bp = dynamic_cast<Building *>(gameboard[i]);
+            if (bp) {
+                cout << *bp;
+            }
+        }
+    }
 }
 
-void Game::auction(){
+void Game::auctionProperty(Building *building){
   
 }
 

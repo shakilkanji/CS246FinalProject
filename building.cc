@@ -46,3 +46,11 @@ void Building::notify(Player *landedPlayer) {
 		}
 	}
 }
+
+ostream& operator<<(ostream& out, const Building& b) {
+	Player *owner = b.getOwner();
+	string ownerName = "Unowned";
+	if (owner) ownerName = owner->getName();
+	out << b.getName() << " " << ownerName << endl;
+	return out;
+}

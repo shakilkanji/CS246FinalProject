@@ -45,8 +45,8 @@ class Game {
    void next();
    void settest();
    void asktobuy(Building *building, Player *buyer);
-   void auction();
-   void assets();
+   void auctionProperty(Building *building);
+   void displayAssets(Player *player);
    void trade();
    bool checkmonoimprov(std::string building);
    bool dicepair();
