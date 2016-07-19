@@ -8,6 +8,7 @@
 #include "academic.h"
 #include "gym.h"
 #include "residence.h"
+#include "textdisplay.h"
 
 class Game {
  // std::vector<std::vector<Player>> Players;
@@ -21,13 +22,15 @@ class Game {
   int rimcup;
   // BoardDisplay * display;
   int sumofdice;
-//dice part
+  //dice part
    int firstdeice;
    int seconddice;
    bool test;
    bool rolled;
    int roll_time;
    bool isWon;
+   // TextDisplay
+   TextDisplay *td;
 
    int getAcademicIndex(std::string square);
    int getBuildingIndex(std::string square);
@@ -44,6 +47,7 @@ class Game {
    void asktobuy(Building *building, Player *buyer);
    void auction();
    void assets();
+   void trade();
    bool checkmonoimprov(std::string building);
    bool dicepair();
    int getsumdice();

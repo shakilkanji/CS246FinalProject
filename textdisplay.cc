@@ -2,6 +2,10 @@
 #include <string>
 #include <fstream>
 #include "textdisplay.h"
+#include "square.h"
+#include "player.h"
+#include "building.h"
+#include "academic.h"
 using namespace std;
 
 
