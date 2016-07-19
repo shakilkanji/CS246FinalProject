@@ -464,11 +464,38 @@ void Game::sellImprovement(Academic *academic, Player *player) {
 }
 
 void Game::mortgageBuilding(Building *building, Player *player) {
-
+    Player *owner = building->getOwner();
+    if (player != owner) {
+        cout << "You do not own this property." << endl;
+        return;
+    }
+    if (building->getMortgaged()) {
+        cout << "This property is already mortgaged." << endl;
+        return;
+    }
+    int mortgageValue = building->getCost() / 2;
+    owner->updateBalance(mortgageValue);
+    building->setMortgaged(true);
 }
 
 void Game::unmortgageBuilding(Building *building, Player *player) {
-    
+    Player *owner = building->getOwner();
+    if (player != owner) {
+        cout << "You do not own this property." << endl;
+        return;
+    }
+    if (!building->getMortgaged()) {
+        cout << "This property is not mortgaged." << endl;
+        return;
+    }
+    int unmortgageCost = building->getCost() * 6 / 10;
+    int ownerBalance = owner->getBalance();
+    if (ownerBalance < unmortgageCost) {
+        cout << "You do not have enough funds to unmortgage this property." << endl;
+        return;
+    }
+    owner->updateBalance(unmortgageCost * -1);
+    building->setMortgaged(false);
 }
 
 void Game::forceBankruptcy(Player *landedPlayer, int fee) {
@@ -495,7 +522,7 @@ void Game::forceBankruptcy(Player *landedPlayer, int fee) {
         }
         string command;
         cin >> command;
-        if (command == "improve") {
+        if (command == "improve" || command == "Improve") {
             string property;
             cin >> property;
             int propertyIndex = getAcademicIndex(property);
@@ -506,6 +533,14 @@ void Game::forceBankruptcy(Player *landedPlayer, int fee) {
                 if (buySell == "buy" || buySell == "Buy") buyImprovement(ap, landedPlayer);
                 else if (buySell == "sell" || buySell == "Sell") sellImprovement(ap, landedPlayer);
             }
+        } else if (command == "mortgage" || command == "Mortgage") {
+            string property;
+            cin >> property;
+            int propertyIndex = getBuildingIndex(property);
+            if (propertyIndex >= 0) {
+                Building *bp = static_cast<Building *>(gameboard[propertyIndex]);
+                mortgageBuilding(bp, landedPlayer);
+            }
         }
     }
     cout << "You now have enough funds to pay the bank." << endl;
@@ -515,12 +550,25 @@ void Game::forceBankruptcy(Player *landedPlayer, int fee) {
 int Game::getAcademicIndex(string square) {
     for (int i = 0; i < 40; ++i) {
         Academic *ap = dynamic_cast<Academic *>(gameboard[i]);
-        if (ap) {   // bp is null if gameboard[i] is not academic
+        if (ap) {   // ap is null if gameboard[i] is not Academic
             if (ap->getName() == square) {
                 return ap->getIndex();
             }
         }
     }
-    cout << "This is a non-academic square." << endl;
+    cout << "This is not an Academic square." << endl;
+    return -1;
+}
+
+int Game::getBuildingIndex(string square) {
+    for (int i = 0; i < 40; ++i) {
+        Building *bp = dynamic_cast<Building *>(gameboard[i]);
+        if (bp) {   // bp is null if gameboard[i] is not Building
+            if (bp->getName() == square) {
+                return bp->getIndex();
+            }
+        }
+    }
+    cout << "This is not a Building square." << endl;
     return -1;
 }
