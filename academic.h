@@ -22,16 +22,16 @@ class Academic : public Building {
 
   	~Academic();
 
-  	int getFees() const;
+  	int getFees() const override;
 
     std::string getMonoBlock() const;
 
-  	int getImpLevel() const override;
+  	int getImpLevel() const;
   	void setImpLevel(int newImpLevel);
 
   	bool isMonopolized() const;
 
-  	int getValue() const;	// during bankruptcy calculation, divide by 2
+  	int getValue() const override;	// during bankruptcy calculation, divide by 2
 };
 
 #endif
