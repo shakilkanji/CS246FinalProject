@@ -86,8 +86,29 @@ void setSquareDisplayInfo(int &info_h, int &info_w, int index) {
     info_h = 52;
     info_w = (index * 9) - 268;
   }
+
   if (index == 5 || index == 12 || index == 15 || index == 25 || index == 28 || index == 35) {
     ++info_h;
+  }
+}
+
+
+void TextDisplay::removePlayer(Player *p) {
+  /* --- notify the player --- */
+  int pos_h;
+  int pos_w;
+  int pos = p->getPos();
+
+  char symbol = p->getSymbol();
+
+  setPlayerDisplayPos(pos_h, pos_w, pos);
+
+  for (int i = 0; i < maxPlayer; ++i) {
+    char c = theDisplay[pos_h - 1][pos_w - 1 + i];
+    if (c == symbol) {
+      theDisplay[pos_h - 1][pos_w - 1 + i] = ' ';
+      break;
+    }
   }
 }
 
@@ -126,7 +147,7 @@ void TextDisplay::notify(Building *b) {
   /* --- notify the square --- */
   int info_h;
   int info_w;
-  int index = s->getIndex();
+  int index = b->getIndex();
 
   setSquareDisplayInfo(info_h, info_w, index);
 
