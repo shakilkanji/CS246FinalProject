@@ -12,6 +12,8 @@ using namespace std;
 
 Game::Game():numplayer(0),currentplayer(0),rimcup(4),test(false),sumofdice(0),rolled(false),roll_time(0),
 firstdeice(0),seconddice(0){
+    td = new TextDisplay;
+
     for(int i = 0 ; i < 8 ; i++){
         player[i] = nullptr;
     }
@@ -63,6 +65,8 @@ Game::~Game(){
 
 
 void Game::normalinit(){
+  td->display();
+
      cout << "Welcome to Watopoly!" << endl;
      cout << "Please enter the number of players in the game [2-8]" << endl;
      int temp_num;
@@ -255,7 +259,11 @@ void Game::run(){
 }
 
 void Game::next(){
-    
+  for (int i = 0 ; i < numplayer; i++) {
+    td->notify(player[i]);
+  }
+  td->display();
+
     cout << "Hello! it is " << player[currentplayer]->getName() << "'s turn!" << endl;
     cout << endl;
     cout<<"You can choose the following commands:"<<endl;
@@ -287,7 +295,7 @@ void Game::asktobuy(Building *building, Player *buyer ) {
     cout << "Sorry you don't have enough money to buy this building. " << "You current balance is" << buyer->getBalance();
     cout << "The building will spend " << building->getCost() << endl;
     // cout << "Auctions will begin" << endl;
-    // auction();
+    auction();
    }
    cout << "Do you want to buy " << building->getName() << "which will spend you " << building->getCost() << "$?" <<endl;
    cout << "[yes/no/assets]" << endl;
@@ -306,8 +314,8 @@ void Game::asktobuy(Building *building, Player *buyer ) {
         break;
     }
     else if( temp_askbuy == "assets" ){
-        // assets();
-        // auction();
+        assets();
+        auction();
     }
     else{
         cout << "invaild command, please input yes/no/assets. " <<endl;
@@ -344,25 +352,25 @@ void Game::asktobuy(Building *building, Player *buyer ) {
 
 // }
 
-bool Game::checkmonoimprov(string building){
-    int current_index = getPropertyIndex(building);
-    Building *current_pointerbuilding = dynamic_cast<Building *>(gameboard[current_index]);
-    Academic *current_pointeracademic = dynamic_cast<Academic *>(current_pointerbuilding);
-    for( int i = 0 ; i < 40 ; i++) {
-       int index =  getPropertyIndex( gameboard[i]->getName());
-      if ( ( index  != -1 )||( index != 12 )||( index != 28 )||( index != 28 )||
-        ( index != 5 )||( index != 15 )||( index != 25 )||( index != 31 ) ) {
-       Building *pointerbuilding = dynamic_cast<Building *>(gameboard[index]);
-       Academic *pointeracademic = dynamic_cast<Academic *>(pointerbuilding);
-       if(pointeracademic->getMonoBlock() == current_pointeracademic->getMonoBlock()) {
-         if(pointeracademic->getImpLevel() != 0 ){
-            return true;
-         }
-       }
-   }
+// bool Game::checkmonoimprov(string building){
+//     int current_index = getPropertyIndex(building);
+//     Building *current_pointerbuilding = dynamic_cast<Building *>(gameboard[current_index]);
+//     Academic *current_pointeracademic = dynamic_cast<Academic *>(current_pointerbuilding);
+//     for( int i = 0 ; i < 40 ; i++) {
+//        int index =  getPropertyIndex( gameboard[i]->getName());
+//       if ( ( index  != -1 )||( index != 12 )||( index != 28 )||( index != 28 )||
+//         ( index != 5 )||( index != 15 )||( index != 25 )||( index != 31 ) ) {
+//        Building *pointerbuilding = dynamic_cast<Building *>(gameboard[index]);
+//        Academic *pointeracademic = dynamic_cast<Academic *>(pointerbuilding);
+//        if(pointeracademic->getMonoBlock() == current_pointeracademic->getMonoBlock()) {
+//          if(pointeracademic->getImpLevel() != 0 ){
+//             return true;
+//          }
+//        }
+//    }
 
-}
-}
+// }
+// }
       
   
     
@@ -426,6 +434,50 @@ int Game::diceroll(){
     return firstdeice+seconddice;
 }
 
+void Game::buyImprovement(Academic *academic, Player *player) {
+    Player *owner = academic->getOwner();
+    if (player != owner) {
+        cout << "You do not own this property." << endl;
+        return;
+    }
+    int ownerBalance = owner->getBalance();
+    int impCost = academic->getImpCost();
+    if (ownerBalance < impCost) {
+        cout << "You do not have enough funds to improve this property." << endl;
+        return;
+    }
+    int impLevel = academic->getImpLevel();
+    if (impLevel == 5) {
+        cout << "This property cannot be improved further." << endl;
+        return;
+    }
+    academic->setImpLevel(impLevel+1);
+    owner->updateBalance(impCost * -1);
+}
+
+void Game::sellImprovement(Academic *academic, Player *player) {
+    Player *owner = academic->getOwner();
+    if (player != owner) {
+        cout << "You do not own this property." << endl;
+        return;
+    }
+    int impCost = academic->getImpCost();
+    int impLevel = academic->getImpLevel();
+    if (impLevel == 0) {
+        cout << "This property has no improvements." << endl;
+        return;
+    }
+    academic->setImpLevel(impLevel-1);
+    owner->updateBalance(impCost/2);
+}
+
+void Game::mortgageBuilding(Building *building, Player *player) {
+
+}
+
+void Game::unmortgageBuilding(Building *building, Player *player) {
+    
+}
 
 void Game::forceBankruptcy(Player *landedPlayer, int fee) {
     int playerBalance = landedPlayer->getBalance();
@@ -454,27 +506,29 @@ void Game::forceBankruptcy(Player *landedPlayer, int fee) {
         if (command == "improve") {
             string property;
             cin >> property;
-            int propertyIndex = getPropertyIndex(property);
+            int propertyIndex = getAcademicIndex(property);
             if (propertyIndex >= 0) {
+                Academic *ap = static_cast<Academic *>(gameboard[propertyIndex]);
                 string buySell;
                 cin >> buySell;
-                // if (buySell == "buy" || buySell == "Buy") buyImprovement(property);
-                // else if (buySell == "sell" || buySell == "Sell") sellImprovement(property);
+                if (buySell == "buy" || buySell == "Buy") buyImprovement(ap, landedPlayer);
+                else if (buySell == "sell" || buySell == "Sell") sellImprovement(ap, landedPlayer);
             }
         }
     }
-
+    cout << "You now have enough funds to pay the bank." << endl;
+    landedPlayer->updateBalance(fee * -1);
 }
 
-int Game::getPropertyIndex(string property) {
+int Game::getAcademicIndex(string square) {
     for (int i = 0; i < 40; ++i) {
-        Building *bp = dynamic_cast<Building *>(gameboard[i]);
-        if (bp) {   // bp is null if gameboard[i] is not building
-            if (bp->getName() == property) {
-                return bp->getIndex();
+        Academic *ap = dynamic_cast<Academic *>(gameboard[i]);
+        if (ap) {   // bp is null if gameboard[i] is not academic
+            if (ap->getName() == square) {
+                return ap->getIndex();
             }
         }
     }
-    cout << "Not a valid property." << endl;
+    cout << "This is a non-academic square." << endl;
     return -1;
 }
