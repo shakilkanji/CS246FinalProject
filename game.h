@@ -35,11 +35,14 @@ class Game {
   public:
   	Game();
 	  ~Game();
-
+   
    void run();
    void normalinit();
    void next();
    void settest();
+   void asktobuy(Building *building, Player *buyer);
+   void auction();
+   void assets();
    bool dicepair();
    int getsumdice();
    int diceroll(); 
