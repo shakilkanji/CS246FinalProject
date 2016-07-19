@@ -18,8 +18,6 @@ class Square {
 
   	int getIndex() const;
   	std::string getName() const;
-
-    virtual Player *getOwner() const;
   	virtual void notify(Player *landedPlayer);
 };
 

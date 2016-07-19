@@ -2,8 +2,6 @@
 #include <string>
 #include <fstream>
 #include "textdisplay.h"
-#include "player.h"
-#include "building.h"
 using namespace std;
 
 
@@ -104,8 +102,11 @@ void TextDisplay::notify(Square *s) {
     info_w = (index * 9) - 268;
   }
 
-  Player *owner = s->getOwner();
-  int level = s->getImpLevel();
+  Building *building = dynamic_cast<Building *>(s);
+  Player *owner = building->getOwner();
+
+  Academic *academic = dynamic_cast<Academic *>(s);
+  int level = academic->getImpLevel();
 
   if (level != 0) {
     theDisplay[info_h - 1][info_w - 1] = 'O';
