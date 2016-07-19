@@ -16,7 +16,7 @@ class Building : public Square {
   		Player *owner, bool mortgaged);		// Constructor for loaded games (not default)
   	virtual ~Building();
 
-  	Player *getOwner() const override;
+  	Player *getOwner() const;
   	void setOwner(Player *newOwner);
 
   	virtual int getFees() const = 0;

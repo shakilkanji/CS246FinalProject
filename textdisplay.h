@@ -1,5 +1,6 @@
 #ifndef _TEXTDISPLAY_H_
 #define _TEXTDISPLAY_H_
+#include "game.h"
 
 class Player;
 class Square;

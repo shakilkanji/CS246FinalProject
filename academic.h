@@ -26,7 +26,7 @@ class Academic : public Building {
 
     std::string getMonoBlock() const;
 
-  	int getImpLevel() const override;
+  	int getImpLevel() const;
   	void setImpLevel(int newImpLevel);
 
   	bool isMonopolized() const;
