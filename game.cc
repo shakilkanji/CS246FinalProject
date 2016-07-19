@@ -433,13 +433,11 @@ void Game::settest(){
 void Game::displayAssets(Player *player){
     for (int i = 0; i < 40; ++i) {
         Academic *ap = dynamic_cast<Academic *>(gameboard[i]);
-        if (ap) {   // bp is null if gameboard[i] is not building
+        if (!ap) {
+            Building *ap = dynamic_cast<Building *>(gameboard[i]);
+        }
+        if (ap) {
             cout << *ap;
-        } else {
-            Building *bp = dynamic_cast<Building *>(gameboard[i]);
-            if (bp) {
-                cout << *bp;
-            }
         }
     }
 }
