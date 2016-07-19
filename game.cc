@@ -287,7 +287,7 @@ void Game::asktobuy(Building *building, Player *buyer ) {
     cout << "Sorry you don't have enough money to buy this building. " << "You current balance is" << buyer->getBalance();
     cout << "The building will spend " << building->getCost() << endl;
     // cout << "Auctions will begin" << endl;
-    auction();
+    // auction();
    }
    cout << "Do you want to buy " << building->getName() << "which will spend you " << building->getCost() << "$?" <<endl;
    cout << "[yes/no/assets]" << endl;
@@ -306,8 +306,8 @@ void Game::asktobuy(Building *building, Player *buyer ) {
         break;
     }
     else if( temp_askbuy == "assets" ){
-        assets();
-        auction();
+        // assets();
+        // auction();
     }
     else{
         cout << "invaild command, please input yes/no/assets. " <<endl;
@@ -458,6 +458,8 @@ void Game::forceBankruptcy(Player *landedPlayer, int fee) {
             if (propertyIndex >= 0) {
                 string buySell;
                 cin >> buySell;
+                // if (buySell == "buy" || buySell == "Buy") buyImprovement(property);
+                // else if (buySell == "sell" || buySell == "Sell") sellImprovement(property);
             }
         }
     }
