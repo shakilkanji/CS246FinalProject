@@ -26,6 +26,7 @@ class Academic : public Building {
 
     std::string getMonoBlock() const;
 
+    int getImpCost() const;
   	int getImpLevel() const;
   	void setImpLevel(int newImpLevel);
 

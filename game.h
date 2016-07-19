@@ -32,7 +32,7 @@ class Game {
    // TextDisplay
    TextDisplay *td;
 
-   int getPropertyIndex(std::string property);
+   int getAcademicIndex(std::string square);
    int getplayer(std::string name);
 
   public:
@@ -51,6 +51,12 @@ class Game {
    int getsumdice();
    int diceroll(); 
    void forceBankruptcy(Player *landedPlayer, int fee);   // Player owes bank more than their current balance
+
+   void buyImprovement(Academic *academic, Player *player);
+   void sellImprovement(Academic *academic, Player *player);
+
+   void mortgageBuilding(Building *building, Player *player);
+   void unmortgageBuilding(Building *building, Player *player);
 };
 
 /***************
