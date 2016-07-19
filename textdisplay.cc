@@ -3,11 +3,13 @@
 #include <fstream>
 #include "textdisplay.h"
 #include "player.h"
+#include "building.h"
 using namespace std;
 
 
 const int height = 56;
 const int width = 101;
+const int maxPlayer = 8;
 
 TextDisplay::TextDisplay(){
   /* --- set up the board --- */
@@ -50,84 +52,75 @@ void TextDisplay::display() {
   }
 }
 
-void TextDisplay::notify(Player *p) {
-  int pos = p->getPos();
 
+void TextDisplay::addPlayer(Player *p) {
 
 }
 
+
+void TextDisplay::notify(Player *p) {
+  /* --- notify the player --- */
+  int pos_h;
+  int pos_w;
+
+  int pos = p->getPos();
+
+  if (pos < 10) {
+    pos_h = height - (pos * 5 + 1);
+    pos_w = 92;
+  } else if (pos < 20) {
+    pos_h = 5;
+    pos_w = width - (pos * 9 + 81);
+  } else if (pos < 30) {
+    pos_h = index * 5 - 95;
+    pos_w = 2;
+  } else {
+    pos_h = 55;
+    pos_w = index * 9 - 268;
+  }
+
+  for (int i = 0; i < maxPlayer; ++i) {
+    char c = theDisplay[pos_h - 1][pos_w - 1 + i];
+    if (c == ' ') {
+      theDisplay[pos_h - 1][pos_w - 1 + i] = p->symbol;
+      break;
+    }
+  }
+}
+
 void TextDisplay::notify(Square *s) {
+  /* --- notify the square --- */
   int info_h;
   int info_w;
 
   int index = s->getIndex();
 
-  switch (index) {
-    case 1:
-      info_h = 47; info_w = 92;
-      break;
-    case 3:
-      info_h = 37; info_w = 92;
-      break;
-    case 6:
-      info_h = 22; info_w = 92;
-      break;
-    case 8:
-      info_h = 12; info_w = 92;
-      break;
-    case 9:
-      info_h = 7; info_w = 92;
-      break;
-    case 11:
-      info_h = 2; info_w = 83;
-      break;
-    case 13:
-      info_h = 2; info_w = 65;
-      break;
-    case 14:
-      info_h = 2; info_w = 56;
-      break;
-    case 16:
-      info_h = 2; info_w = 38;
-      break;
-    case 17:
-      info_h = 2; info_w = 29;
-      break;
-    case 19:
-      info_h = 2; info_w = 11;
-      break;
-    case 21:
-      info_h = 7; info_w = 2;
-      break;
-    case 22:
-      info_h = 12; info_w = 2;
-      break;
-    case 24: 
-      info_h = 22; info_w = 2;
-      break;
-    case 26:
-      info_h = 32; info_w = 2;
-      break;
-    case 27:
-      info_h = 37; info_w = 2;
-      break;
-    case 29:
-      info_h = 47; info_w = 2;
-      break;
-    case 31:
-      info_h = 52; info_w = 11;
-      break;
-    case 32:
-      info_h = 52; info_w = 20;
-      break;
-    case 34:
-      info_h = 52; info_w = 38;
-      break;
-    case 37:
-      info_h = 52; info_w = 65;
-      break;
-    case 39:
-      info_h = 52; info_w = 83;
-      break;
+  if (index < 10) {
+    info_h = height - (index * 5 + 4);
+    info_w = 92;
+  } else if (index < 20) {
+    info_h = 2;
+    info_w = width - (index * 9 + 81);
+  } else if (index < 30) {
+    info_h = index * 5 - 98;
+    info_w = 2;
+  } else {
+    info_h = 52;
+    info_w = index * 9 - 268;
+  }
+
+  Player *owner = s->getOwner();
+  int level = s->getImpLevel();
+
+  if (level != 0) {
+    theDisplay[info_h - 1][info_w - 1] = 'O';
+    theDisplay[info_h - 1][info_w] = ':';
+    theDisplay[info_h - 1][info_w + 1] = level;
+  }
+
+  if (owner != nullptr) {
+    theDisplay[info_h - 1][info_w + 4] = 'L';
+    theDisplay[info_h - 1][info_w + 5] = ':';
+    theDisplay[info_h - 1][info_w + 6] = owner->symbol;
   }
 }

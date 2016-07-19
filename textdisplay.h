@@ -12,8 +12,9 @@ class TextDisplay {
 
   void display();
 
+  void addPlayer(Player *p);
   void notify(Player *p);
-  //void notify(Square *s);
+  void notify(Square *s);
 };
 
 #endif
