@@ -65,7 +65,7 @@ void setPlayerDisplayPos(int &pos_h, int &pos_w, int pos) {
   } else if (pos < 30) {
     pos_h = (pos * 5) - 95;
     pos_w = 2;
-  } else {
+  } else if (pos < 40) {
     pos_h = 55;
     pos_w = (pos * 9) - 268;
   }
@@ -82,7 +82,7 @@ void setSquareDisplayInfo(int &info_h, int &info_w, int index) {
   } else if (index < 30) {
     info_h = (index * 5) - 98;
     info_w = 2;
-  } else {
+  } else if (index < 40) {
     info_h = 52;
     info_w = (index * 9) - 268;
   }
@@ -125,10 +125,10 @@ void TextDisplay::notify(Player *p, int oldPos) {
 
   char symbol = p->getSymbol();
 
-  setPlayerDisplayPos(&pos_h, &pos_w, oldPos);
+  setPlayerDisplayPos(pos_h, pos_w, oldPos);
   replaceChar(pos_h, pos_w, theDisplay, symbol, ' ');
 
-  setPlayerDisplayPos(&pos_h, &pos_w, pos);
+  setPlayerDisplayPos(pos_h, pos_w, pos);
   replaceChar(pos_h, pos_w, theDisplay, ' ', symbol);
 }
 
