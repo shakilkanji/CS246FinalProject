@@ -35,4 +35,6 @@ class Academic : public Building {
   	int getValue() const override;	// during bankruptcy calculation, divide by 2
 };
 
+std::ostream& operator<<(std::ostream& out, const Academic& a);
+
 #endif

@@ -31,4 +31,6 @@ class Building : public Square {
   	void notify(Player *landedPlayer) override;
 };
 
+std::ostream& operator<<(std::ostream& out, const Building& b);
+
 #endif

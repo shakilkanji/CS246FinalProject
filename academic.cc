@@ -4,6 +4,7 @@ using namespace std;
 Academic::Academic(Game *game, int index, string name, int cost, int impCost, string monoBlock, 
 	int baseFee, int oneImpFee, int twoImpFee, int threeImpFee, int fourImpFee, int fiveImpFee) :
 	Building(game, index, name, cost), impCost(impCost), monoBlock(monoBlock) {
+		impLevel = 0;
 		fees[0] = baseFee;
 		fees[1] = oneImpFee;
 		fees[2] = twoImpFee;
@@ -57,4 +58,12 @@ int Academic::getValue() const {
 	if (mortgaged) return 0;
 	int impValue = impLevel * impCost;
 	return impValue + cost;
+}
+
+ostream& operator<<(ostream& out, const Academic& a) {
+	Player *owner = a.getOwner();
+	string ownerName = "Unowned";
+	if (owner) ownerName = owner->getName();
+	out << a.getName() << " " << ownerName << " " << a.getImpLevel() << endl;
+	return out;
 }
