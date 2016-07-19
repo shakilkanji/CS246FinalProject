@@ -2,7 +2,7 @@
 #define _TEXTDISPLAY_H_
 
 class Player;
-class Square;
+class Building;
 
 class TextDisplay {
 
@@ -15,8 +15,8 @@ class TextDisplay {
 
   void display();
 
-  void notify(Player *p);
-  void notify(Square *s);
+  void notify(Player *p, int oldPos);
+  void notify(Building *b);
 };
 
 #endif

@@ -55,13 +55,7 @@ void TextDisplay::display() {
 }
 
 
-void TextDisplay::notify(Player *p) {
-  /* --- notify the player --- */
-  int pos_h;
-  int pos_w;
-
-  int pos = p->getPos();
-
+void setPlayerDisplayPos(int &pos_h, int &pos_w, int pos) {
   if (pos < 10) {
     pos_h = height - (pos * 5 + 1);
     pos_w = 92;
@@ -75,23 +69,10 @@ void TextDisplay::notify(Player *p) {
     pos_h = 55;
     pos_w = (pos * 9) - 268;
   }
-
-  for (int i = 0; i < maxPlayer; ++i) {
-    char c = theDisplay[pos_h - 1][pos_w - 1 + i];
-    if (c == ' ') {
-      theDisplay[pos_h - 1][pos_w - 1 + i] = p->getSymbol();
-      break;
-    }
-  }
 }
 
-void TextDisplay::notify(Square *s) {
-  /* --- notify the square --- */
-  int info_h;
-  int info_w;
 
-  int index = s->getIndex();
-
+void setSquareDisplayInfo(int &info_h, int &info_w, int index) {
   if (index < 10) {
     info_h = height - (index * 5 + 4);
     info_w = 92;
@@ -105,22 +86,65 @@ void TextDisplay::notify(Square *s) {
     info_h = 52;
     info_w = (index * 9) - 268;
   }
+  if (index == 5 || index == 12 || index == 15 || index == 25 || index == 28 || index == 35) {
+    ++info_h;
+  }
+}
 
-  Building *building = dynamic_cast<Building *>(s);
-  Player *owner = building->getOwner();
 
-  Academic *academic = dynamic_cast<Academic *>(s);
-  int level = academic->getImpLevel();
+void TextDisplay::notify(Player *p, int oldPos) {
+  /* --- notify the player --- */
+  int pos_h;
+  int pos_w;
+  int pos = p->getPos();
 
-  if (level != 0) {
-    theDisplay[info_h - 1][info_w - 1] = 'O';
-    theDisplay[info_h - 1][info_w] = ':';
-    theDisplay[info_h - 1][info_w + 1] = level;
+  char symbol = p->getSymbol();
+
+  setPlayerDisplayPos(pos_h, pos_w, oldPos);
+
+  for (int i = 0; i < maxPlayer; ++i) {
+    char c = theDisplay[pos_h - 1][pos_w - 1 + i];
+    if (c == symbol) {
+      theDisplay[pos_h - 1][pos_w - 1 + i] = ' ';
+      break;
+    }
   }
 
+  setPlayerDisplayPos(pos_h, pos_w, pos);
+
+  for (int i = 0; i < maxPlayer; ++i) {
+    char c = theDisplay[pos_h - 1][pos_w - 1 + i];
+    if (c == ' ') {
+      theDisplay[pos_h - 1][pos_w - 1 + i] = symbol;
+      break;
+    }
+  }
+}
+
+
+void TextDisplay::notify(Building *b) {
+  /* --- notify the square --- */
+  int info_h;
+  int info_w;
+  int index = s->getIndex();
+
+  setSquareDisplayInfo(info_h, info_w, index);
+
+  Player *owner = building->getOwner();
+
   if (owner != nullptr) {
+    theDisplay[info_h - 1][info_w - 1] = 'O';
+    theDisplay[info_h - 1][info_w] = ':';
+    theDisplay[info_h - 1][info_w + 1] = owner->getSymbol();
+  }
+
+  int level = 0;
+  Academic *academic = dynamic_cast<Academic *>(b);
+  level = academic->getImpLevel();
+
+  if (level != 0) {
     theDisplay[info_h - 1][info_w + 4] = 'L';
     theDisplay[info_h - 1][info_w + 5] = ':';
-    theDisplay[info_h - 1][info_w + 6] = owner->getSymbol();
+    theDisplay[info_h - 1][info_w + 6] = level;
   }
 }
