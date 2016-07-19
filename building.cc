@@ -25,7 +25,7 @@ void Building::setMortgaged(bool isMortgaged) {
 }
 
 int Building::getValue() const {
-	if (getMortgaged()) return cost/2;
+	if (mortgaged) return 0;
 	return cost;
 }
 
