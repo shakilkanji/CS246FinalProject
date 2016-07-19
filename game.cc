@@ -259,6 +259,7 @@ void Game::run(){
 }
 
 void Game::next(){
+  if (test) cout << "Start next()" << endl;
   for (int i = 0 ; i < numplayer; i++) {
     if(player[i] != nullptr){
       int pos = player[i]->getPos();
@@ -285,7 +286,7 @@ void Game::next(){
     
     rolled = false;
     roll_time = 0;
-   
+  if (test) cout << "End next()" << endl; 
 }
 
 
@@ -310,8 +311,11 @@ void Game::askToBuy(Building *building, Player *buyer ) {
     if(temp_askbuy == "yes"){
         cout << "You have purchesd " << building->getName() << endl;
         building->setOwner(buyer);
+        cout << "debug 1" << endl;
         buyer->updateBalance( -1 * building->getCost() );
+        cout << "debug 2" << endl;
         td->notify(building);
+        cout << "debug 3" << endl;
         break;
     }
     else if (temp_askbuy == "no"){
@@ -433,14 +437,29 @@ void Game::settest(){
 }
 
 
+// void Game::displayAssets(Player *player){
+//     for (int i = 0; i < 40; ++i) {
+//         Academic *ap = dynamic_cast<Academic *>(gameboard[i]);
+//         if (!ap) {
+//             Building *ap = dynamic_cast<Building *>(gameboard[i]);
+//         }
+//         if (ap) {
+//             cout << *ap;
+//         }
+//     }
+// }
+
 void Game::displayAssets(Player *player){
     for (int i = 0; i < 40; ++i) {
         Academic *ap = dynamic_cast<Academic *>(gameboard[i]);
-        if (!ap) {
-            Building *ap = dynamic_cast<Building *>(gameboard[i]);
-        }
         if (ap) {
             cout << *ap;
+        }
+        else {
+            Building *bp = dynamic_cast<Building *>(gameboard[i]);
+            if (bp) {
+              cout << *bp;
+            }
         }
     }
 }
