@@ -176,7 +176,7 @@ void Game::run(){
      else{
      int dice_result = diceroll();
      roll_time += 1;
-     
+     move(dice_result);
      if(dicepair() == true){
       //if the player rolls 3 times, he'll be sent to DC tims line and cannot move
       if(roll_time == 3){
@@ -301,11 +301,13 @@ void Game::asktobuy(Building *building, Player *buyer ) {
    cout << "[yes/no/assets]" << endl;
    
    string temp_askbuy;
-   while( cin >> temp_askbuy){
+   while( cin >> temp_askbuy ){
     if(temp_askbuy == "yes"){
         cout << "You have purchesd " << building->getName() << endl;
         building->setOwner(buyer);
         buyer->updateBalance( -1 * building->getCost() );
+
+
         //notify textdisplay 
         break;
     }
@@ -403,6 +405,25 @@ bool Game::dicepair(){
     }
     
 }
+
+void Game::move(int move_blocks){
+ int old_pos = player[currentplayer]->getPos();
+ int current_pos =  player[currentplayer]->getPos() + move_blocks;
+
+ if(current_pos > 39){
+  current_pos -= 40;
+  cout << "You pass OSAP and get 200$!" << endl;
+  player[currentplayer]->updateBalance(200);
+ }
+ 
+ player[currentplayer]->setPos(current_pos);
+ td->notify(player[currentplayer],old_pos);
+ td->display();
+ gameboard[current_pos]->notify(player[currentplayer]);
+}
+
+
+
 
 
 void Game::settest(){

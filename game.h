@@ -51,6 +51,7 @@ class Game {
    bool dicepair();
    int getsumdice();
    int diceroll(); 
+   void move(int move_blocks);
    void forceBankruptcy(Player *landedPlayer, int fee);   // Player owes bank more than their current balance
 
    void buyImprovement(Academic *academic, Player *player);
