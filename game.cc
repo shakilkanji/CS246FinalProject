@@ -157,7 +157,8 @@ void Game::run(){
 
     else if( command == "trade"){
      cout << "you will do a trade" << endl;
- 
+     string temp_trader;
+
     }
     
     else if( command == "improve") {
@@ -240,13 +241,66 @@ void Game::next(){
 // }
 
 
+void asktobuy(Building *building, Player *buyer ) {
+   
+   if(buyer->getBalance() < building->getCost()){
+    cout << "Sorry you don't have enough money to buy this building. " << "You current balance is" << buyer->getBalance();
+    cout << "The building will spend " << building->getCost() << endl;
+    // cout << "Auctions will begin" << endl;
+    auction();
+   }
+   cout << "Do you want to buy " << building->getName() << "which will spend you " << building->getCost() << "$?" <<endl;
+   cour << "[yes/no/assets]" << endl;
+   
+   string temp_askbuy;
+   while( cin >> temp_askbuy){
+    if(temp_askbuy == "yes"){
+        cout << "You have purchesd " << building->getName() << endl;
+        building->setOwner(buyer);
+        buyer->updateBalance( -1 * building->getCost() );
+        //notify textdisplay 
+        break;
+    }
+    else if (temp_askbuy == "no"){
+        cout << "Auctions will begin" << endl;
+        break;
+    }
+    else if( temp_askbuy == "assets" ){
+        assets();
+        auction();
+    }
+    else{
+        cout << "invaild command, please input yes/no/assets. " <<endl;
+    }
+   }
+}
+
+void Game::trade() {
+    
+
+}
 
 
 
+//get index of player
+int Game::getplayer(string name){
+   for(int i = 0; i < numplayer; i ++){
+    if(player[i]->getName() == name){
+        return i;
+    }  
+   }
+   return -1;
+}
 
-
-
-
+//get index of building
+int Game::getbuilding(string name){
+   for(int i = 0; i < numplayer; i ++){
+    if(gameboard[i]->getName() == name){
+        return i;
+    }  
+   }
+   return -1;
+}
 
 
 

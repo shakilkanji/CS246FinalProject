@@ -11,7 +11,7 @@ class Game {
   Player *player[8];
   int numplayer;
   int currentplayer; 
-  // Square *gameboard[40];
+  Square *gameboard[40];
   // Dice *dice;
   int rimcup;
   // BoardDisplay * display;
@@ -22,6 +22,7 @@ class Game {
    bool test;
    bool rolled;
    int roll_time;
+   
 
   public:
   	Game();
@@ -34,7 +35,7 @@ class Game {
    bool dicepair();
    int getsumdice();
    int diceroll();
-   
+   int getplayer(stds::tring name);
 };
 
 /***************
