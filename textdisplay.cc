@@ -57,34 +57,34 @@ void TextDisplay::display() {
 
 void setPlayerDisplayPos(int &pos_h, int &pos_w, int pos) {
   if (pos < 10) {
-    pos_h = height - (pos * 5 + 1);
-    pos_w = 92;
-  } else if (pos < 20) {
-    pos_h = 5;
-    pos_w = width - (pos * 9 + 81);
-  } else if (pos < 30) {
-    pos_h = (pos * 5) - 95;
-    pos_w = 2;
-  } else if (pos < 40) {
     pos_h = 55;
-    pos_w = (pos * 9) - 268;
+    pos_w = width - (pos * 9) - 9;
+  } else if (pos < 20) {
+    pos_h = height - ((pos - 10) * 5) - 1;
+    pos_w = 2;
+  } else if (pos < 30) {
+    pos_h = 5;
+    pos_w = ((pos - 20) * 9) + 2;
+  } else if (pos < 40) {
+    pos_h = ((pos - 30) * 5) + 5;
+    pos_w = 92;
   }
 }
 
 
 void setSquareDisplayInfo(int &info_h, int &info_w, int index) {
   if (index < 10) {
-    info_h = height - (index * 5 + 4);
-    info_w = 92;
-  } else if (index < 20) {
-    info_h = 2;
-    info_w = width - (index * 9 + 81);
-  } else if (index < 30) {
-    info_h = (index * 5) - 98;
-    info_w = 2;
-  } else if (index < 40) {
     info_h = 52;
-    info_w = (index * 9) - 268;
+    info_w = width - (pos * 9) - 9;
+  } else if (index < 20) {
+    info_h = height - ((pos - 10) * 5) - 4;
+    info_w = 2;
+  } else if (index < 30) {
+    info_h = 2;
+    info_w = ((pos - 20) * 9) + 2;
+  } else if (index < 40) {
+    info_h = ((pos - 30) * 5) + 1;
+    info_w = 92;
   }
 
   if (index == 5 || index == 12 || index == 15 || index == 25 || index == 28 || index == 35) {
