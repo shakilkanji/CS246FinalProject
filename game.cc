@@ -70,8 +70,8 @@ void Game::normalinit(){
 
         //initial player's character 
         cout << "Hello! " << playername[current] << ", please choose an character whcih represents you." << endl;
-        cout << "You can choose from G(Goose) / B(GRT BUS) / D(Tim Hortons Doughnut)  " <<endl;
-        cout << "P(Professor) / S(Student) / $ (Money) / L (Laptop) / T (Pink tie) " << endl;
+        cout << "You can choose from G(Goose) / B (GRT BUS) / D (Tim Hortons Doughnut)  " <<endl;
+        cout << "P (Professor) / S (Student) / $ (Money) / L (Laptop) / T (Pink tie) " << endl;
 
         char temp_symbol;
         
@@ -157,7 +157,7 @@ void Game::run(){
 
     else if( command == "trade"){
      cout << "you will do a trade" << endl;
-     string temp_trader;
+     
 
     }
     
@@ -276,12 +276,41 @@ void asktobuy(Building *building, Player *buyer ) {
    }
 }
 
-void Game::trade() {
+
+// void Game::trade() {
+//     string temp_trader;
+//     string give;
+//     string receive;
+//     int givenumber = 0;
+//     int receivenumber = 0;
+//     bool givemoney = false;
+//     bool receivemoney = false;
+
+//     cin >> temp_trader;
+//     cin >> give;
+//     cin >> receive;
     
+//     istringstream give_s(give)
+//     if(give_s >> givenumber){
+//      givemoney = true;    
+//     }
+    
+//     istringstream receive_s(receive)
+//     if(receive_s >> receivenumber){
+//      receivemoney = true;    
+//     }
 
-}
+//     int trader_index = getplayer(string temp_trader);
+//     if
 
+// }
 
+// bool Game::checkmonoimprov(string building){
+//     for( int i = 0 ; i < 40 ; i++){
+//       if(getPropertyIndex( gameboard[i]->getName() ) != -1 )||()
+//     }
+
+// }
 
 //get index of player
 int Game::getplayer(string name){
@@ -294,14 +323,14 @@ int Game::getplayer(string name){
 }
 
 //get index of building
-int Game::getbuilding(string name){
-   for(int i = 0; i < numplayer; i ++){
-    if(gameboard[i]->getName() == name){
-        return i;
-    }  
-   }
-   return -1;
-}
+// int Game::getbuilding(string name){
+//    for(int i = 0; i < numplayer; i ++){
+//     if(gameboard[i]->getName() == name){
+//         return i;
+//     }  
+//    }
+//    return -1;
+// }
 
 
 
@@ -351,6 +380,7 @@ int Game::diceroll(){
     
     return firstdeice+seconddice;
 }
+
 
 void Game::forceBankruptcy(Player *landedPlayer, int fee) {
     int playerBalance = landedPlayer->getBalance();
