@@ -151,7 +151,7 @@ void TextDisplay::notify(Building *b) {
 
   setSquareDisplayInfo(info_h, info_w, index);
 
-  Player *owner = building->getOwner();
+  Player *owner = b->getOwner();
 
   if (owner != nullptr) {
     theDisplay[info_h - 1][info_w - 1] = 'O';
