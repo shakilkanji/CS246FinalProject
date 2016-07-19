@@ -3,6 +3,8 @@
 #include <string>
 #include <iostream>
 #include "player.h"
+#include "square.h"
+#include "building.h"
 
 class Game {
  // std::vector<std::vector<Player>> Players;
@@ -11,7 +13,7 @@ class Game {
   Player *player[8];
   int numplayer;
   int currentplayer; 
-  // Square *gameboard[40];
+  Square *gameboard[40];
   // Dice *dice;
   int rimcup;
   // BoardDisplay * display;
@@ -22,6 +24,9 @@ class Game {
    bool test;
    bool rolled;
    int roll_time;
+   bool isWon;
+
+   int getPropertyIndex(string property);
 
   public:
   	Game();
@@ -35,6 +40,7 @@ class Game {
    int getsumdice();
    int diceroll();
    
+   void forceBankruptcy(Player *landedPlayer, int fee);   // Player owes bank more than their current balance
 };
 
 /***************

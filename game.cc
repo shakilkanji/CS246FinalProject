@@ -115,7 +115,7 @@ void Game::normalinit(){
 void Game::run(){
 	string command;
     
-    while(true){
+    while(!isWon){
     
 
     next();
@@ -210,7 +210,8 @@ void Game::run(){
         return;
     }
     }
-    }   
+    }
+    cout << "Somebody has won!" << endl;
 }
 
 void Game::next(){
@@ -295,4 +296,55 @@ int Game::diceroll(){
     cin >> n;
     
     return firstdeice+seconddice;
+}
+
+void Game::forceBankruptcy(Player *landedPlayer, int fee) {
+    int playerBalance = landedPlayer->getBalance();
+    cout << "You owe the Bank " << fee << " dollars. " ;
+    cout << "You only have " << playerBalance << " dollars. " << endl;
+    int bankruptcyValue = 0;
+    for (int i = 0; i < 40; ++i) {
+        Building *bp = dynamic_cast<Building *>(gameboard[i]);
+        if (bp) {   // bp is null if gameboard[i] is not building
+            if (bp->getOwner() == landedPlayer) {
+                bankruptcyValue += bp->getValue() / 2;
+            }
+        }
+    }
+    while (fee > landedPlayer->getBalance()) {
+        if (bankruptcyValue < fee) {
+            cout<<"improve <property> buy/sell: attempts to buy or sell an improvement for property"<<endl;
+            cout<<"mortgage <property>: attempts to mortgage property."<<endl;
+            cout<<"bankrupt: player declares bankruptcy."<<endl;
+        } else {
+            cout<<"improve <property> buy/sell: attempts to buy or sell an improvement for property"<<endl;
+            cout<<"mortgage <property>: attempts to mortgage property."<<endl;
+        }
+        string command;
+        cin >> command;
+        if (string == "improve") {
+            string property;
+            cin >> property;
+            int propertyIndex = getPropertyIndex(property);
+            if (propertyIndex >= 0) {
+                string buySell;
+                cin >> buySell;
+                if (buySell ==)
+            }
+        }
+    }
+
+}
+
+int Game::getPropertyIndex(string property) {
+    for (int i = 0; i < 40; ++i) {
+        Building *bp = dynamic_cast<Building *>(gameboard[i]);
+        if (bp) {   // bp is null if gameboard[i] is not building
+            if (bp->getName() == property) {
+                return bp->getIndex();
+            }
+        }
+    }
+    cout << "Not a valid property." << endl;
+    return -1;
 }
