@@ -5,6 +5,9 @@
 #include "player.h"
 #include "square.h"
 #include "building.h"
+#include "academic.h"
+#include "gym.h"
+#include "residence.h"
 
 class Game {
  // std::vector<std::vector<Player>> Players;

@@ -15,7 +15,46 @@ firstdeice(0),seconddice(0){
     for(int i = 0 ; i < 8 ; i++){
         player[i] = nullptr;
     }
-
+    gameboard[0] = new Square(this, 0, "COLLECT OSAP");
+    gameboard[1] = new Academic(this, 1, "AL", 40, 50, "Arts1", 2, 10, 30, 90, 160, 250);
+    gameboard[2] = new Square(this, 2, "SLC");
+    gameboard[3] = new Academic(this, 3, "ML", 40, 50, "Arts1", 4, 20, 60, 180, 320, 450);
+    gameboard[4] = new Square(this, 4, "TUITION");
+    gameboard[5] = new Residence(this, 5, "MKV", 200);
+    gameboard[6] = new Academic(this, 6, "ECH", 100, 50, "Arts2", 6, 30, 90, 270, 400, 550);
+    gameboard[7] = new Square(this, 7, "NEEDLES HALL");
+    gameboard[8] = new Academic(this, 8, "PAS", 100, 50, "Arts2", 6, 30, 90, 270, 400, 550);
+    gameboard[9] = new Academic(this, 9, "HH", 120, 50, "Arts2", 8, 40, 100, 300, 450, 600);
+    gameboard[10] = new Square(this, 10, "DC Tims Line");
+    gameboard[11] = new Academic(this, 11, "RCH", 140, 100, "Eng", 10, 50, 150, 450, 625, 750);
+    gameboard[12] = new Gym(this, 12, "PAC", 150);
+    gameboard[13] = new Academic(this, 13, "DWE", 140, 100, "Eng", 10, 50, 150, 450, 625, 750);
+    gameboard[14] = new Academic(this, 14, "CPH", 160, 100, "Eng", 12, 60, 180, 500, 700, 900);
+    gameboard[15] = new Residence(this, 15, "UWP", 200);
+    gameboard[16] = new Academic(this, 16, "LHI", 180, 100, "Health", 14, 70, 200, 550, 750, 950);
+    gameboard[17] = new Square(this, 17, "SLC");
+    gameboard[18] = new Academic(this, 18, "BMH", 180, 100, "Health", 14, 70, 200, 550, 750, 950);
+    gameboard[19] = new Academic(this, 19, "OPT", 200, 100, "Health", 16, 80, 220, 600, 800, 1000);
+    gameboard[20] = new Square(this, 20, "Goose Nesting");
+    gameboard[21] = new Academic(this, 21, "EV1", 220, 150, "Env", 18, 90, 250, 700, 875, 1050);
+    gameboard[22] = new Square(this, 22, "NEEDLES HALL");
+    gameboard[23] = new Academic(this, 23, "EV2", 220, 150, "Env", 18, 90, 250, 700, 875, 1050);
+    gameboard[24] = new Academic(this, 24, "EV3", 240, 150, "Env", 20, 100, 300, 750, 925, 1100);
+    gameboard[25] = new Residence(this, 25, "UWP", 200);
+    gameboard[26] = new Academic(this, 26, "PHYS", 260, 150, "Sci1", 22, 110, 330, 800, 975, 1150);
+    gameboard[27] = new Academic(this, 27, "B1", 260, 150, "Sci1", 22, 110, 330, 800, 975, 1150);
+    gameboard[28] = new Gym(this, 28, "CIF", 150);
+    gameboard[29] = new Academic(this, 29, "B2", 280, 150, "Sci1", 24, 120, 360, 850, 1025, 1200);
+    gameboard[30] = new Square(this, 30, "GO TO TIMS");
+    gameboard[31] = new Academic(this, 31, "EIT", 300, 200, "Sci2", 26, 130, 390, 900, 1100, 1275);
+    gameboard[32] = new Academic(this, 32, "ESC", 300, 200, "Sci2", 26, 130, 390, 900, 1100, 1275);
+    gameboard[33] = new Square(this, 33, "SLC");
+    gameboard[34] = new Academic(this, 34, "C2", 320, 200, "Sci2", 28, 150, 450, 1000, 1200, 1400);
+    gameboard[35] = new Residence(this, 35, "REV", 200);
+    gameboard[36] = new Square(this, 36, "NEEDLES HALL");
+    gameboard[37] = new Academic(this, 37, "MC", 350, 200, "Math", 35, 175, 500, 1100, 1300, 1500);
+    gameboard[38] = new Square(this, 38, "COOP FEE");
+    gameboard[39] = new Academic(this, 39, "DC", 400, 200, "Math", 50, 200, 600, 1400, 1700, 2000);
 }
 
 Game::~Game(){
@@ -376,14 +415,13 @@ void Game::forceBankruptcy(Player *landedPlayer, int fee) {
         }
         string command;
         cin >> command;
-        if (string == "improve") {
+        if (command == "improve") {
             string property;
             cin >> property;
             int propertyIndex = getPropertyIndex(property);
             if (propertyIndex >= 0) {
                 string buySell;
                 cin >> buySell;
-                if (buySell ==)
             }
         }
     }
