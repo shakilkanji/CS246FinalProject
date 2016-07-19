@@ -53,11 +53,6 @@ void TextDisplay::display() {
 }
 
 
-void TextDisplay::addPlayer(Player *p) {
-
-}
-
-
 void TextDisplay::notify(Player *p) {
   /* --- notify the player --- */
   int pos_h;
