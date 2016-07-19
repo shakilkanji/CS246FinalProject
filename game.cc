@@ -410,6 +410,15 @@ void Game::settest(){
 }
 
 
+void Game::assets(){
+
+}
+
+void Game::auction(){
+  
+}
+
+
 
 int Game::diceroll(){
     string n;
