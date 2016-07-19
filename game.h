@@ -8,6 +8,7 @@
 #include "academic.h"
 #include "gym.h"
 #include "residence.h"
+#include "textdisplay.h"
 
 class Game {
  // std::vector<std::vector<Player>> Players;
@@ -21,13 +22,15 @@ class Game {
   int rimcup;
   // BoardDisplay * display;
   int sumofdice;
-//dice part
+  //dice part
    int firstdeice;
    int seconddice;
    bool test;
    bool rolled;
    int roll_time;
    bool isWon;
+   // TextDisplay
+   TextDisplay *td;
 
    int getPropertyIndex(std::string property);
    int getplayer(std::string name);
