@@ -67,17 +67,17 @@ void TextDisplay::notify(Player *p) {
     pos_h = 5;
     pos_w = width - (pos * 9 + 81);
   } else if (pos < 30) {
-    pos_h = index * 5 - 95;
+    pos_h = (pos * 5) - 95;
     pos_w = 2;
   } else {
     pos_h = 55;
-    pos_w = index * 9 - 268;
+    pos_w = (pos * 9) - 268;
   }
 
   for (int i = 0; i < maxPlayer; ++i) {
     char c = theDisplay[pos_h - 1][pos_w - 1 + i];
     if (c == ' ') {
-      theDisplay[pos_h - 1][pos_w - 1 + i] = p->symbol;
+      theDisplay[pos_h - 1][pos_w - 1 + i] = p->getSymbol();
       break;
     }
   }
@@ -97,11 +97,11 @@ void TextDisplay::notify(Square *s) {
     info_h = 2;
     info_w = width - (index * 9 + 81);
   } else if (index < 30) {
-    info_h = index * 5 - 98;
+    info_h = (index * 5) - 98;
     info_w = 2;
   } else {
     info_h = 52;
-    info_w = index * 9 - 268;
+    info_w = (index * 9) - 268;
   }
 
   Player *owner = s->getOwner();
@@ -116,6 +116,6 @@ void TextDisplay::notify(Square *s) {
   if (owner != nullptr) {
     theDisplay[info_h - 1][info_w + 4] = 'L';
     theDisplay[info_h - 1][info_w + 5] = ':';
-    theDisplay[info_h - 1][info_w + 6] = owner->symbol;
+    theDisplay[info_h - 1][info_w + 6] = owner->getSymbol();
   }
 }

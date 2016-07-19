@@ -2,8 +2,9 @@
 #define __SQUARE_H__
 #include <iostream>
 #include <string>
-#include "game.h"
 #include "player.h"
+
+class Game;
 
 class Square {
   protected:
@@ -18,6 +19,8 @@ class Square {
   	int getIndex() const;
   	std::string getName() const;
 
+    virtual Player *getOwner() const;
+    virtual int getImpLevel() const;
   	virtual void notify(Player *landedPlayer);
 };
 
