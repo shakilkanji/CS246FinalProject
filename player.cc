@@ -4,7 +4,7 @@
 
 using namespace std;
 Player::Player(char symbol, string playerName, Game *g):
-  symbol{symbol},playerName{playerName},numGym{numGym}, numRes{numRes}, balance{balance}, position{position}, DCTurn{DCTurn}, g{g} {}
+  symbol{symbol},playerName{playerName},numGym{numGym}, numRes{numRes}, balance{1500}, position{0}, DCTurn{DCTurn}, g{g} {}
 
 Player::~Player() { 
  }

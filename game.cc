@@ -294,10 +294,10 @@ void Game::next(){
 // }
 
 
-void Game::asktobuy(Building *building, Player *buyer ) {
+void Game::askToBuy(Building *building, Player *buyer ) {
    
    if(buyer->getBalance() < building->getCost()){
-    cout << "Sorry you don't have enough money to buy this building. " << "You current balance is" << buyer->getBalance();
+    cout << "Sorry you don't have enough money to buy this building. " << "You current balance is " << buyer->getBalance();
     cout << "The building will spend " << building->getCost() << endl;
     // cout << "Auctions will begin" << endl;
     auctionProperty(building);

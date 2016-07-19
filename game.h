@@ -44,7 +44,7 @@ class Game {
    void normalinit();
    void next();
    void settest();
-   void asktobuy(Building *building, Player *buyer);
+   void askToBuy(Building *building, Player *buyer);
    void auctionProperty(Building *building);
    void displayAssets(Player *player);
    void trade();

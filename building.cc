@@ -1,4 +1,5 @@
 #include "building.h"
+#include "game.h"
 using namespace std;
 
 Building::Building(Game *game, int index, string name, int cost) : Square(game, index, name), cost(cost) {}
@@ -34,7 +35,7 @@ int Building::getCost() const {
 }
 
 void Building::notify(Player *landedPlayer) {
-	if (owner == nullptr) ;//game->askToBuy();
+	if (owner == nullptr) game->askToBuy(this, landedPlayer);
 	else if (owner == landedPlayer) cout << "You own this property." << endl;
 	else {
 		int fees = getFees();
