@@ -260,8 +260,13 @@ void Game::run(){
 
 void Game::next(){
   for (int i = 0 ; i < numplayer; i++) {
-    td->notify(player[i]);
+    if(player[i] != nullptr){
+      int pos = player[i]->getPos();
+    td->notify(player[i],pos);
+    }   
   }
+
+
   td->display();
 
     cout << "Hello! it is " << player[currentplayer]->getName() << "'s turn!" << endl;
@@ -306,9 +311,7 @@ void Game::asktobuy(Building *building, Player *buyer ) {
         cout << "You have purchesd " << building->getName() << endl;
         building->setOwner(buyer);
         buyer->updateBalance( -1 * building->getCost() );
-
-
-        //notify textdisplay 
+        td->notify(building);
         break;
     }
     else if (temp_askbuy == "no"){
