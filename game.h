@@ -43,6 +43,7 @@ class Game {
    void asktobuy(Building *building, Player *buyer);
    void auction();
    void assets();
+   bool checkmonoimprov(std::string building);
    bool dicepair();
    int getsumdice();
    int diceroll(); 

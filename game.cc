@@ -344,12 +344,30 @@ void Game::asktobuy(Building *building, Player *buyer ) {
 
 // }
 
-// bool Game::checkmonoimprov(string building){
-//     for( int i = 0 ; i < 40 ; i++){
-//       if(getPropertyIndex( gameboard[i]->getName() ) != -1 )||()
-//     }
+bool Game::checkmonoimprov(string building){
+    int current_index = getPropertyIndex(building);
+    Building *current_pointerbuilding = dynamic_cast<Building *>(gameboard[current_index]);
+    Academic *current_pointeracademic = dynamic_cast<Academic *>(current_pointerbuilding);
+    for( int i = 0 ; i < 40 ; i++) {
+       int index =  getPropertyIndex( gameboard[i]->getName());
+      if ( ( index  != -1 )||( index != 12 )||( index != 28 )||( index != 28 )||
+        ( index != 5 )||( index != 15 )||( index != 25 )||( index != 31 ) ) {
+       Building *pointerbuilding = dynamic_cast<Building *>(gameboard[index]);
+       Academic *pointeracademic = dynamic_cast<Academic *>(pointerbuilding);
+       if(pointeracademic->getMonoBlock() == current_pointeracademic->getMonoBlock()) {
+         if(pointeracademic->getImpLevel() != 0 ){
+            return true;
+         }
+       }
+   }
 
-// }
+}
+}
+      
+  
+    
+
+
 
 //get index of player
 int Game::getplayer(string name){
@@ -360,18 +378,6 @@ int Game::getplayer(string name){
    }
    return -1;
 }
-
-//get index of building
-// int Game::getbuilding(string name){
-//    for(int i = 0; i < numplayer; i ++){
-//     if(gameboard[i]->getName() == name){
-//         return i;
-//     }  
-//    }
-//    return -1;
-// }
-
-
 
 
 int Game::getsumdice(){
