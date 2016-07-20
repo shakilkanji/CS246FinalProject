@@ -100,7 +100,7 @@ void setSquareDisplayInfo(int &info_h, int &info_w, int index) {
   }
 
   for (int i = 0; i < numNonBuild; ++i) {
-    if (index == nonBuilding[i]) ++info_h;
+    if (index == nonBuilding[i]) info_h =- 2;
   }
 }
 
