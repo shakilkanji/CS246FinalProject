@@ -345,33 +345,38 @@ void Game::askToBuy(Building *building, Player *buyer ) {
 }
 
 
-void Game::trade() {
-    string temp_trader;
-    string give;
-    string receive;
-    int givenumber = 0;
-    int receivenumber = 0;
-    bool givemoney = false;
-    bool receivemoney = false;
+// void Game::trade() {
+//     string temp_trader;
+//     string give;
+//     string receive;
+//     int givenumber = 0;
+//     int receivenumber = 0;
+//     bool givemoney = false;
+//     bool receivemoney = false;
 
-    cin >> temp_trader;
-    cin >> give;
-    cin >> receive;
+//     cin >> temp_trader;
+//     cin >> give;
+//     cin >> receive;
     
-    istringstream give_s(give)
-    if(give_s >> givenumber){
-     givemoney = true;    
-    }
+//     istringstream give_s(give);
+//     if(give_s >> givenumber){
+//      givemoney = true;    
+//     }
     
-    istringstream receive_s(receive)
-    if(receive_s >> receivenumber){
-     receivemoney = true;    
-    }
+//     istringstream receive_s(receive);
+//     if(receive_s >> receivenumber){
+//      receivemoney = true;    
+//     }
 
-    int trader_index = getplayer( temp_trader);
-    if
+//     int trader_index = getplayer(temp_trader);
+//     if (trader_index == -1){
+//       cout << "Sorry, the player you want to trade is not exist." << endl;
+//       return;
+//     }
 
-}
+
+
+// }
 
 
       
@@ -589,6 +594,9 @@ void Game::buyImprovement(Square *square, Player *player) {
   academic->setImpLevel(impLevel+1);
   owner->updateBalance(impCost * -1);
 
+  Building *bp = dynamic_cast<Building *>(square);
+  td->notify(bp);
+  td->display();
   cout << academic->getName() << " now has " << academic->getImpLevel() << " improvements. ";
   cout << "Your balance decreased to " << player->getBalance() << "." << endl;
 }
