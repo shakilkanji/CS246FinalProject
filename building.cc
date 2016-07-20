@@ -3,18 +3,12 @@
 using namespace std;
 
 Building::Building(Game *game, int index, string name, int cost) : Square(game, index, name), cost(cost) {
-	    owner = nullptr;
-}
-
-Building::Building(Game *game, int index, string name, int cost, Player *owner, bool mortgaged) : 
-	Square(game, index, name), cost(cost), owner(owner), mortgaged(mortgaged) {		
 	impLevel = 0;
 	owner = nullptr;
 }
 
-// Building::Building(Game *game, int index, string name, int cost, Player *owner, int impLevel) : 
-// 	Square(game, index, name), cost(cost), owner(owner), impLevel(impLevel) {}
-
+Building::Building(Game *game, int index, string name, int cost, Player *owner, int impLevel) : 
+	Square(game, index, name), cost(cost), owner(owner), impLevel(impLevel) {}
 
 Building::~Building() {}
 
@@ -44,13 +38,8 @@ int Building::getCost() const {
 }
 
 void Building::notify(Player *landedPlayer) {
-	if (owner == nullptr) {
-		game->askToBuy(this, landedPlayer);
-	}
-	
-	else if (owner == landedPlayer) {
-		cout << "You own this property." << endl;
-	}
+	if (owner == nullptr) game->askToBuy(this, landedPlayer);
+	else if (owner == landedPlayer) cout << "You own this property." << endl;
 	else {
 		int fees = getFees();
 		if (landedPlayer->getBalance() < fees) {
@@ -66,7 +55,7 @@ bool Building::isAcademic(){
 	if((index == 5 || index == 15 || index == 25 || index == 35)||(index == 28 || index == 12)){
 		return false;
 	}
-	return false;
+	return true;
 }
 
 
