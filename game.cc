@@ -495,6 +495,10 @@ void Game::displayAllAssets() {
 // }
 
 void Game::auctionProperty(Building *building){
+   int playerLeft = numplayer;
+   int highestPrice = 1;
+
+   
   
 }
 
@@ -523,7 +527,7 @@ int Game::diceroll(){
     return firstdeice+seconddice;
 }
 
-// void Game::Improve
+// void Game::Improve(Building *building){}
 
 void Game::buyImprovement(Academic *academic, Player *player) {
     Player *owner = academic->getOwner();
@@ -724,6 +728,15 @@ bool Game::loadGame(string filename) {
     }
     currentplayer = 0;
     myfile.close();
+
+    for(int i = 0 ; i < 39 ; i++){
+    Building *bp = dynamic_cast<Building *>(gameboard[i]);
+    if(bp){
+      td->notify(bp);
+    }
+    }
+    
+    // td->display();
     return true;
   } else {
     cout << "Unable to open file." << endl;
