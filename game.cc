@@ -326,11 +326,11 @@ void Game::askToBuy(Building *building, Player *buyer ) {
   string temp_askbuy;
   while( cin >> temp_askbuy ){
     if(temp_askbuy == "yes" || temp_askbuy == "Yes"){
-      cout << "You have purchesd " << building->getName() << endl;
       building->setOwner(buyer);
       buyer->updateBalance( -1 * building->getCost() );
       td->notify(building);
       td->display();
+      cout << "You have purchesd " << building->getName() << endl;
       break;
     } else if (temp_askbuy == "no" || temp_askbuy == "No"){
       // cout << "Auctions will begin" << endl;
@@ -564,13 +564,13 @@ void Game::auctionProperty(Building *building){
     }
   }
 
-  cout << "Auction is end, " << building->getName() << " is bought by";
-  cout << player[highestPlayer]->getName() << " by " << highestPrice << " $. " << endl;
-
   player[highestPlayer]->updateBalance(-1 * highestPrice);
   building->setOwner(player[highestPlayer]);
   td->notify(building);
   td->display();
+
+  cout << "Auction is end, " << building->getName() << " is bought by";
+  cout << player[highestPlayer]->getName() << " by " << highestPrice << " $. " << endl;
 }
 
 
