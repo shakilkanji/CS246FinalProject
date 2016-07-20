@@ -74,7 +74,7 @@ int Player::getDCTurn() const {
 
 
 void Player::setPos(int n) { 
-  position += n; 
+  position = n; 
 }
 int Player::getPos() const { 
   return position; 

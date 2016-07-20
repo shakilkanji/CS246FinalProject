@@ -37,6 +37,6 @@ void Square::notify(Player *landedPlayer) {
 		} else {
 			landedPlayer->updateBalance(-150);
 		}
-	}
+	} else cout << index << endl;
 
 }

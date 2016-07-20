@@ -174,9 +174,12 @@ void Game::run(){
 
      //player does not roll
      else{
+     
      int dice_result = diceroll();
      roll_time += 1;
+
      move(dice_result);
+
      if(dicepair() == true){
       //if the player rolls 3 times, he'll be sent to DC tims line and cannot move
       if(roll_time == 3){
@@ -185,6 +188,7 @@ void Game::run(){
       }
       else{
         cout << "You roll a double and you can roll a dice for another time" << endl;
+
       }    
      }
 
@@ -266,7 +270,6 @@ void Game::next(){
       td->notify(player[i],pos);
     }   
   }
-
 
   td->display();
 
@@ -419,6 +422,7 @@ void Game::move(int move_blocks){
     cout << old_pos << endl;
     cout << move_blocks << endl;
     cout << current_pos << endl;
+    cout << "previous pos is " << player[currentplayer]->getPos() <<endl;
   }
 
  if(current_pos > 39){
@@ -428,9 +432,17 @@ void Game::move(int move_blocks){
  }
  
  player[currentplayer]->setPos(current_pos);
+
+ if(test){ cout<<"current pos is  " << player[currentplayer]->getPos() << endl; }
+
  td->notify(player[currentplayer],old_pos);
  td->display();
+
+ if(test){ cout<<"current pos is  " << player[currentplayer]->getPos() << endl; }
+
  gameboard[current_pos]->notify(player[currentplayer]);
+
+ if(test){ cout<<"final pos is " << current_pos << endl; }
 }
 
 
