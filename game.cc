@@ -229,7 +229,7 @@ void Game::run(){
     }
 
     else if(command == "all") {
-      cout << "you will do a all" << endl;  
+      displayAllAssets(); 
     }
 
     else if(command == "save") {
@@ -456,32 +456,46 @@ void Game::settest(){
 }
 
 
-// void Game::displayAssets(Player *player){
-//     for (int i = 0; i < 40; ++i) {
-//         Academic *ap = dynamic_cast<Academic *>(gameboard[i]);
-//         if (!ap) {
-//             Building *ap = dynamic_cast<Building *>(gameboard[i]);
-//         }
-//         if (ap) {
-//             cout << *ap;
-//         }
-//     }
-// }
-
 void Game::displayAssets(Player *player){
+    cout << "Cash Balance: " << player->getBalance() << endl;
+    cout << "Properties(Name, Owner, Improvements): " << endl;
     for (int i = 0; i < 40; ++i) {
         Academic *ap = dynamic_cast<Academic *>(gameboard[i]);
-        if (ap) {
-            cout << *ap;
-        }
-        else {
+        if (!ap) {
             Building *bp = dynamic_cast<Building *>(gameboard[i]);
             if (bp) {
-              cout << *bp;
+                if (bp->getOwner() == player) cout << *bp;
             }
+        } else {
+            if (ap->getOwner() == player) cout << *ap;
         }
     }
 }
+
+void Game::displayAllAssets() {
+  for (int i = 0; i < 8; ++i) {
+    if (player[i]) {
+      cout << player[i]->getName() << endl;
+      displayAssets(player[i]);
+      cout << endl;
+    }
+  }
+}
+
+// void Game::displayAssets(Player *player){
+//     for (int i = 0; i < 40; ++i) {
+//         Academic *ap = dynamic_cast<Academic *>(gameboard[i]);
+//         if (ap) {
+//             cout << *ap;
+//         }
+//         else {
+//             Building *bp = dynamic_cast<Building *>(gameboard[i]);
+//             if (bp) {
+//               cout << *bp;
+//             }
+//         }
+//     }
+// }
 
 void Game::auctionProperty(Building *building){
   
