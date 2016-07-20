@@ -299,6 +299,7 @@ void Game::next(){
 
 
 void Game::askToBuy(Building *building, Player *buyer ) {
+   
    if(buyer->getBalance() < building->getCost()){
     cout << "Sorry you don't have enough money to buy this building. " << "You current balance is " << buyer->getBalance();
     cout << "The building will spend " << building->getCost() << endl;
@@ -317,7 +318,6 @@ void Game::askToBuy(Building *building, Player *buyer ) {
         buyer->updateBalance( -1 * building->getCost() );
         cout << "debug 2" << endl;
         td->notify(building);
-        td->display();
         cout << "debug 3" << endl;
         break;
     }
