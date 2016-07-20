@@ -294,15 +294,15 @@ void Game::next(){
 void Game::displayCommands() {
     cout << endl;
     cout << "Please choose from the following commands:" << endl;
-    cout << "roll: roll two dice, and move your piece the sum of those dice." << endl;
-    cout << "next: give control to the next player. " << endl;
-    cout << "trade <player> <give> <receive>: offers to trade property/cash with another player." << endl;
-    cout << "improve <property> buy/sell: attempts to buy or sell an improvement for property." << endl;
-    cout << "mortgage <property>: attempts to mortgage property." << endl;
-    cout << "unmortgage <property>: attempts to unmortgage property." << endl;
-    cout << "assets: displays the assets of the current player." << endl;
-    cout << "all: displays the assets of every player." << endl;
-    cout << "save <filename>: saves the current state of the game to the given file." << endl;
+    cout << "1. roll: roll two dice, and move your piece the sum of those dice." << endl;
+    cout << "2. next: give control to the next player. " << endl;
+    cout << "3. trade <player> <give> <receive>: offers to trade property/cash with another player." << endl;
+    cout << "4. improve <property> buy/sell: attempts to buy or sell an improvement for property." << endl;
+    cout << "5. mortgage <property>: attempts to mortgage property." << endl;
+    cout << "6. unmortgage <property>: attempts to unmortgage property." << endl;
+    cout << "7. assets: displays the assets of the current player." << endl;
+    cout << "8. all: displays the assets of every player." << endl;
+    cout << "9. save <filename>: saves the current state of the game to the given file." << endl;
 }
 
 
