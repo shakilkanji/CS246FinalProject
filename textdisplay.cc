@@ -159,12 +159,12 @@ void TextDisplay::notify(Building *b) {
     theDisplay[info_h - 1][info_w + 1] = owner->getSymbol();
   }
 
-  int level = 0;
+  int level = b->getImpLevel();
 
-  if (b->isAcademic()) {    // cast b to Academic when appropriate
+  /*if (b->isAcademic()) {    // cast b to Academic when appropriate
     Academic *academic = dynamic_cast<Academic *>(b);
     level = academic->getImpLevel();
-  }
+  }*/
 
   if (level != 0) {         // only display level when the property has been improved
     theDisplay[info_h - 1][info_w + 4] = 'L';
