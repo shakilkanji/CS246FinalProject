@@ -524,7 +524,7 @@ void Game::auctionProperty(Building *building){
 
     do {
       current_auction_player = (current_auction_player + 1) % 8;
-    } while ( (active[current_auction_player] == false));
+    } while (!active[current_auction_player]);
 
     if(test) cout << "auction 1 "  << current_auction_player << endl;
     cout << "It is " << player[current_auction_player]->getName() <<" 's turn" ;
