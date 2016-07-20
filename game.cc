@@ -10,8 +10,8 @@
 
 using namespace std;
 
-Game::Game():numplayer(0),currentplayer(0),rimcup(4),test(false),sumofdice(0),rolled(false),roll_time(0),
-firstdeice(0),seconddice(0){
+Game::Game():numplayer(0),currentplayer(0),rimcup(4),sumofdice(0),
+firstdeice(0),seconddice(0),test(false),rolled(false),roll_time(0){
     td = new TextDisplay;
 
     for(int i = 0 ; i < 8 ; i++){
@@ -102,7 +102,7 @@ void Game::normalinit(){
         }
 
         if(chosen == true ){
-        	cout << "Someone has already chosen this name, please change to another one" << endl;
+        	cout << "Someone has already chosen this name, please change to another one." << endl;
         }
         else{
         	playername[current] = temp_name;
@@ -229,11 +229,13 @@ void Game::run(){
     }
 
     else if(command == "all") {
-      cout << "you will do a all" << endl;  
+      displayAllAssets(); 
     }
 
     else if(command == "save") {
-      cout << "you will do a save" << endl;  
+      string saveFile;
+      cin >> saveFile;
+      saveGame(saveFile);
     }
 
     else if(command == "next") {
@@ -454,32 +456,46 @@ void Game::settest(){
 }
 
 
-// void Game::displayAssets(Player *player){
-//     for (int i = 0; i < 40; ++i) {
-//         Academic *ap = dynamic_cast<Academic *>(gameboard[i]);
-//         if (!ap) {
-//             Building *ap = dynamic_cast<Building *>(gameboard[i]);
-//         }
-//         if (ap) {
-//             cout << *ap;
-//         }
-//     }
-// }
-
 void Game::displayAssets(Player *player){
+    cout << "Cash Balance: " << player->getBalance() << endl;
+    cout << "Properties(Name, Owner, Improvements): " << endl;
     for (int i = 0; i < 40; ++i) {
         Academic *ap = dynamic_cast<Academic *>(gameboard[i]);
-        if (ap) {
-            cout << *ap;
-        }
-        else {
+        if (!ap) {
             Building *bp = dynamic_cast<Building *>(gameboard[i]);
             if (bp) {
-              cout << *bp;
+                if (bp->getOwner() == player) cout << *bp;
             }
+        } else {
+            if (ap->getOwner() == player) cout << *ap;
         }
     }
 }
+
+void Game::displayAllAssets() {
+  for (int i = 0; i < 8; ++i) {
+    if (player[i]) {
+      cout << player[i]->getName() << endl;
+      displayAssets(player[i]);
+      cout << endl;
+    }
+  }
+}
+
+// void Game::displayAssets(Player *player){
+//     for (int i = 0; i < 40; ++i) {
+//         Academic *ap = dynamic_cast<Academic *>(gameboard[i]);
+//         if (ap) {
+//             cout << *ap;
+//         }
+//         else {
+//             Building *bp = dynamic_cast<Building *>(gameboard[i]);
+//             if (bp) {
+//               cout << *bp;
+//             }
+//         }
+//     }
+// }
 
 void Game::auctionProperty(Building *building){
   
@@ -553,13 +569,13 @@ void Game::mortgageBuilding(Building *building, Player *player) {
         cout << "You do not own this property." << endl;
         return;
     }
-    if (building->getMortgaged()) {
+    if (building->getImpLevel() == -1) {
         cout << "This property is already mortgaged." << endl;
         return;
     }
     int mortgageValue = building->getCost() / 2;
     owner->updateBalance(mortgageValue);
-    building->setMortgaged(true);
+    building->setImpLevel(-1);
 }
 
 void Game::unmortgageBuilding(Building *building, Player *player) {
@@ -568,7 +584,7 @@ void Game::unmortgageBuilding(Building *building, Player *player) {
         cout << "You do not own this property." << endl;
         return;
     }
-    if (!building->getMortgaged()) {
+    if (building->getImpLevel() != -1) {
         cout << "This property is not mortgaged." << endl;
         return;
     }
@@ -579,7 +595,7 @@ void Game::unmortgageBuilding(Building *building, Player *player) {
         return;
     }
     owner->updateBalance(unmortgageCost * -1);
-    building->setMortgaged(false);
+    building->setImpLevel(0);
 }
 
 void Game::forceBankruptcy(Player *landedPlayer, int fee) {
@@ -656,3 +672,96 @@ int Game::getBuildingIndex(string square) {
     cout << "This is not a Building square." << endl;
     return -1;
 }
+
+
+bool Game::loadGame(string filename) {
+  ifstream myfile(filename);
+  if (myfile.is_open()) {
+    myfile >> numplayer;
+    for (int i = 0; i < numplayer; ++i) { // Read player data
+      myfile >> playername[i];
+      if (playername[i] == "BANK") {
+        cout << "Cannot have player named BANK." << endl;
+        return false;
+      }
+      myfile >> chosensymbol[i];
+      int playerNumTimsCups;
+      myfile >> playerNumTimsCups;
+      int playerBalance;
+      myfile >> playerBalance;
+      int playerPosition;
+      myfile >> playerPosition;
+      int isStuckDC = 0;
+      int playerDCTurn = -1;
+      if (playerPosition == 10) {
+        myfile >> isStuckDC;
+        if (isStuckDC != 0) {
+          myfile >> playerDCTurn;
+        }
+      }
+
+      player[i] = new Player(chosensymbol[i], playername[i], this, playerNumTimsCups, playerBalance, 
+        playerPosition, playerDCTurn);
+    }
+
+    for (int i = 0; i < 28; ++i) {  // Read property data
+      string propertyName;
+      myfile >> propertyName;
+      int propertyIndex = getBuildingIndex(propertyName);
+      Building *bp = static_cast<Building *>(gameboard[propertyIndex]);
+      string propertyOwner;
+      myfile >> propertyOwner;
+      if (propertyOwner != "BANK") {
+        for (int i = 0; i < numplayer; ++i) {
+          if (player[i]->getName() == propertyOwner) {
+            bp->setOwner(player[i]);
+          }
+        }
+      }
+      int propertyImprovements;
+      myfile >> propertyImprovements;
+      bp->setImpLevel(propertyImprovements);
+    }
+    currentplayer = 0;
+    myfile.close();
+    return true;
+  } else {
+    cout << "Unable to open file." << endl;
+    return false;
+  }
+
+}
+
+void Game::saveGame(string filename) {
+  ofstream myfile;
+  myfile.open(filename);
+  myfile << numplayer << endl;
+  for (int i = 0; i < 8; ++i) { // Print player data
+    if (player[i]) {
+      myfile << player[i]->getName() << " " << player[i]->getSymbol() << " " << player[i]->getNumTimsCups();
+      myfile << " " << player[i]->getBalance() << " " << player[i] ->getPos();
+      if (player[i]->getPos() == 10) {  // Player is on DCTims Square
+        myfile << " ";
+        if (player[i]->getDCTurn() != -1) {  // Player is stuck in DCTims line
+          myfile << 1 << " " << player[i]->getDCTurn();
+        } else {  // Just visiting
+          myfile << 0 << " ";
+        }
+      }
+      myfile << endl;
+    }
+  }
+  for (int i = 0; i < 40; ++i) {  // Print square data
+      Academic *ap = dynamic_cast<Academic *>(gameboard[i]);
+      if (ap) {
+          myfile << *ap;
+      }
+      else {
+          Building *bp = dynamic_cast<Building *>(gameboard[i]);
+          if (bp) {
+            myfile << *bp;
+          }
+      }
+  }
+}
+

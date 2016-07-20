@@ -8,36 +8,42 @@
 using namespace std;
 
 
-int main(int argc, char* argv[]){
+int main(int argc, char* argv[]) {
 	Game g;
 	// Dice d;
 
-cout <<"   _____________________        "  <<endl;
-cout <<"  ( Welcome to Watopoly )       "  <<endl;
-cout <<"   ---------------------        "  <<endl;
-cout <<"          o   ^__^              "  <<endl;
-cout <<"           o  (oo)________      "  <<endl;
-cout <<"              (__)      ) |--   "  <<endl;
-cout <<"                  ||----w |     "  <<endl;
-cout <<"                  ||     ||     "  <<endl;
-cout <<"                                "  <<endl;
+	cout <<"   _____________________        "  <<endl;
+	cout <<"  ( Welcome to Watopoly )       "  <<endl;
+	cout <<"   ---------------------        "  <<endl;
+	cout <<"          o   ^__^              "  <<endl;
+	cout <<"           o  (oo)________      "  <<endl;
+	cout <<"              (__)      ) |--   "  <<endl;
+	cout <<"                  ||----w |     "  <<endl;
+	cout <<"                  ||     ||     "  <<endl;
+	cout <<"                                "  <<endl;
 
-for ( int i = 0 ; i < argc ; i++){
-	string cur_argc = argv[i];
-	if( cur_argc == "-testing" ) {
-	   g.settest();
-       // g.test == true;;
-       cout << "Testing mode start" << endl;
+
+	bool loaded = false;
+	for (int i = 0; i < argc; ++i) {
+		string cur_argc = argv[i];
+		if (cur_argc == "-testing") {
+			g.settest();
+			cout << "Testing mode started." << endl;
+		} else if (cur_argc == "-load") {
+			if (i < argc-1) {
+				++i;
+				cur_argc = argv[i];
+				if (g.loadGame(cur_argc)) {
+					loaded = true;
+				}
+			} else {
+				cout << "Please specify file name." << endl;
+				return 0;
+			}
+		}
 	}
-	else {
-		// g.initGame();
-		// cout << "Game start" << endl;
-	}
-}
-    cout << "Game start" << endl;
-	g.normalinit();
+	if (!loaded) g.normalinit();
 	g.run();
-
 }
 
     

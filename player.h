@@ -12,6 +12,7 @@ class Player {
 
   int numGym;
   int numRes;
+  int numTimsCups;
 
   int balance;
   int position;
@@ -22,7 +23,8 @@ class Player {
   //std::vector <Building *> buildings;
 
  public:
-  Player(char symbol,std::string playerName, Game *g);
+  Player(char symbol, std::string playerName, Game *g);
+  Player(char symbol, std::string playerName, Game *g, int numTimsCups, int balance, int position, int DCTurn);
   ~Player();
 
   char getSymbol() ;
@@ -40,6 +42,9 @@ class Player {
 
   void setNumRes(int n);
   int getNumRes() const;
+
+  void setNumTimsCups(int n);
+  int getNumTimsCups() const;
 
   void setDCTurn(int n);
   int getDCTurn() const;

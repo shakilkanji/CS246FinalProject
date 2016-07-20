@@ -47,6 +47,7 @@ class Game {
    void askToBuy(Building *building, Player *buyer);
    void auctionProperty(Building *building);
    void displayAssets(Player *player);
+   void displayAllAssets();
    void trade();
    bool checkmonoimprov(std::string building);
    bool dicepair();
@@ -60,6 +61,9 @@ class Game {
 
    void mortgageBuilding(Building *building, Player *player);
    void unmortgageBuilding(Building *building, Player *player);
+
+   bool loadGame(std::string filename);
+   void saveGame(std::string filename);
 };
 
 /***************

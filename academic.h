@@ -8,7 +8,6 @@ class Academic : public Building {
 	const int impCost;
 	const std::string monoBlock;
 	bool monopolized;
-	int impLevel;
 	int fees[6];
 
   public:
@@ -27,10 +26,8 @@ class Academic : public Building {
     std::string getMonoBlock() const;
 
     int getImpCost() const;
-  	int getImpLevel() const;
-  	void setImpLevel(int newImpLevel);
 
-  	bool isMonopolized() const;
+  	// bool isMonopolized() const;
 
   	int getValue() const override;	// during bankruptcy calculation, divide by 2
 };

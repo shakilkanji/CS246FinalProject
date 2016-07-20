@@ -7,9 +7,14 @@ Building::Building(Game *game, int index, string name, int cost) : Square(game, 
 }
 
 Building::Building(Game *game, int index, string name, int cost, Player *owner, bool mortgaged) : 
-	Square(game, index, name), cost(cost), owner(owner), mortgaged(mortgaged) {
-		
-	}
+	Square(game, index, name), cost(cost), owner(owner), mortgaged(mortgaged) {		
+	impLevel = 0;
+	owner = nullptr;
+}
+
+// Building::Building(Game *game, int index, string name, int cost, Player *owner, int impLevel) : 
+// 	Square(game, index, name), cost(cost), owner(owner), impLevel(impLevel) {}
+
 
 Building::~Building() {}
 
@@ -21,16 +26,16 @@ void Building::setOwner(Player *newOwner) {
 	owner = newOwner;
 }
 
-bool Building::getMortgaged() const {
-	return mortgaged;
+int Building::getImpLevel() const {
+	return impLevel;
 }
 
-void Building::setMortgaged(bool isMortgaged) {
-	mortgaged = isMortgaged;
+void Building::setImpLevel(int newImpLevel) {
+	impLevel = newImpLevel;
 }
 
 int Building::getValue() const {
-	if (mortgaged) return 0;
+	if (getImpLevel() == -1) return 0;
 	return cost;
 }
 
@@ -68,8 +73,8 @@ bool Building::isAcademic(){
 
 ostream& operator<<(ostream& out, const Building& b) {
 	Player *owner = b.getOwner();
-	string ownerName = "Unowned";
+	string ownerName = "BANK";
 	if (owner) ownerName = owner->getName();
-	out << b.getName() << " " << ownerName << endl;
+	out << b.getName() << " " << ownerName << " " << b.getImpLevel() << endl;
 	return out;
 }
