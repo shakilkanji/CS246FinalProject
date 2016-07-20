@@ -16,6 +16,9 @@ const int box_h = 5;
 const int box_w = 9;
 
 const int maxPlayer = 8;
+const int maxLevel = 5;
+const char levelSymbol = 'I';
+
 const int numNonBuild = 6;
 const int nonBuilding[numNonBuild] = {5, 12, 15, 25, 28, 35};
 
@@ -102,9 +105,9 @@ void setSquareDisplayInfo(int &info_h, int &info_w, int index) {
 }
 
 
-void replaceChar(int pos_h, int pos_w, char **theDisplay, char from, char to) {
+void replaceChar(int pos_h, int pos_w, char **theDisplay, char from, char to, int repeatTimes) {
   /* --- used for add or remove players --- */
-  for (int i = 0; i < maxPlayer; ++i) {
+  for (int i = 0; i < repeatTimes; ++i) {
     char c = theDisplay[pos_h - 1][pos_w - 1 + i];
     if (c == from) {
       theDisplay[pos_h - 1][pos_w - 1 + i] = to;
@@ -123,7 +126,7 @@ void TextDisplay::removePlayer(Player *p) {
   char symbol = p->getSymbol();
 
   setPlayerDisplayPos(pos_h, pos_w, pos);             // remove Player
-  replaceChar(pos_h, pos_w, theDisplay, symbol, ' ');
+  replaceChar(pos_h, pos_w, theDisplay, symbol, ' ', maxPlayer);
 }
 
 
@@ -136,10 +139,10 @@ void TextDisplay::notify(Player *p, int oldPos) {
   char symbol = p->getSymbol();
 
   setPlayerDisplayPos(pos_h, pos_w, oldPos);           // remove Player from old pos
-  replaceChar(pos_h, pos_w, theDisplay, symbol, ' ');
+  replaceChar(pos_h, pos_w, theDisplay, symbol, ' ', maxPlayer);
 
   setPlayerDisplayPos(pos_h, pos_w, pos);              // add Player to its new pos
-  replaceChar(pos_h, pos_w, theDisplay, ' ', symbol);
+  replaceChar(pos_h, pos_w, theDisplay, ' ', symbol, maxPlayer);
 }
 
 
@@ -154,21 +157,13 @@ void TextDisplay::notify(Building *b) {
   Player *owner = b->getOwner();
 
   if (owner != nullptr) {    // only display ownership when the property is owned
-    theDisplay[info_h - 1][info_w - 1] = 'O';
-    theDisplay[info_h - 1][info_w] = ':';
-    theDisplay[info_h - 1][info_w + 1] = owner->getSymbol();
+    theDisplay[info_h + 1][info_w + 4] = 'O';
+    theDisplay[info_h + 1][info_w + 5] = ':';
+    theDisplay[info_h + 1][info_w + 6] = owner->getSymbol();
   }
 
   int level = b->getImpLevel();
 
-  /*if (b->isAcademic()) {    // cast b to Academic when appropriate
-    Academic *academic = dynamic_cast<Academic *>(b);
-    level = academic->getImpLevel();
-  }*/
-
-  if (level != 0) {         // only display level when the property has been improved
-    theDisplay[info_h - 1][info_w + 4] = 'L';
-    theDisplay[info_h - 1][info_w + 5] = ':';
-    theDisplay[info_h - 1][info_w + 6] = level;
-  }
+  replaceChar(info_h, info_w, theDisplay, levelSymbol, ' ', maxLevel);
+  replaceChar(info_h, info_w, theDisplay, ' ', levelSymbol, level);
 }
