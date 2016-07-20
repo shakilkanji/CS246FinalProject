@@ -36,6 +36,9 @@ class Game {
    int getBuildingIndex(std::string square);
    int getplayer(std::string name);
 
+   void loadGame(std::string filename);
+   void saveGame(std::string filename);
+
   public:
   	Game();
 	  ~Game();

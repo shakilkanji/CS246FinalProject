@@ -2,10 +2,13 @@
 #include "game.h"
 using namespace std;
 
-Building::Building(Game *game, int index, string name, int cost) : Square(game, index, name), cost(cost) {}
+Building::Building(Game *game, int index, string name, int cost) : Square(game, index, name), cost(cost) {
+	impLevel = 0;
+	owner = nullptr;
+}
 
-Building::Building(Game *game, int index, string name, int cost, Player *owner, bool mortgaged) : 
-	Square(game, index, name), cost(cost), owner(owner), mortgaged(mortgaged) {}
+Building::Building(Game *game, int index, string name, int cost, Player *owner, int impLevel) : 
+	Square(game, index, name), cost(cost), owner(owner), impLevel(impLevel) {}
 
 Building::~Building() {}
 
@@ -17,16 +20,25 @@ void Building::setOwner(Player *newOwner) {
 	owner = newOwner;
 }
 
+int Building::getImpLevel() const {
+	return impLevel;
+}
+
+void Building::setImpLevel(int newImpLevel) {
+	impLevel = newImpLevel;
+}
+
 bool Building::getMortgaged() const {
-	return mortgaged;
+	return impLevel == -1;
 }
 
 void Building::setMortgaged(bool isMortgaged) {
-	mortgaged = isMortgaged;
+	if (isMortgaged) impLevel = -1;
+	else impLevel = 0;
 }
 
 int Building::getValue() const {
-	if (mortgaged) return 0;
+	if (getMortgaged()) return 0;
 	return cost;
 }
 
@@ -59,8 +71,8 @@ bool Building::isAcademic(){
 
 ostream& operator<<(ostream& out, const Building& b) {
 	Player *owner = b.getOwner();
-	string ownerName = "Unowned";
+	string ownerName = "BANK";
 	if (owner) ownerName = owner->getName();
-	out << b.getName() << " " << ownerName << endl;
+	out << b.getName() << " " << ownerName << " " << b.getImpLevel() << endl;
 	return out;
 }

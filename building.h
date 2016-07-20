@@ -8,12 +8,12 @@ class Building : public Square {
   protected:
   	const int cost;
   	Player *owner;
-  	bool mortgaged;
+	int impLevel;  	
 
   public:
   	Building(Game *game, const int index, const std::string name, const int cost);
   	Building(Game *game, const int index, const std::string name, const int cost, 
-  		Player *owner, bool mortgaged);		// Constructor for loaded games (not default)
+  		Player *owner, int impLevel);		// Constructor for loaded games (not default)
   	virtual ~Building();
 
   	Player *getOwner() const;
@@ -25,6 +25,9 @@ class Building : public Square {
   	void setMortgaged(bool isMortgaged);
 
   	virtual int getValue() const;
+
+  	int getImpLevel() const;
+  	void setImpLevel(int newImpLevel);
 
   	int getCost() const;
 

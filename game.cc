@@ -233,7 +233,9 @@ void Game::run(){
     }
 
     else if(command == "save") {
-      cout << "you will do a save" << endl;  
+      string saveFile;
+      cin >> saveFile;
+      saveGame(saveFile);
     }
 
     else if(command == "next") {
@@ -655,4 +657,42 @@ int Game::getBuildingIndex(string square) {
     }
     cout << "This is not a Building square." << endl;
     return -1;
+}
+
+void Game::loadGame(string filename) {
+  ifstream myfile;
+  
+}
+
+void Game::saveGame(string filename) {
+  ofstream myfile;
+  myfile.open(filename);
+  myfile << numplayer << endl;
+  for (int i = 0; i < 8; ++i) { // Print player data
+    if (player[i]) {
+      myfile << player[i]->getName() << " " << player[i]->getSymbol() << " " << player[i]->getNumTimsCups();
+      myfile << " " << player[i]->getBalance() << " " << player[i] ->getPos();
+      if (player[i]->getPos() == 10) {  // Player is on DCTims Square
+        myfile << " ";
+        if (player[i]->getDCTurn() != 0) {  // Player is stuck in DCTims line
+          myfile << 1 << " " << player[i]->getDCTurn();
+        } else {  // Just visiting
+          myfile << 0 << " ";
+        }
+      }
+      myfile << endl;
+    }
+  }
+  for (int i = 0; i < 40; ++i) {  // Print square data
+      Academic *ap = dynamic_cast<Academic *>(gameboard[i]);
+      if (ap) {
+          myfile << *ap;
+      }
+      else {
+          Building *bp = dynamic_cast<Building *>(gameboard[i]);
+          if (bp) {
+            myfile << *bp;
+          }
+      }
+  }
 }
