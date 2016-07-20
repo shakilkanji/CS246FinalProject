@@ -313,6 +313,7 @@ void Game::askToBuy(Building *building, Player *buyer ) {
     // cout << "Auctions will begin" << endl;
     auctionProperty(building);
    }
+   
    cout << "Do you want to buy " << building->getName() << " for $" << building->getCost() << "? ";
    cout << "[yes/no/assets]" << endl;
    
@@ -500,7 +501,81 @@ void Game::displayAllAssets() {
 // }
 
 void Game::auctionProperty(Building *building){
-  
+   cout << "Auction for " << building->getName() << " start!" << endl;
+   int playerLeft = numplayer;
+   int highestPrice = 0;
+   int current_auction_player = currentplayer;
+   int highestPlayer = current_auction_player;
+   bool active[8];
+
+   //In the begining of a auction, all the players are active
+   for(int i = 0 ; i < 8 ;i ++){
+    if(player[i] != nullptr){
+      active[i] = true;
+    }
+    else{
+      active[i] = false;
+    }
+   }
+
+   string command_auction;
+
+   while(playerLeft != 1){
+
+    do {
+      current_auction_player = (current_auction_player + 1) % 8;
+    } while ( (active[current_auction_player] == false));
+    
+    if(test) cout << "auction 1 "  << current_auction_player << endl;
+    cout << "It is " << player[current_auction_player]->getName() <<" 's turn" ;
+    cout << "The bid is " << highestPrice <<"$ right now by " << player[highestPlayer]->getName() << endl;
+    cout << "You can do [bid money]/[withdraw]/[assets]" << endl;
+    
+    if(test) cout << "auction 2" << endl;
+    while(true){
+      cin >> command_auction;
+      int auction_number;
+      if(command_auction == "bid"){
+         cin >> auction_number;
+         if(auction_number <= highestPrice){
+          cout << "Sorry, you should bid more than the current price, which is "  << highestPrice << endl;
+         }
+         else if (auction_number > player[current_auction_player]->getBalance() ){
+          cout << "Sorry, you don't have such money" << endl;
+         }
+         else if(auction_number > highestPrice){
+          highestPrice = auction_number;
+          highestPlayer = current_auction_player;
+          cout << "Bid successfully, current bid price is " << highestPrice << endl;
+          break;
+         }
+         else{
+          cout << "Reached end of condition" << endl;
+         }
+      }
+      else if(command_auction == "assets"){
+        displayAssets(player[current_auction_player]);
+      }
+      else if(command_auction == "withdraw"){
+        playerLeft -= 1;
+        active[current_auction_player] = false;
+        cout << "You withdraw this auction, " << "number of current candidates are " << playerLeft << endl;
+        break;
+      }
+      else{ 
+        cout << "invaild commands, please input [bid money]/[withdraw]/[assets]" << endl;
+      }
+
+    }
+   }
+
+   cout << "Auction is end, " << building->getName() << " is bought by";
+   cout << player[highestPlayer]->getName() << " by " << highestPrice << " $. " << endl;
+   
+   player[highestPlayer]->updateBalance(-1 * highestPrice);
+   building->setOwner(player[highestPlayer]);
+   td->notify(building);
+   td->display();
 }
 
 
@@ -744,6 +819,15 @@ bool Game::loadGame(string filename) {
     }
     currentplayer = 0;
     myfile.close();
+
+    for(int i = 0 ; i < 39 ; i++){
+    Building *bp = dynamic_cast<Building *>(gameboard[i]);
+    if(bp){
+      td->notify(bp);
+    }
+    }
+    
+    // td->display();
     return true;
   } else {
     cout << "Unable to open file." << endl;
