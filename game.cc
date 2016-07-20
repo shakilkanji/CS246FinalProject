@@ -11,7 +11,7 @@
 using namespace std;
 
 Game::Game():numplayer(0),currentplayer(0),rimcup(4),sumofdice(0),
-firstdeice(0),seconddice(0),test(false),rolled(false),roll_time(0){
+firstdice(0),seconddice(0),test(false),rolled(false),roll_time(0){
     td = new TextDisplay;
 
     for(int i = 0 ; i < 8 ; i++){
@@ -60,7 +60,12 @@ firstdeice(0),seconddice(0),test(false),rolled(false),roll_time(0){
 }
 
 Game::~Game(){
-
+  for (int i = 0; i < 40; ++i) {
+    delete gameboard[i];
+  }
+  for (int i = 0; i < 8; ++i) {
+    if (player[i]) delete player[i];
+  }
 }
 
 
@@ -158,111 +163,112 @@ void Game::normalinit(){
 void Game::run(){
 	string command;
     
-    while(!isWon){
-    
-
+  while(!isWon) {
     next();
 
-
-    while(cin >> command){
-    if( command == "roll" ){
-     
-     //if the player has already roll the dice 
-     if(rolled == true){
-     cout << "You cannot roll the dice anymore in this turn" << endl;   
-     }
-
-     //player does not roll
-     else{
-     
-     int dice_result = diceroll();
-     roll_time += 1;
-
-     move(dice_result);
-
-     if(dicepair() == true){
-      //if the player rolls 3 times, he'll be sent to DC tims line and cannot move
-      if(roll_time == 3){
-        cout << "You have rolled 3 doubles, as a result, you are moved to DC tims line" << endl;
-        rolled = true;
+    while(cin >> command) {
+      if( command == "roll" ){
+         if(rolled == true) { //if the player has already roll the dice 
+           cout << "You cannot roll the dice anymore in this turn" << endl;   
+         } else{  //player has not rolled
+             int dice_result = diceroll();
+             roll_time += 1;
+             move(dice_result);
+             if(dicepair() == true) {
+              if(roll_time == 3) {  // after 3 rolls, player is sent to DC tims line and cannot move
+                cout << "You have rolled 3 doubles, as a result, you are moved to DC tims line" << endl;
+                rolled = true;
+              } else {
+                  cout << "You roll a double and you can roll a dice for another time" << endl;
+              }    
+             } else { // roll a nondouble dice 
+                cout << "you go to a square" << endl;
+                rolled = true;
+             }
+         }
       }
-      else{
-        cout << "You roll a double and you can roll a dice for another time" << endl;
-
-      }    
-     }
-
-     //roll a nondouble dice 
-     else{
-     cout << "you go to a square" << endl;
-
-     rolled = true;
-     }
-     }
-    }
 
 
-    else if( command == "trade"){
-     cout << "you will do a trade" << endl;
-     
-
-    }
-    
-    else if( command == "improve") {
-      cout << "you will do an improve" << endl;  
-    }
-
-    else if(command == "mortage") {
-      cout << "you will do a mortage" << endl;  
-    }
-    
-    else if(command == "unmortgage") {
-      cout << "you will do a unmortgage" << endl;  
-    }
-
-    else if(command == "bankrupt") {
-      cout << "you will do a bankrupt" << endl;  
-    }
- 
-    else if(command == "assets") {
-      displayAssets(player[currentplayer]); 
-    }
-
-    else if(command == "all") {
-      displayAllAssets(); 
-    }
-
-    else if(command == "save") {
-      string saveFile;
-      cin >> saveFile;
-      saveGame(saveFile);
-      cout << "Successfully saved in "<< saveFile << " !" << endl;
-    }
-
-    else if(command == "next") {
-      if(rolled == false){
-        cout << "You cannot finish this turn, you should roll the dice first" << endl;
+      else if( command == "trade"){
+       cout << "you will do a trade" << endl;
       }
-      else{
-        cout << "you will go to next turn" << endl;  
-        
-        //find next player 
-        do { 
-            currentplayer = (currentplayer + 1) % 8;
-        }        
-        while (player[currentplayer] == nullptr);
+      
+      else if( command == "improve") {
+        string property;
+        cin >> property;
+        int propertyIndex = getAcademicIndex(property);
+        if (propertyIndex >= 0) {
+            Academic *ap = static_cast<Academic *>(gameboard[propertyIndex]);
+            string buySell;
+            cin >> buySell;
+            if (buySell == "buy" || buySell == "Buy") buyImprovement(ap, player[currentplayer]);
+            else if (buySell == "sell" || buySell == "Sell") sellImprovement(ap, player[currentplayer]);
+        }
+      }
 
-        next();
+      else if(command == "mortage") {
+        string mortgageProperty;
+        cin >> mortgageProperty;
+        int buildingIndex = getBuildingIndex(mortgageProperty);
+        if (buildingIndex >= 0) {
+          Building *bp = static_cast<Building *>(gameboard[buildingIndex]);
+          mortgageBuilding(bp, player[currentplayer]);
+        }
+      }
+      
+      else if(command == "unmortgage") {
+        string unmortgageProperty;
+        cin >> unmortgageProperty;
+        int buildingIndex = getBuildingIndex(unmortgageProperty);
+        if (buildingIndex >= 0) {
+          Building *bp = static_cast<Building *>(gameboard[buildingIndex]);
+          unmortgageBuilding(bp, player[currentplayer]);
+        } 
+      }
+
+      else if(command == "bankrupt") {
+        cout << "you will do a bankrupt" << endl;  
+      }
+   
+      else if(command == "assets") {
+        displayAssets(player[currentplayer]); 
+      }
+
+      else if(command == "all") {
+        displayAllAssets(); 
+      }
+
+      else if(command == "save") {
+        string saveFile;
+        cin >> saveFile;
+        saveGame(saveFile);
+        cout << "Successfully saved in "<< saveFile << " !" << endl;
+      }
+
+      else if(command == "next") {
+        if (rolled == false){
+          cout << "You have not rolled, please roll to complete your turn." << endl;
+        }
+        else {
+          cout << "Turn complete." << endl;  
+          
+          //find next player 
+          do { 
+              currentplayer = (currentplayer + 1) % 8;
+          }        
+          while (player[currentplayer] == nullptr);
+
+          next();
+        }
+      }
+
+      else if(command == "exit") {
+          cout << "You will exit the game now." << endl;
+          return;
       }
     }
-
-    else if(command == "exit") {
-        cout << "You will exit the game in a few seconds" <<endl;
-        return;
-    }
-    }
-    }
-    cout << "Somebody has won!" << endl;
+  }
+  cout << "Somebody has won!" << endl;
 }
 
 void Game::next(){
@@ -401,13 +407,13 @@ int Game::getplayer(string name){
 
 
 int Game::getsumdice(){
-    return firstdeice+seconddice;
+    return firstdice+seconddice;
 }
 
 
 
 bool Game::dicepair(){
-    if(firstdeice  != seconddice ){
+    if(firstdice  != seconddice ){
     	return false;
     }
     else{
@@ -504,23 +510,23 @@ int Game::diceroll(){
     string n;
     srand(time(0));
     if(test == false){
-    firstdeice = 1+rand()%6;
+    firstdice = 1+rand()%6;
     seconddice = 1+rand()%6;
     
     }
     else{
     cout << "It is testing mode" << endl;
     cout << "Please enter two numbers between 1 and 6 (inclusive)." << endl;
-    cin >> firstdeice >> seconddice;
+    cin >> firstdice >> seconddice;
 
     }
-    cout << "first dice rolls " << firstdeice << endl;
+    cout << "first dice rolls " << firstdice << endl;
     cout << "second dice rolls " << seconddice << endl;
-    cout << "total is " << firstdeice+seconddice << endl;
+    cout << "total is " << firstdice+seconddice << endl;
     cout << "Input any string to countinue" << endl;
     cin >> n;
     
-    return firstdeice+seconddice;
+    return firstdice+seconddice;
 }
 
 // void Game::Improve

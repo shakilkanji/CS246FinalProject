@@ -23,7 +23,7 @@ class Game {
   // BoardDisplay * display;
   int sumofdice;
   //dice part
-   int firstdeice;
+   int firstdice;
    int seconddice;
    bool test;
    bool rolled;
