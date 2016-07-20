@@ -8,9 +8,17 @@
 using namespace std;
 
 
+// Constants:
 const int height = 56;
 const int width = 101;
+
+const int box_h = 9;
+const int box_w = 5;
+
 const int maxPlayer = 8;
+const int numNonBuild = 6;
+const int nonBuilding[numNonBuild] = {5, 12, 15, 25, 28, 35};
+
 
 TextDisplay::TextDisplay(){
   /* --- set up the board --- */
@@ -55,44 +63,47 @@ void TextDisplay::display() {
 
 
 void setPlayerDisplayPos(int &pos_h, int &pos_w, int pos) {
+  /* --- caculate pos on board for displaying players --- */
   if (pos < 10) {
     pos_h = 55;
-    pos_w = width - (pos * 9) - 9;
+    pos_w = width - (pos * box_h) - 9;
   } else if (pos < 20) {
-    pos_h = height - ((pos - 10) * 5) - 1;
+    pos_h = height - ((pos - 10) * box_w) - 1;
     pos_w = 2;
   } else if (pos < 30) {
     pos_h = 5;
-    pos_w = ((pos - 20) * 9) + 2;
-  } else if (pos < 40) {
-    pos_h = ((pos - 30) * 5) + 5;
+    pos_w = ((pos - 20) * box_h) + 2;
+  } else {
+    pos_h = ((pos - 30) * box_w) + 5;
     pos_w = 92;
   }
 }
 
 
 void setSquareDisplayInfo(int &info_h, int &info_w, int index) {
+  /* --- caculate pos on board for displaying ownerships and levels --- */
   if (index < 10) {
     info_h = 52;
-    info_w = width - (index * 9) - 9;
+    info_w = width - (index * box_h) - 9;
   } else if (index < 20) {
-    info_h = height - ((index - 10) * 5) - 4;
+    info_h = height - ((index - 10) * box_w) - 4;
     info_w = 2;
   } else if (index < 30) {
     info_h = 2;
-    info_w = ((index - 20) * 9) + 2;
-  } else if (index < 40) {
-    info_h = ((index - 30) * 5) + 1;
+    info_w = ((index - 20) * box_h) + 2;
+  } else {
+    info_h = ((index - 30) * box_w) + 1;
     info_w = 92;
   }
 
-  if (index == 5 || index == 12 || index == 15 || index == 25 || index == 28 || index == 35) {
-    ++info_h;
+  for (int i = 0; i < numNonBuild; ++i) {
+    if (index == nonBuilding[i]) ++info_h;
   }
 }
 
 
 void replaceChar(int pos_h, int pos_w, char **theDisplay, char from, char to) {
+  /* --- used for add or remove players --- */
   for (int i = 0; i < maxPlayer; ++i) {
     char c = theDisplay[pos_h - 1][pos_w - 1 + i];
     if (c == from) {
@@ -104,36 +115,36 @@ void replaceChar(int pos_h, int pos_w, char **theDisplay, char from, char to) {
 
 
 void TextDisplay::removePlayer(Player *p) {
-  /* --- notify the player --- */
+  /* --- remove the player --- */
   int pos_h;
   int pos_w;
   int pos = p->getPos();
 
   char symbol = p->getSymbol();
 
-  setPlayerDisplayPos(pos_h, pos_w, pos);
+  setPlayerDisplayPos(pos_h, pos_w, pos);             // remove Player
   replaceChar(pos_h, pos_w, theDisplay, symbol, ' ');
 }
 
 
 void TextDisplay::notify(Player *p, int oldPos) {
-  /* --- notify the player --- */
+  /* --- notify the player (change pos) --- */
   int pos_h;
   int pos_w;
   int pos = p->getPos();
 
   char symbol = p->getSymbol();
 
-  setPlayerDisplayPos(pos_h, pos_w, oldPos);
+  setPlayerDisplayPos(pos_h, pos_w, oldPos);           // remove Player from old pos
   replaceChar(pos_h, pos_w, theDisplay, symbol, ' ');
 
-  setPlayerDisplayPos(pos_h, pos_w, pos);
+  setPlayerDisplayPos(pos_h, pos_w, pos);              // add Player to its new pos
   replaceChar(pos_h, pos_w, theDisplay, ' ', symbol);
 }
 
 
 void TextDisplay::notify(Building *b) {
-  /* --- notify the square --- */
+  /* --- notify the square (display info) --- */
   int info_h;
   int info_w;
   int index = b->getIndex();
@@ -142,19 +153,20 @@ void TextDisplay::notify(Building *b) {
 
   Player *owner = b->getOwner();
 
-  if (owner != nullptr) {
+  if (owner != nullptr) {    // only display ownership when the property is owned
     theDisplay[info_h - 1][info_w - 1] = 'O';
     theDisplay[info_h - 1][info_w] = ':';
     theDisplay[info_h - 1][info_w + 1] = owner->getSymbol();
   }
 
   int level = 0;
-  if (b->isAcademic()) {
+
+  if (b->isAcademic()) {    // cast b to Academic when appropriate
     Academic *academic = dynamic_cast<Academic *>(b);
     level = academic->getImpLevel();
   }
 
-  if (level != 0) {
+  if (level != 0) {         // only display level when the property has been improved
     theDisplay[info_h - 1][info_w + 4] = 'L';
     theDisplay[info_h - 1][info_w + 5] = ':';
     theDisplay[info_h - 1][info_w + 6] = level;
