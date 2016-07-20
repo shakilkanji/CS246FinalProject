@@ -1,4 +1,5 @@
 #include "academic.h"
+#include "game.h"
 using namespace std;
 
 Academic::Academic(Game *game, int index, string name, int cost, int impCost, string monoBlock, 
@@ -14,10 +15,9 @@ Academic::Academic(Game *game, int index, string name, int cost, int impCost, st
 	}
 
 Academic::Academic(Game *game, int index, string name, int cost, Player *owner, bool mortgaged, 
-	int impCost, string monoBlock, bool monopolized, int newImpLevel, int baseFee, int oneImpFee, 
+	int impCost, string monoBlock, int newImpLevel, int baseFee, int oneImpFee, 
 	int twoImpFee, int threeImpFee, int fourImpFee, int fiveImpFee) :
-	Building(game, index, name, cost, owner, mortgaged), impCost(impCost), monoBlock(monoBlock),
-	monopolized(monopolized) {
+	Building(game, index, name, cost, owner, mortgaged), impCost(impCost), monoBlock(monoBlock) {
 		impLevel = newImpLevel;
 		fees[0] = baseFee;
 		fees[1] = oneImpFee;
@@ -31,7 +31,7 @@ Academic::~Academic() {}
 
 int Academic::getFees() const {
 	if (getImpLevel() == -1) return 0;
-	if (monopolized && impLevel == 0) return fees[impLevel]*2;
+	if (game->isMonopolized(this) && impLevel == 0) return fees[impLevel]*2;
 	return fees[impLevel];
 }
 
@@ -42,10 +42,6 @@ string Academic::getMonoBlock() const {
 int Academic::getImpCost() const {
 	return impCost;
 }
-
-// bool Academic::isMonopolized() const {
-// 	return monopolized;
-// }
 
 int Academic::getValue() const {
 	if (getImpLevel() == -1) return 0;

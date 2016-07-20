@@ -50,7 +50,7 @@ class Game {
    void displayAssets(Player *player);
    void displayAllAssets();
    void trade();
-   bool checkMonopolized(Square *square);
+   int isMonopolized(const Square *square) const;
    bool dicepair();
    int getsumdice();
    int diceroll(); 

@@ -274,7 +274,6 @@ void Game::run(){
 }
 
 void Game::next(){
-  if (test) cout << "Start next()" << endl;
   for (int i = 0 ; i < 8; i++) {
     if(player[i] != nullptr){
       int pos = player[i]->getPos();
@@ -313,7 +312,7 @@ void Game::askToBuy(Building *building, Player *buyer ) {
     // cout << "Auctions will begin" << endl;
     auctionProperty(building);
    }
-   
+
    cout << "Do you want to buy " << building->getName() << " for $" << building->getCost() << "? ";
    cout << "[yes/no/assets]" << endl;
    
@@ -595,8 +594,12 @@ int Game::diceroll(){
     return sum;
 }
 
-bool Game::checkMonopolized(Square *square) {
-  return true;
+int Game::isMonopolized(const Square *square ) const {
+    return 0;
+    // return 0 if not all properties owned by same player (can't improve, can mortgage)
+    // return 0 if all properties owned by same player, but at least one is mortgaged (can't improve)
+    // return 1 if all properties owned, no improvements, no mortgages (can improve, can mortgage, DOUBLE rent)
+    // return 2 if all properties owned, one property has improvements (can improve, can't mortgage)
 }
 
 void Game::buyImprovement(Square *square, Player *player) {
@@ -609,6 +612,9 @@ void Game::buyImprovement(Square *square, Player *player) {
         return;
     }
     int ownerBalance = owner->getBalance();
+    if (isMonopolized(academic) == 0) {
+        cout << "You can only improve properties on which you own a monopoly." << endl;
+    }
     int impCost = academic->getImpCost();
     if (ownerBalance < impCost) {
         cout << "You do not have enough funds to improve this property." << endl;
@@ -619,8 +625,13 @@ void Game::buyImprovement(Square *square, Player *player) {
         cout << "This property cannot be improved further." << endl;
         return;
     }
+    if (impLevel == -1) {
+        cout << "You may not improve a mortgaged property." << endl;
+        return;
+    }
     academic->setImpLevel(impLevel+1);
     owner->updateBalance(impCost * -1);
+    td->notify(academic);
     cout << academic->getName() << " now has " << academic->getImpLevel() << " improvements. ";
     cout << "Your balance decreased to " << player->getBalance() << "." << endl;
 }
@@ -641,8 +652,13 @@ void Game::sellImprovement(Square *square, Player *player) {
         cout << "This property has no improvements." << endl;
         return;
     }
+    if (impLevel == -1) {
+        cout << "This property is mortgaged, and has no improvements." << endl;
+        return;
+    }
     academic->setImpLevel(impLevel-1);
     owner->updateBalance(impCost/2);
+    td->notify(academic);
     cout << academic->getName() << " now has " << academic->getImpLevel() << " improvements. ";
     cout << "Your balance increased to " << player->getBalance() << "." << endl;
 }
@@ -656,6 +672,9 @@ void Game::mortgageBuilding(Square *square, Player *player) {
         cout << "You do not own this property." << endl;
         return;
     }
+    if (building->getImpLevel() > 0) {
+        cout << "You cannot mortgage a building which has improvements. " << endl;
+    }
     if (building->getImpLevel() == -1) {
         cout << "This property is already mortgaged." << endl;
         return;
@@ -663,6 +682,7 @@ void Game::mortgageBuilding(Square *square, Player *player) {
     int mortgageValue = building->getCost() / 2;
     owner->updateBalance(mortgageValue);
     building->setImpLevel(-1);
+    td->notify(building);
     cout << building->getName() << " has been mortgaged. ";
     cout << "Your balance increased to " << player->getBalance() << "." << endl;
 }
@@ -688,6 +708,7 @@ void Game::unmortgageBuilding(Square *square, Player *player) {
     }
     owner->updateBalance(unmortgageCost * -1);
     building->setImpLevel(0);
+    td->notify(building);
     cout << building->getName() << " has been unmortgaged. ";
     cout << "Your balance decreased to " << player->getBalance() << "." << endl;
 }
