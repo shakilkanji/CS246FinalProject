@@ -14,7 +14,9 @@ class TextDisplay {
   ~TextDisplay();
 
   void display();
+
   void removePlayer(Player *p);
+  
   void notify(Player *p, int oldPos);
   void notify(Building *b);
 };
