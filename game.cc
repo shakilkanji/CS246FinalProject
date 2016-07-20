@@ -260,10 +260,10 @@ void Game::run(){
 
 void Game::next(){
   if (test) cout << "Start next()" << endl;
-  for (int i = 0 ; i < numplayer; i++) {
+  for (int i = 0 ; i < 8; i++) {
     if(player[i] != nullptr){
       int pos = player[i]->getPos();
-    td->notify(player[i],pos);
+      td->notify(player[i],pos);
     }   
   }
 
@@ -415,6 +415,11 @@ bool Game::dicepair(){
 void Game::move(int move_blocks){
  int old_pos = player[currentplayer]->getPos();
  int current_pos =  player[currentplayer]->getPos() + move_blocks;
+  if (test) {
+    cout << old_pos << endl;
+    cout << move_blocks << endl;
+    cout << current_pos << endl;
+  }
 
  if(current_pos > 39){
   current_pos -= 40;
@@ -425,7 +430,7 @@ void Game::move(int move_blocks){
  player[currentplayer]->setPos(current_pos);
  td->notify(player[currentplayer],old_pos);
  td->display();
- // gameboard[current_pos]->notify(player[currentplayer]);
+ gameboard[current_pos]->notify(player[currentplayer]);
 }
 
 
