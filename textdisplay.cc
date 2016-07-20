@@ -12,8 +12,8 @@ using namespace std;
 const int height = 56;
 const int width = 101;
 
-const int box_h = 9;
-const int box_w = 5;
+const int box_h = 5;
+const int box_w = 9;
 
 const int maxPlayer = 8;
 const int numNonBuild = 6;
@@ -66,15 +66,15 @@ void setPlayerDisplayPos(int &pos_h, int &pos_w, int pos) {
   /* --- caculate pos on board for displaying players --- */
   if (pos < 10) {
     pos_h = 55;
-    pos_w = width - (pos * box_h) - 9;
+    pos_w = width - (pos * box_w) - 9;
   } else if (pos < 20) {
-    pos_h = height - ((pos - 10) * box_w) - 1;
+    pos_h = height - ((pos - 10) * box_h) - 1;
     pos_w = 2;
   } else if (pos < 30) {
     pos_h = 5;
-    pos_w = ((pos - 20) * box_h) + 2;
+    pos_w = ((pos - 20) * box_w) + 2;
   } else {
-    pos_h = ((pos - 30) * box_w) + 5;
+    pos_h = ((pos - 30) * box_h) + 5;
     pos_w = 92;
   }
 }
@@ -84,15 +84,15 @@ void setSquareDisplayInfo(int &info_h, int &info_w, int index) {
   /* --- caculate pos on board for displaying ownerships and levels --- */
   if (index < 10) {
     info_h = 52;
-    info_w = width - (index * box_h) - 9;
+    info_w = width - (index * box_w) - 9;
   } else if (index < 20) {
-    info_h = height - ((index - 10) * box_w) - 4;
+    info_h = height - ((index - 10) * box_h) - 4;
     info_w = 2;
   } else if (index < 30) {
     info_h = 2;
-    info_w = ((index - 20) * box_h) + 2;
+    info_w = ((index - 20) * box_w) + 2;
   } else {
-    info_h = ((index - 30) * box_w) + 1;
+    info_h = ((index - 30) * box_h) + 2;
     info_w = 92;
   }
 
