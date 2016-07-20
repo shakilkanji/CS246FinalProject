@@ -342,59 +342,38 @@ void Game::askToBuy(Building *building, Player *buyer ) {
 }
 
 
-// void Game::trade() {
-//     string temp_trader;
-//     string give;
-//     string receive;
-//     int givenumber = 0;
-//     int receivenumber = 0;
-//     bool givemoney = false;
-//     bool receivemoney = false;
+void Game::trade() {
+    string temp_trader;
+    string give;
+    string receive;
+    int givenumber = 0;
+    int receivenumber = 0;
+    bool givemoney = false;
+    bool receivemoney = false;
 
-//     cin >> temp_trader;
-//     cin >> give;
-//     cin >> receive;
+    cin >> temp_trader;
+    cin >> give;
+    cin >> receive;
     
-//     istringstream give_s(give)
-//     if(give_s >> givenumber){
-//      givemoney = true;    
-//     }
+    istringstream give_s(give)
+    if(give_s >> givenumber){
+     givemoney = true;    
+    }
     
-//     istringstream receive_s(receive)
-//     if(receive_s >> receivenumber){
-//      receivemoney = true;    
-//     }
+    istringstream receive_s(receive)
+    if(receive_s >> receivenumber){
+     receivemoney = true;    
+    }
 
-//     int trader_index = getplayer(string temp_trader);
-//     if
+    int trader_index = getplayer( temp_trader);
+    if
 
-// }
+}
 
-// bool Game::checkmonoimprov(string building){
-//     int current_index = getPropertyIndex(building);
-//     Building *current_pointerbuilding = dynamic_cast<Building *>(gameboard[current_index]);
-//     Academic *current_pointeracademic = dynamic_cast<Academic *>(current_pointerbuilding);
-//     for( int i = 0 ; i < 40 ; i++) {
-//        int index =  getPropertyIndex( gameboard[i]->getName());
-//       if ( ( index  != -1 )||( index != 12 )||( index != 28 )||( index != 28 )||
-//         ( index != 5 )||( index != 15 )||( index != 25 )||( index != 31 ) ) {
-//        Building *pointerbuilding = dynamic_cast<Building *>(gameboard[index]);
-//        Academic *pointeracademic = dynamic_cast<Academic *>(pointerbuilding);
-//        if(pointeracademic->getMonoBlock() == current_pointeracademic->getMonoBlock()) {
-//          if(pointeracademic->getImpLevel() != 0 ){
-//             return true;
-//          }
-//        }
-//    }
 
-// }
-// }
       
   
-    
-
-
-
+  
 //get index of player
 int Game::getplayer(string name){
    for(int i = 0; i < numplayer; i ++){
@@ -485,20 +464,6 @@ void Game::displayAllAssets() {
   }
 }
 
-// void Game::displayAssets(Player *player){
-//     for (int i = 0; i < 40; ++i) {
-//         Academic *ap = dynamic_cast<Academic *>(gameboard[i]);
-//         if (ap) {
-//             cout << *ap;
-//         }
-//         else {
-//             Building *bp = dynamic_cast<Building *>(gameboard[i]);
-//             if (bp) {
-//               cout << *bp;
-//             }
-//         }
-//     }
-// }
 
 void Game::auctionProperty(Building *building){
    cout << "Auction for " << building->getName() << " start!" << endl;
