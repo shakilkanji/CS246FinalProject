@@ -21,9 +21,6 @@ class Building : public Square {
 
   	virtual int getFees() const = 0;
 
-  	bool getMortgaged() const;
-  	void setMortgaged(bool isMortgaged);
-
   	virtual int getValue() const;
 
   	int getImpLevel() const;

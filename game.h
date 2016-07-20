@@ -36,9 +36,6 @@ class Game {
    int getBuildingIndex(std::string square);
    int getplayer(std::string name);
 
-   void loadGame(std::string filename);
-   void saveGame(std::string filename);
-
   public:
   	Game();
 	  ~Game();
@@ -63,6 +60,9 @@ class Game {
 
    void mortgageBuilding(Building *building, Player *player);
    void unmortgageBuilding(Building *building, Player *player);
+
+   bool loadGame(std::string filename);
+   void saveGame(std::string filename);
 };
 
 /***************

@@ -28,17 +28,8 @@ void Building::setImpLevel(int newImpLevel) {
 	impLevel = newImpLevel;
 }
 
-bool Building::getMortgaged() const {
-	return impLevel == -1;
-}
-
-void Building::setMortgaged(bool isMortgaged) {
-	if (isMortgaged) impLevel = -1;
-	else impLevel = 0;
-}
-
 int Building::getValue() const {
-	if (getMortgaged()) return 0;
+	if (getImpLevel() == -1) return 0;
 	return cost;
 }
 

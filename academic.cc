@@ -30,7 +30,7 @@ Academic::Academic(Game *game, int index, string name, int cost, Player *owner, 
 Academic::~Academic() {}
 
 int Academic::getFees() const {
-	if (getMortgaged()) return 0;
+	if (getImpLevel() == -1) return 0;
 	if (monopolized && impLevel == 0) return fees[impLevel]*2;
 	return fees[impLevel];
 }
@@ -48,7 +48,7 @@ int Academic::getImpCost() const {
 // }
 
 int Academic::getValue() const {
-	if (getMortgaged()) return 0;
+	if (getImpLevel() == -1) return 0;
 	int impValue = impLevel * impCost;
 	return impValue + cost;
 }

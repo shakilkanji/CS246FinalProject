@@ -102,7 +102,7 @@ void Game::normalinit(){
         }
 
         if(chosen == true ){
-        	cout << "Someone has already chosen this name, please change to another one" << endl;
+        	cout << "Someone has already chosen this name, please change to another one." << endl;
         }
         else{
         	playername[current] = temp_name;
@@ -555,13 +555,13 @@ void Game::mortgageBuilding(Building *building, Player *player) {
         cout << "You do not own this property." << endl;
         return;
     }
-    if (building->getMortgaged()) {
+    if (building->getImpLevel() == -1) {
         cout << "This property is already mortgaged." << endl;
         return;
     }
     int mortgageValue = building->getCost() / 2;
     owner->updateBalance(mortgageValue);
-    building->setMortgaged(true);
+    building->setImpLevel(-1);
 }
 
 void Game::unmortgageBuilding(Building *building, Player *player) {
@@ -570,7 +570,7 @@ void Game::unmortgageBuilding(Building *building, Player *player) {
         cout << "You do not own this property." << endl;
         return;
     }
-    if (!building->getMortgaged()) {
+    if (building->getImpLevel() != -1) {
         cout << "This property is not mortgaged." << endl;
         return;
     }
@@ -581,7 +581,7 @@ void Game::unmortgageBuilding(Building *building, Player *player) {
         return;
     }
     owner->updateBalance(unmortgageCost * -1);
-    building->setMortgaged(false);
+    building->setImpLevel(0);
 }
 
 void Game::forceBankruptcy(Player *landedPlayer, int fee) {
@@ -659,9 +659,62 @@ int Game::getBuildingIndex(string square) {
     return -1;
 }
 
-void Game::loadGame(string filename) {
-  ifstream myfile;
-  
+bool Game::loadGame(string filename) {
+  ifstream myfile(filename);
+  if (myfile.is_open()) {
+    myfile >> numplayer;
+    for (int i = 0; i < numplayer; ++i) { // Read player data
+      myfile >> playername[i];
+      if (playername[i] == "BANK") {
+        cout << "Cannot have player named BANK." << endl;
+        return false;
+      }
+      myfile >> chosensymbol[i];
+      int playerNumTimsCups;
+      myfile >> playerNumTimsCups;
+      int playerBalance;
+      myfile >> playerBalance;
+      int playerPosition;
+      myfile >> playerPosition;
+      int isStuckDC = 0;
+      int playerDCTurn = -1;
+      if (playerPosition == 10) {
+        myfile >> isStuckDC;
+        if (isStuckDC != 0) {
+          myfile >> playerDCTurn;
+        }
+      }
+
+      player[i] = new Player(chosensymbol[i], playername[i], this, playerNumTimsCups, playerBalance, 
+        playerPosition, playerDCTurn);
+    }
+
+    for (int i = 0; i < 28; ++i) {  // Read property data
+      string propertyName;
+      myfile >> propertyName;
+      int propertyIndex = getBuildingIndex(propertyName);
+      Building *bp = static_cast<Building *>(gameboard[propertyIndex]);
+      string propertyOwner;
+      myfile >> propertyOwner;
+      if (propertyOwner != "BANK") {
+        for (int i = 0; i < numplayer; ++i) {
+          if (player[i]->getName() == propertyOwner) {
+            bp->setOwner(player[i]);
+          }
+        }
+      }
+      int propertyImprovements;
+      myfile >> propertyImprovements;
+      bp->setImpLevel(propertyImprovements);
+    }
+    currentplayer = 0;
+    myfile.close();
+    return true;
+  } else {
+    cout << "Unable to open file." << endl;
+    return false;
+  }
+
 }
 
 void Game::saveGame(string filename) {

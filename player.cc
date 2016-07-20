@@ -8,7 +8,7 @@ Player::Player(char symbol, string playerName, Game *g) : symbol(symbol), player
   numRes = 0;
   balance = 1500;
   position = 0;
-  DCTurn = 0;
+  DCTurn = -1;
 }
 
 Player::Player(char symbol, string playerName, Game *g, int numTimsCups, int balance, int position, int DCTurn) : 
