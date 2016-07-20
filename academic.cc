@@ -14,11 +14,11 @@ Academic::Academic(Game *game, int index, string name, int cost, int impCost, st
 	}
 
 Academic::Academic(Game *game, int index, string name, int cost, Player *owner, bool mortgaged, 
-	int impCost, string monoBlock, bool monopolized, int impLevel, int baseFee, int oneImpFee, 
+	int impCost, string monoBlock, bool monopolized, int newImpLevel, int baseFee, int oneImpFee, 
 	int twoImpFee, int threeImpFee, int fourImpFee, int fiveImpFee) :
 	Building(game, index, name, cost, owner, mortgaged), impCost(impCost), monoBlock(monoBlock),
 	monopolized(monopolized) {
-		impLevel = impLevel;
+		impLevel = newImpLevel;
 		fees[0] = baseFee;
 		fees[1] = oneImpFee;
 		fees[2] = twoImpFee;

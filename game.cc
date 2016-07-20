@@ -10,8 +10,8 @@
 
 using namespace std;
 
-Game::Game():numplayer(0),currentplayer(0),rimcup(4),test(false),sumofdice(0),rolled(false),roll_time(0),
-firstdeice(0),seconddice(0){
+Game::Game():numplayer(0),currentplayer(0),rimcup(4),sumofdice(0),
+firstdeice(0),seconddice(0),test(false),rolled(false),roll_time(0){
     td = new TextDisplay;
 
     for(int i = 0 ; i < 8 ; i++){
@@ -727,7 +727,7 @@ void Game::saveGame(string filename) {
       myfile << " " << player[i]->getBalance() << " " << player[i] ->getPos();
       if (player[i]->getPos() == 10) {  // Player is on DCTims Square
         myfile << " ";
-        if (player[i]->getDCTurn() != 0) {  // Player is stuck in DCTims line
+        if (player[i]->getDCTurn() != -1) {  // Player is stuck in DCTims line
           myfile << 1 << " " << player[i]->getDCTurn();
         } else {  // Just visiting
           myfile << 0 << " ";
