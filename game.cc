@@ -236,6 +236,7 @@ void Game::run(){
       string saveFile;
       cin >> saveFile;
       saveGame(saveFile);
+      cout << "Successfully saved in "<< saveFile << " !" << endl;
     }
 
     else if(command == "next") {
@@ -295,9 +296,6 @@ void Game::next(){
 }
 
 
-// void Game::blockaction(){
-    
-// }
 
 
 void Game::askToBuy(Building *building, Player *buyer ) {
@@ -315,16 +313,17 @@ void Game::askToBuy(Building *building, Player *buyer ) {
     if(temp_askbuy == "yes"){
         cout << "You have purchesd " << building->getName() << endl;
         building->setOwner(buyer);
-        cout << "debug 1" << endl;
+        if(test == true )cout << "debug 1" << endl;
         buyer->updateBalance( -1 * building->getCost() );
-        cout << "debug 2" << endl;
+        if(test == true ) cout << "debug 2" << endl;
         td->notify(building);
         td->display();
-        cout << "debug 3" << endl;
+        if(test == true ) cout << "debug 3" << endl;
         break;
     }
     else if (temp_askbuy == "no"){
-        cout << "Auctions will begin" << endl;
+        // cout << "Auctions will begin" << endl;
+        auctionProperty(building);
         break;
     }
     else if( temp_askbuy == "assets" ){
@@ -449,8 +448,6 @@ void Game::move(int move_blocks){
 
 
 
-
-
 void Game::settest(){
    test = true;
 }
@@ -526,6 +523,8 @@ int Game::diceroll(){
     return firstdeice+seconddice;
 }
 
+// void Game::Improve
+
 void Game::buyImprovement(Academic *academic, Player *player) {
     Player *owner = academic->getOwner();
     if (player != owner) {
@@ -546,6 +545,7 @@ void Game::buyImprovement(Academic *academic, Player *player) {
     academic->setImpLevel(impLevel+1);
     owner->updateBalance(impCost * -1);
 }
+
 
 void Game::sellImprovement(Academic *academic, Player *player) {
     Player *owner = academic->getOwner();

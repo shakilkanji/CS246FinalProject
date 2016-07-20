@@ -6,14 +6,14 @@ Building::Building(Game *game, int index, string name, int cost) : Square(game, 
 	    owner = nullptr;
 }
 
-Building::Building(Game *game, int index, string name, int cost, Player *owner, bool mortgaged) : 
-	Square(game, index, name), cost(cost), owner(owner), mortgaged(mortgaged) {		
-	impLevel = 0;
-	owner = nullptr;
-}
+// Building::Building(Game *game, int index, string name, int cost, Player *owner, bool mortgaged) : 
+// 	Square(game, index, name), cost(cost), owner(owner), mortgaged(mortgaged) {		
+// 	impLevel = 0;
+// 	owner = nullptr;
+// }
 
-// Building::Building(Game *game, int index, string name, int cost, Player *owner, int impLevel) : 
-// 	Square(game, index, name), cost(cost), owner(owner), impLevel(impLevel) {}
+Building::Building(Game *game, int index, string name, int cost, Player *owner, int impLevel) : 
+	Square(game, index, name), cost(cost), owner(owner), impLevel(impLevel) {}
 
 
 Building::~Building() {}
@@ -53,11 +53,13 @@ void Building::notify(Player *landedPlayer) {
 	}
 	else {
 		int fees = getFees();
+		cout << "You will pay " << owner->getName() << " "  << fees << " $" << endl;
 		if (landedPlayer->getBalance() < fees) {
 			// game->forceBankruptcy(landedPlayer, owner, fees);
 		} else {
 			landedPlayer->updateBalance(fees * -1);
 			owner->updateBalance(fees);
+			cout << "You current balance is " <<  landedPlayer->getBalance() << endl;
 		}
 	}
 }
@@ -75,6 +77,6 @@ ostream& operator<<(ostream& out, const Building& b) {
 	Player *owner = b.getOwner();
 	string ownerName = "BANK";
 	if (owner) ownerName = owner->getName();
-	out << b.getName() << " " << ownerName << " " << b.getImpLevel() << endl;
+	out << b.getName() << " " << ownerName << " " << endl;
 	return out;
 }
