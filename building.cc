@@ -52,17 +52,22 @@ int Building::getCost() const {
 }
 
 void Building::notify(Player *landedPlayer) {
-	if (owner == nullptr) game->askToBuy(this, landedPlayer);
-	else if (owner == landedPlayer) cout << "You own this property." << endl;
-	else {
+	cout << "You have landed on " << getName() << ". ";
+	if (owner == nullptr) {
+		cout << "It is unowned." << endl;
+		game->askToBuy(this, landedPlayer);
+	} else if (owner == landedPlayer) {
+		cout << "You own this property." << endl;
+	} else {
+		cout << "It is owned by " << owner->getName() << ". ";
 		int fees = getFees();
-		cout << "You will pay " << owner->getName() << " "  << fees << " $" << endl;
+		cout << "You must pay " << "$" << fees << "." << endl;
 		if (landedPlayer->getBalance() < fees) {
 			// game->forceBankruptcy(landedPlayer, owner, fees);
 		} else {
 			landedPlayer->updateBalance(fees * -1);
 			owner->updateBalance(fees);
-			cout << "You current balance is " <<  landedPlayer->getBalance() << endl;
+			cout << "Your new balance is $" <<  landedPlayer->getBalance() << "." << endl;
 		}
 	}
 }

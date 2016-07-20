@@ -167,33 +167,33 @@ void Game::run(){
     next();
 
     while(cin >> command) {
-      if( command == "roll" ){
-         if(rolled == true) { //if the player has already roll the dice 
+      if (command == "roll" || command == "Roll") {
+         if (rolled == true) { // if the player has already roll the dice 
            cout << "You cannot roll the dice anymore in this turn" << endl;   
-         } else{  //player has not rolled
+         } else {  // player has not rolled
              int dice_result = diceroll();
              roll_time += 1;
              move(dice_result);
              if(dicepair() == true) {
               if(roll_time == 3) {  // after 3 rolls, player is sent to DC tims line and cannot move
-                cout << "You have rolled 3 doubles, as a result, you are moved to DC tims line" << endl;
+                cout << "You have rolled 3 doubles. Go to DC Tims Line! " << endl;
                 rolled = true;
               } else {
-                  cout << "You roll a double and you can roll a dice for another time" << endl;
+                  cout << "You rolled a double, please roll again. " << endl;
               }    
              } else { // roll a nondouble dice 
-                cout << "you go to a square" << endl;
+                displayCommands();
                 rolled = true;
              }
          }
       }
 
 
-      else if( command == "trade"){
+      else if( command == "trade" || command == "Trade") {
        cout << "you will do a trade" << endl;
       }
       
-      else if( command == "improve") {
+      else if( command == "improve" || command == "Improve") {
         string property;
         cin >> property;
         int propertyIndex = getAcademicIndex(property);
@@ -206,7 +206,7 @@ void Game::run(){
         }
       }
 
-      else if(command == "mortage") {
+      else if(command == "mortgage" || command == "Mortgage") {
         string mortgageProperty;
         cin >> mortgageProperty;
         int buildingIndex = getBuildingIndex(mortgageProperty);
@@ -216,7 +216,7 @@ void Game::run(){
         }
       }
       
-      else if(command == "unmortgage") {
+      else if(command == "unmortgage" || command == "Unmortgage") {
         string unmortgageProperty;
         cin >> unmortgageProperty;
         int buildingIndex = getBuildingIndex(unmortgageProperty);
@@ -226,26 +226,28 @@ void Game::run(){
         } 
       }
 
-      else if(command == "bankrupt") {
+      else if(command == "bankrupt" || command == "Bankrupt") {
         cout << "you will do a bankrupt" << endl;  
       }
    
-      else if(command == "assets") {
+      else if(command == "assets" || command == "Assets") {
         displayAssets(player[currentplayer]); 
+        displayCommands();
       }
 
-      else if(command == "all") {
-        displayAllAssets(); 
+      else if(command == "all" || command == "All") {
+        displayAllAssets();
+        displayCommands();
       }
 
-      else if(command == "save") {
+      else if(command == "save" || command == "Save") {
         string saveFile;
         cin >> saveFile;
         saveGame(saveFile);
         cout << "Successfully saved in "<< saveFile << " !" << endl;
       }
 
-      else if(command == "next") {
+      else if(command == "next" || command == "Next") {
         if (rolled == false){
           cout << "You have not rolled, please roll to complete your turn." << endl;
         }
@@ -262,7 +264,7 @@ void Game::run(){
         }
       }
 
-      else if(command == "exit") {
+      else if(command == "exit" || command == "Exit") {
           cout << "You will exit the game now." << endl;
           return;
       }
@@ -282,61 +284,58 @@ void Game::next(){
 
   td->display();
 
-    cout << "Hello! it is " << player[currentplayer]->getName() << "'s turn!" << endl;
-    cout << endl;
-    cout<<"You can choose the following commands:"<<endl;
-    cout<<"roll: the player rolls two dice, moves the sum of the two dice and takes action on the square they landed on."<<endl;
-    cout<<"next: give the control to the next player. "<<endl;
-    cout<<"trade <player> <give> <receive>: having trade with player, offering give and requesting receive."<<endl;
-    cout<<"improve <property> buy/sell: attempts to buy or sell an improvement for property"<<endl;
-    cout<<"mortgage <property>: attempts to mortgage property."<<endl;
-    cout<<"unmortgage <property>: attempts to unmortgage property."<<endl;
-    cout<<"bankrupt: player declares bankruptcy."<<endl;
-    cout<<"assets: displays the assets of the current player."<<endl;
-    cout<<"all: displays the assets of every player.."<<endl;
-    cout<<"save <filename>: saves the current state of the game."<<endl<<endl;
-    
-    rolled = false;
-    roll_time = 0;
-  if (test) cout << "End next()" << endl; 
+  cout << "Hello! it is " << player[currentplayer]->getName() << "'s turn!" << endl;
+  displayCommands();
+  
+  rolled = false;
+  roll_time = 0;
 }
 
-
+void Game::displayCommands() {
+    cout << endl;
+    cout << "Please choose from the following commands:" << endl;
+    cout << "roll: roll two dice, and move your piece the sum of those dice." << endl;
+    cout << "next: give control to the next player. " << endl;
+    cout << "trade <player> <give> <receive>: offers to trade property/cash with another player." << endl;
+    cout << "improve <property> buy/sell: attempts to buy or sell an improvement for property." << endl;
+    cout << "mortgage <property>: attempts to mortgage property." << endl;
+    cout << "unmortgage <property>: attempts to unmortgage property." << endl;
+    cout << "assets: displays the assets of the current player." << endl;
+    cout << "all: displays the assets of every player." << endl;
+    cout << "save <filename>: saves the current state of the game to the given file." << endl;
+}
 
 
 void Game::askToBuy(Building *building, Player *buyer ) {
    if(buyer->getBalance() < building->getCost()){
-    cout << "Sorry you don't have enough money to buy this building. " << "You current balance is " << buyer->getBalance();
-    cout << "The building will spend " << building->getCost() << endl;
+    cout << "Sorry you don't have enough money to buy this building. " << "Your current balance is " << buyer->getBalance();
+    cout << "This building costs " << building->getCost() << "." << endl;
     // cout << "Auctions will begin" << endl;
     auctionProperty(building);
    }
-   cout << "Do you want to buy " << building->getName() << "which will spend you " << building->getCost() << "$?" <<endl;
+   cout << "Do you want to buy " << building->getName() << " for $" << building->getCost() << "? ";
    cout << "[yes/no/assets]" << endl;
    
    string temp_askbuy;
    while( cin >> temp_askbuy ){
-    if(temp_askbuy == "yes"){
+    if(temp_askbuy == "yes" || temp_askbuy == "Yes"){
         cout << "You have purchesd " << building->getName() << endl;
         building->setOwner(buyer);
-        if(test == true )cout << "debug 1" << endl;
         buyer->updateBalance( -1 * building->getCost() );
-        if(test == true ) cout << "debug 2" << endl;
         td->notify(building);
         td->display();
-        if(test == true ) cout << "debug 3" << endl;
         break;
     }
-    else if (temp_askbuy == "no"){
+    else if (temp_askbuy == "no" || temp_askbuy == "No"){
         // cout << "Auctions will begin" << endl;
         auctionProperty(building);
         break;
     }
-    else if( temp_askbuy == "assets" ){
+    else if( temp_askbuy == "assets" || temp_askbuy == "Assets"){
         displayAssets(buyer);
     }
     else{
-        cout << "invaild command, please input yes/no/assets. " <<endl;
+        cout << "Invalid command, please input [yes/no/assets]. " << endl;
     }
    }
 }
@@ -509,29 +508,26 @@ void Game::auctionProperty(Building *building){
 int Game::diceroll(){
     string n;
     srand(time(0));
-    if(test == false){
-    firstdice = 1+rand()%6;
-    seconddice = 1+rand()%6;
-    
+    if (test == false) {
+      firstdice = 1+rand()%6;
+      seconddice = 1+rand()%6;
+    } else {
+      cout << "Testing mode: Please enter two numbers between 1 and 6 (inclusive)." << endl;
+      cin >> firstdice >> seconddice;
     }
-    else{
-    cout << "It is testing mode" << endl;
-    cout << "Please enter two numbers between 1 and 6 (inclusive)." << endl;
-    cin >> firstdice >> seconddice;
-
-    }
-    cout << "first dice rolls " << firstdice << endl;
-    cout << "second dice rolls " << seconddice << endl;
-    cout << "total is " << firstdice+seconddice << endl;
-    cout << "Input any string to countinue" << endl;
-    cin >> n;
-    
-    return firstdice+seconddice;
+    int sum = firstdice + seconddice;
+    cout << "You have rolled a " << sum << "." << endl;
+    return sum;
 }
 
-// void Game::Improve
+bool Game::checkMonopolized(Square *square) {
+  return true;
+}
 
-void Game::buyImprovement(Academic *academic, Player *player) {
+void Game::buyImprovement(Square *square, Player *player) {
+    int academicIndex = getAcademicIndex(square->getName());
+    if (academicIndex == -1) return;
+    Academic *academic = static_cast<Academic *>(square);
     Player *owner = academic->getOwner();
     if (player != owner) {
         cout << "You do not own this property." << endl;
@@ -550,10 +546,15 @@ void Game::buyImprovement(Academic *academic, Player *player) {
     }
     academic->setImpLevel(impLevel+1);
     owner->updateBalance(impCost * -1);
+    cout << academic->getName() << " now has " << academic->getImpLevel() << " improvements. ";
+    cout << "Your balance decreased to " << player->getBalance() << "." << endl;
 }
 
 
-void Game::sellImprovement(Academic *academic, Player *player) {
+void Game::sellImprovement(Square *square, Player *player) {
+    int academicIndex = getAcademicIndex(square->getName());
+    if (academicIndex == -1) return;
+    Academic *academic = static_cast<Academic *>(square);
     Player *owner = academic->getOwner();
     if (player != owner) {
         cout << "You do not own this property." << endl;
@@ -567,9 +568,14 @@ void Game::sellImprovement(Academic *academic, Player *player) {
     }
     academic->setImpLevel(impLevel-1);
     owner->updateBalance(impCost/2);
+    cout << academic->getName() << " now has " << academic->getImpLevel() << " improvements. ";
+    cout << "Your balance increased to " << player->getBalance() << "." << endl;
 }
 
-void Game::mortgageBuilding(Building *building, Player *player) {
+void Game::mortgageBuilding(Square *square, Player *player) {
+    int buildingIndex = getBuildingIndex(square->getName());
+    if (buildingIndex == -1) return;
+    Building *building = static_cast<Building *>(square);
     Player *owner = building->getOwner();
     if (player != owner) {
         cout << "You do not own this property." << endl;
@@ -582,9 +588,14 @@ void Game::mortgageBuilding(Building *building, Player *player) {
     int mortgageValue = building->getCost() / 2;
     owner->updateBalance(mortgageValue);
     building->setImpLevel(-1);
+    cout << building->getName() << " has been mortgaged. ";
+    cout << "Your balance increased to " << player->getBalance() << "." << endl;
 }
 
-void Game::unmortgageBuilding(Building *building, Player *player) {
+void Game::unmortgageBuilding(Square *square, Player *player) {
+    int buildingIndex = getBuildingIndex(square->getName());
+    if (buildingIndex == -1) return;
+    Building *building = static_cast<Building *>(square);
     Player *owner = building->getOwner();
     if (player != owner) {
         cout << "You do not own this property." << endl;
@@ -602,6 +613,8 @@ void Game::unmortgageBuilding(Building *building, Player *player) {
     }
     owner->updateBalance(unmortgageCost * -1);
     building->setImpLevel(0);
+    cout << building->getName() << " has been unmortgaged. ";
+    cout << "Your balance decreased to " << player->getBalance() << "." << endl;
 }
 
 void Game::forceBankruptcy(Player *landedPlayer, int fee) {
@@ -651,6 +664,7 @@ void Game::forceBankruptcy(Player *landedPlayer, int fee) {
     }
     cout << "You now have enough funds to pay the bank." << endl;
     landedPlayer->updateBalance(fee * -1);
+    cout << "Your new balance is " << landedPlayer->getBalance() << "." << endl;
 }
 
 int Game::getAcademicIndex(string square) {
@@ -770,4 +784,3 @@ void Game::saveGame(string filename) {
       }
   }
 }
-

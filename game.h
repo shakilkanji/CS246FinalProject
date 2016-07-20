@@ -35,6 +35,7 @@ class Game {
    int getAcademicIndex(std::string square);
    int getBuildingIndex(std::string square);
    int getplayer(std::string name);
+   void displayCommands();
 
   public:
   	Game();
@@ -49,18 +50,18 @@ class Game {
    void displayAssets(Player *player);
    void displayAllAssets();
    void trade();
-   bool checkmonoimprov(std::string building);
+   bool checkMonopolized(Square *square);
    bool dicepair();
    int getsumdice();
    int diceroll(); 
    void move(int move_blocks);
    void forceBankruptcy(Player *landedPlayer, int fee);   // Player owes bank more than their current balance
 
-   void buyImprovement(Academic *academic, Player *player);
-   void sellImprovement(Academic *academic, Player *player);
+   void buyImprovement(Square *square, Player *player);
+   void sellImprovement(Square *square, Player *player);
 
-   void mortgageBuilding(Building *building, Player *player);
-   void unmortgageBuilding(Building *building, Player *player);
+   void mortgageBuilding(Square *square, Player *player);
+   void unmortgageBuilding(Square *square, Player *player);
 
    bool loadGame(std::string filename);
    void saveGame(std::string filename);
