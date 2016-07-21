@@ -161,9 +161,9 @@ void TextDisplay::notify(Building *b) {
     theDisplay[info_h + 1][info_w + 5] = ':';
     theDisplay[info_h + 1][info_w + 6] = owner->getSymbol();
   }
-
+  
   int level = b->getImpLevel();
-
+  // cout << "TextDisplay" << level << endl;
   replaceChar(info_h, info_w, theDisplay, levelSymbol, ' ', maxLevel);
   replaceChar(info_h, info_w, theDisplay, ' ', levelSymbol, level);
 }

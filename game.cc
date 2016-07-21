@@ -329,6 +329,7 @@ void Game::askToBuy(Building *building, Player *buyer ) {
       building->setOwner(buyer);
       buyer->updateBalance( -1 * building->getCost() );
       td->notify(building);
+      if(test) cout << "Test display" << endl;
       td->display();
       cout << "You have purchesd " << building->getName() << endl;
       break;
@@ -372,9 +373,15 @@ void Game::askToBuy(Building *building, Player *buyer ) {
 //     if (trader_index == -1){
 //       cout << "Sorry, the player you want to trade is not exist." << endl;
 //       return;
+//     }else if ( player[trader_index]->getName() == player[currentplayer]->getName()){
+//       cout << "You cannot trade with your mother." << endl;
+//       return;
+//     }else if ( givemoney && receivemoney){
+//       cout << "You can not trade money for money!" << endl;
+//     }else if ( (givemoney== true )  && (receivemoney == false) ){
+       
+
 //     }
-
-
 
 // }
 
@@ -598,6 +605,7 @@ void Game::buyImprovement(Square *square, Player *player) {
     academic->setImpLevel(impLevel+1);
     owner->updateBalance(impCost * -1);
     td->notify(academic);
+    if(test) cout << "test  " << academic->getImpLevel() << endl;
     cout << academic->getName() << " now has " << academic->getImpLevel() << " improvements. ";
     cout << "Your balance decreased to " << player->getBalance() << "." << endl;
 }
