@@ -119,14 +119,14 @@ void setSquareDisplayInfo(int &info_h, int &info_w, int index) {
 }
 
 
-void replaceChar(int pos_h, int pos_w, char **theDisplay, 
+void replaceChar(int pos_h, int pos_w, char **charArray, 
   char from, char to, int repeatTimes, bool isRepeated) {
   /* --- used for add or remove players --- */
   char c;
   for (int i = 0; i < repeatTimes; ++i) {
-    c = theDisplay[pos_h - 1][pos_w - 1 + i];
+    c = charArray[pos_h - 1][pos_w - 1 + i];
     if (c == from) {
-      theDisplay[pos_h - 1][pos_w - 1 + i] = to;
+      charArray[pos_h - 1][pos_w - 1 + i] = to;
       if (!isRepeated) break;
     }
   }
@@ -206,7 +206,21 @@ void TextDisplay::display() {
   for (int i = 0; i < height; ++i) {
     for (int j = 0; j < width; ++j) {
       displayEffect(i, j);        // display colours for Monopoly Blocks
-      cout << theDisplay[i][j];   // normal display
+
+      if (theDisplay[i][j] == 'O' && theDisplay[i][j + 1] == ':') {
+        cout << Dim << Bold;
+      } else if (theDisplay[i][j] == '#') {
+        cout << Reverse;
+      }
+
+      if (theDisplay[i][j] == '#') cout << ' ';
+      else cout << theDisplay[i][j];   // normal display
+
+      if ((theDisplay[i][j - 2] == 'O' && theDisplay[i][j - 1] == ':') || 
+          (theDisplay[i][j] == '#')) {
+        cout << ResetAll;
+      }
+
       resetEffect(j);             // end colour to default
     }
   }
