@@ -19,12 +19,9 @@ class Player {
 
   int DCTurn;
 
-  Game *g;
-  //std::vector <Building *> buildings;
-
  public:
-  Player(char symbol, std::string playerName, Game *g);
-  Player(char symbol, std::string playerName, Game *g, int numTimsCups, int balance, int position, int DCTurn);
+  Player(char symbol, std::string playerName);
+  Player(char symbol, std::string playerName, int numTimsCups, int balance, int position, int DCTurn);
   ~Player();
 
   char getSymbol() ;
@@ -32,10 +29,6 @@ class Player {
 
   void updateBalance(int n);
   int getBalance() const;
-  //void addProperty(Building *b);
-
-  //int getAssets() const;
-  //int getTotalValue() const;
 
   void setNumGym(int n);
   int getNumGym() const;

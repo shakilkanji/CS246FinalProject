@@ -164,7 +164,7 @@ void displayColour(int row, int col) {
 
 
 void resetColour(int row, int col) {
-  if (col % box_w == 8) cout << BackgroundDefault;
+  if (col % box_w == maxPlayer) cout << BackgroundDefault;
 }
 
 

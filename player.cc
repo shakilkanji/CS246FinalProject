@@ -3,7 +3,7 @@
 #include "player.h"
 
 using namespace std;
-Player::Player(char symbol, string playerName, Game *g) : symbol(symbol), playerName(playerName), g(g) {
+Player::Player(char symbol, string playerName) : symbol(symbol), playerName(playerName) {
   numGym = 0;
   numRes = 0;
   balance = 1500;
@@ -12,8 +12,8 @@ Player::Player(char symbol, string playerName, Game *g) : symbol(symbol), player
   numTimsCups = 0;
 }
 
-Player::Player(char symbol, string playerName, Game *g, int numTimsCups, int balance, int position, int DCTurn) : 
-  symbol(symbol), playerName(playerName), g(g), numTimsCups(numTimsCups), balance(balance), position(position), 
+Player::Player(char symbol, string playerName, int numTimsCups, int balance, int position, int DCTurn) : 
+  symbol(symbol), playerName(playerName), numTimsCups(numTimsCups), balance(balance), position(position), 
   DCTurn(DCTurn) {}
 
 Player::~Player() {}
@@ -34,27 +34,6 @@ void Player::updateBalance(int n) {
 int Player::getBalance() const {
   return balance;
 }
-
-/*void Player::addProperty(Building *b) {
-  buildings.emplace_back(b);
-}
-
-
-int Player::getAssets() {
-  int assets = 0;
-  for (int i = 0; i < buildings.size(); ++i) {
-    assets += buildings[i]->cost;
-  }
-}
-
-
-int Player::getTotalValue() const {
-  int imp = 0;
-  for (int i = 0; i < buildings.size(); ++i) {
-    imp += ( buildings[i]->impLevel * buildings[i]->impCost);
-  }
-  return balance + getAssets() + imp;
-}*/
 
 
 void Player::setNumGym(int n) { 
