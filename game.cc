@@ -369,6 +369,14 @@ void Game::askToBuy(Building *building, Player *buyer ) {
 //      receivemoney = true;    
 //     }
 
+//     if(givemoney == false){
+//       int trade_give_building_index = getBuildingIndex(give);
+//     }
+
+//     if(receivemoney == false){
+//       int trade_receive_building_index = getBuildingIndex(receive);
+//     }
+
 //     int trader_index = getplayer(temp_trader);
 //     if (trader_index == -1){
 //       cout << "Sorry, the player you want to trade is not exist." << endl;
@@ -378,8 +386,28 @@ void Game::askToBuy(Building *building, Player *buyer ) {
 //       return;
 //     }else if ( givemoney && receivemoney){
 //       cout << "You can not trade money for money!" << endl;
-//     }else if ( (givemoney== true )  && (receivemoney == false) ){
-       
+//       return;
+//     }
+
+//     else if ( (givemoney== true )  && (receivemoney == false) ){
+//       if(givenumber > player[currentplayer]->getBalance()){
+//         cout << "You do not have enough money!" << endl;
+//         return;
+//       }
+//       else if( trade_receive_building_index == -1){
+//         cout << "The building you want to trade is not exist!" << endl;
+//         return;
+//       }
+//       else {
+//         Building *bp = dynamic_cast<Building *>(gameboard[trade_receive_building_index]);
+//         if(bp->getOwner()->getName() != temp_trader){
+//           cout << "The person you want to trade does not own this building!" << endl;
+//           return;
+//         }
+//         //should check monopoly
+        
+//       }
+
 
 //     }
 
@@ -605,9 +633,12 @@ void Game::buyImprovement(Square *square, Player *player) {
     academic->setImpLevel(impLevel+1);
     owner->updateBalance(impCost * -1);
     td->notify(academic);
+
     if(test) cout << "test  " << academic->getImpLevel() << endl;
+    td->display();
     cout << academic->getName() << " now has " << academic->getImpLevel() << " improvements. ";
     cout << "Your balance decreased to " << player->getBalance() << "." << endl;
+    displayCommands();
 }
 
 
@@ -633,8 +664,10 @@ void Game::sellImprovement(Square *square, Player *player) {
     academic->setImpLevel(impLevel-1);
     owner->updateBalance(impCost/2);
     td->notify(academic);
+    td->display();
     cout << academic->getName() << " now has " << academic->getImpLevel() << " improvements. ";
     cout << "Your balance increased to " << player->getBalance() << "." << endl;
+    displayCommands();
 }
 
 void Game::mortgageBuilding(Square *square, Player *player) {
