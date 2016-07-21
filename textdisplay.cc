@@ -124,9 +124,7 @@ void replaceChar(int pos_h, int pos_w, char **theDisplay,
   /* --- used for add or remove players --- */
   char c;
   for (int i = 0; i < repeatTimes; ++i) {
-    cout << "test1" << endl;
     c = theDisplay[pos_h - 1][pos_w - 1 + i];
-    cout << "---" << c << "---" << endl;
     if (c == from) {
       theDisplay[pos_h - 1][pos_w - 1 + i] = to;
       if (!isRepeated) break;
@@ -247,8 +245,6 @@ void TextDisplay::notify(Building *b) {
   int info_h, info_w;
   int index = b->getIndex();
 
-  cout << "TEST INDEX: " << index << endl;
-
   setSquareDisplayInfo(info_h, info_w, index);
   if (!b->isAcademic()) info_h -= 2;
 
@@ -261,7 +257,7 @@ void TextDisplay::notify(Building *b) {
   }
 
   int level = b->getImpLevel(); // for displaying level
-  
+
   if (level > 0) {
     replaceChar(info_h, info_w, theDisplay, levelSymbol, ' ', maxLevel, true);
     replaceChar(info_h, info_w, theDisplay, ' ', levelSymbol, level, true);
