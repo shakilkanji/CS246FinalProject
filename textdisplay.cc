@@ -20,7 +20,6 @@ const int index_bot_left  = 10;
 const int index_top_left  = 20;
 const int index_top_right = 30;
 
-const int maxSquare = 40;
 const int maxPlayer = 8;
 const int maxLevel  = 5;
 
@@ -133,6 +132,42 @@ void replaceChar(int pos_h, int pos_w, char **theDisplay,
 }
 
 
+void displayColour(int row, int col) {
+  if (row == 51) {
+    if (col == 64 || col == 82)
+      cout << BackgroundYellow;                // Arts1
+    if (col == 10 || col == 19 || col == 37) 
+      cout << BackgroundLightYellow;           // Arts2
+  }
+
+  if (col == 1) {
+    if (row == 31 || row == 36 || row == 46) 
+      cout << BackgroundMagenta;               // Eng
+    if (row == 6 || row == 11 || row == 21) 
+      cout << BackgroundCyan;                  // Health
+  }
+
+  if (row == 1) {
+    if (col == 10 || col == 28 || col == 37) 
+      cout << BackgroundLightGreen;            // Env
+    if (col == 55 || col == 64 || col == 82) 
+      cout << BackgroundBlue;                  // Sci1
+  }
+
+  if (col == 91) {
+    if (row == 6 || row == 11 || row == 21) 
+      cout << BackgroundLightBlue;             // Sci2
+    if (row == 36 || row == 46) 
+      cout << BackgroundLightRed;              // Math
+  }
+}
+
+
+void resetColour(int row, int col) {
+  if (col % box_w == 8) cout << BackgroundDefault;
+}
+
+
 // Class Functions: /////////////////////////////////////////////////////////////
 
 TextDisplay::TextDisplay(){
@@ -140,12 +175,10 @@ TextDisplay::TextDisplay(){
   theDisplay = new char *[height];
   for (int i = 0; i < height; ++i) theDisplay[i] = new char[width];
 
-  int info_h;
-  int info_w;
-  char c;
-
   ifstream file;
   file.open("board.txt");  // "board.txt" contains the text board frame
+
+  char c;
 
   for (int i = 0; i < height; ++i) {
     for (int j = 0; j < width; ++j) {
@@ -154,20 +187,13 @@ TextDisplay::TextDisplay(){
     }
   }
 
-  for (int index = 0; index < maxSquare; ++index){
-    setSquareDisplayInfo(info_h, info_w, index);
-    
-  }
-
   file.close();
 }
 
 
 TextDisplay::~TextDisplay() {
   /* --- clean the board --- */
-  for (int i = 0; i < height; ++i) {
-    delete [] theDisplay[i];
-  }
+  for (int i = 0; i < height; ++i) delete [] theDisplay[i];
   delete [] theDisplay;
 }
 
@@ -176,7 +202,12 @@ void TextDisplay::display() {
   /* --- display (print) the board --- */
   for (int i = 0; i < height; ++i) {
     for (int j = 0; j < width; ++j) {
+      // display colours for Monopoly Blocks
+      displayColour(i, j);
+      // normal display
       cout << theDisplay[i][j];
+      // end colour to default
+      resetColour(i, j);
     }
   }
 }
@@ -190,7 +221,7 @@ void TextDisplay::removePlayer(Player *p) {
 
   char symbol = p->getSymbol();
 
-  setPlayerDisplayPos(pos_h, pos_w, pos);             // remove Player
+  setPlayerDisplayPos(pos_h, pos_w, pos);              // remove Player
   replaceChar(pos_h, pos_w, theDisplay, symbol, ' ', maxPlayer, false);
 }
 
@@ -228,14 +259,8 @@ void TextDisplay::notify(Building *b) {
     theDisplay[info_h + 1][info_w + 6] = owner->getSymbol();
   }
   
-  int level = b->getImpLevel();
-
-  // cout << "TextDisplay" << level << endl;
-  // replaceChar(info_h, info_w, theDisplay, levelSymbol, ' ', maxLevel);
-  // replaceChar(info_h, info_w, theDisplay, ' ', levelSymbol, level);
-
+  int level = b->getImpLevel(); // for displaying level
 
   replaceChar(info_h, info_w, theDisplay, levelSymbol, ' ', maxLevel, true);
   replaceChar(info_h, info_w, theDisplay, ' ', levelSymbol, level, true);
-
 }
