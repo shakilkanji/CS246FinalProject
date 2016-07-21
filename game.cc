@@ -633,7 +633,7 @@ int Game::diceroll(){
 int Game::isMonopolized(const Square *square ) const {
     return 0;
     // return 0 if not all properties owned by same player (can't improve, can mortgage, can trade)
-    // return 1 if all properties owned by same player, but at least one is mortgaged (can't improve, can trade)
+    // return 1 if all properties owned by same player, but at least one is mortgaged (can't improve, can mortgage, can trade)
     // return 2 if all properties owned, no improvements, no mortgages (can improve, can mortgage, DOUBLE rent, can trade)
     // return 3 if all properties owned, one property has improvements (can improve, can't mortgage, cannot trade)
 }
@@ -716,8 +716,8 @@ void Game::mortgageBuilding(Square *square, Player *player) {
         cout << "You do not own this property." << endl;
         return;
     }
-    if (building->getImpLevel() > 0) {
-        cout << "You cannot mortgage a building which has improvements. " << endl;
+    if (isMonopolized() == 3) {
+        cout << "You may not mortgage a building which has an improved building in its block." << endl;
     }
     if (building->getImpLevel() == -1) {
         cout << "This property is already mortgaged." << endl;
