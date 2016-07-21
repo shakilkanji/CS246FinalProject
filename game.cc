@@ -42,7 +42,7 @@ firstdice(0),seconddice(0),test(false),rolled(false),roll_time(0){
   gameboard[22] = new Square(this, 22, "NEEDLES HALL");
   gameboard[23] = new Academic(this, 23, "EV2", 220, 150, "Env", 18, 90, 250, 700, 875, 1050);
   gameboard[24] = new Academic(this, 24, "EV3", 240, 150, "Env", 20, 100, 300, 750, 925, 1100);
-  gameboard[25] = new Residence(this, 25, "UWP", 200);
+  gameboard[25] = new Residence(this, 25, "V1", 200);
   gameboard[26] = new Academic(this, 26, "PHYS", 260, 150, "Sci1", 22, 110, 330, 800, 975, 1150);
   gameboard[27] = new Academic(this, 27, "B1", 260, 150, "Sci1", 22, 110, 330, 800, 975, 1150);
   gameboard[28] = new Gym(this, 28, "CIF", 150);
@@ -838,7 +838,7 @@ int Game::getBuildingIndex(string square) {
       }
     }
   }
-  cout << "This is not a Building square." << endl;
+  cout << "This is not a Building square. " << << endl;
   return -1;
 }
 
@@ -874,6 +874,7 @@ bool Game::loadGame(string filename) {
 
       player[i] = new Player(chosensymbol[i], playername[i], playerNumTimsCups, playerBalance, 
       playerPosition, playerDCTurn);
+      if (test) cout << "Added Player " << player[i]->getName() << endl;
     }
 
     for (int i = 0; i < 28; ++i) {  // Read property data
@@ -895,14 +896,15 @@ bool Game::loadGame(string filename) {
       int propertyImprovements;
       myfile >> propertyImprovements;
       bp->setImpLevel(propertyImprovements);
+      if (test) cout << "Loaded Property " << bp->getName() << endl;
     }
 
     currentplayer = 0;
     myfile.close();
 
-    for(int i = 0 ; i < 39 ; i++){
+    for(int i = 0 ; i < 40 ; i++) {
       Building *bp = dynamic_cast<Building *>(gameboard[i]);
-      if(bp) td->notify(bp);
+      if (bp) td->notify(bp);
     }
     
     // td->display();
