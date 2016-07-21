@@ -632,10 +632,10 @@ int Game::diceroll(){
 
 int Game::isMonopolized(const Square *square ) const {
     return 0;
-    // return 0 if not all properties owned by same player (can't improve, can mortgage)
-    // return 0 if all properties owned by same player, but at least one is mortgaged (can't improve)
-    // return 1 if all properties owned, no improvements, no mortgages (can improve, can mortgage, DOUBLE rent)
-    // return 2 if all properties owned, one property has improvements (can improve, can't mortgage)
+    // return 0 if not all properties owned by same player (can't improve, can mortgage, can trade)
+    // return 1 if all properties owned by same player, but at least one is mortgaged (can't improve, can trade)
+    // return 2 if all properties owned, no improvements, no mortgages (can improve, can mortgage, DOUBLE rent, can trade)
+    // return 3 if all properties owned, one property has improvements (can improve, can't mortgage, cannot trade)
 }
 
 void Game::buyImprovement(Square *square, Player *player) {
@@ -647,10 +647,16 @@ void Game::buyImprovement(Square *square, Player *player) {
         cout << "You do not own this property." << endl;
         return;
     }
-    int ownerBalance = owner->getBalance();
     if (isMonopolized(academic) == 0) {
         cout << "You can only improve properties on which you own a monopoly." << endl;
+        return;
     }
+    if (isMonopolized(academic) == 1) {
+        cout << "You may not improve a property which a mortgaged property in its block." << endl;
+        return;
+    }
+
+    int ownerBalance = owner->getBalance();
     int impCost = academic->getImpCost();
     if (ownerBalance < impCost) {
         cout << "You do not have enough funds to improve this property." << endl;
@@ -659,10 +665,6 @@ void Game::buyImprovement(Square *square, Player *player) {
     int impLevel = academic->getImpLevel();
     if (impLevel == 5) {
         cout << "This property cannot be improved further." << endl;
-        return;
-    }
-    if (impLevel == -1) {
-        cout << "You may not improve a mortgaged property." << endl;
         return;
     }
     academic->setImpLevel(impLevel+1);
@@ -838,7 +840,7 @@ int Game::getBuildingIndex(string square) {
       }
     }
   }
-  cout << "This is not a Building square. " << << endl;
+  cout << "This is not a Building square. " << endl;
   return -1;
 }
 
