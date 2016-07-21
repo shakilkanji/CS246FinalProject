@@ -32,8 +32,8 @@ class Game {
    // TextDisplay
    TextDisplay *td;
 
-   int getAcademicIndex(std::string square);
-   int getBuildingIndex(std::string square);
+   int getAcademicIndex(std::string square) const;
+   int getBuildingIndex(std::string square) const;
    int getplayer(std::string name);
    void displayCommands();
 
