@@ -6,6 +6,7 @@
 #include <locale>
 #include <fstream>
 #include <sstream>
+#include <vector>
 
 
 using namespace std;
@@ -192,6 +193,16 @@ void Game::run(){
             displayCommands();
             rolled = true;
           }
+        }
+
+      } else if (command == "brothers") {
+        string property;
+        cin >> property;
+
+        int propertyIndex = getAcademicIndex(property);
+        if (propertyIndex >= 0) {
+          int i = isMonopolized(gameboard[propertyIndex]);
+          if (test) cout << "Monopolized code: " << i << endl;
         }
 
       } else if( command == "trade" || command == "Trade") {
@@ -631,11 +642,40 @@ int Game::diceroll(){
 }
 
 int Game::isMonopolized(const Square *square ) const {
-    return 0;
     // return 0 if not all properties owned by same player (can't improve, can mortgage, can trade)
     // return 1 if all properties owned by same player, but at least one is mortgaged (can't improve, can mortgage, can trade)
     // return 2 if all properties owned, no improvements, no mortgages (can improve, can mortgage, DOUBLE rent, can trade)
     // return 3 if all properties owned, one property has improvements (can improve, can't mortgage, cannot trade)
+    int academicIndex = getAcademicIndex(square->getName());
+    if (academicIndex == -1) return -1;
+    const Academic *academic = static_cast<const Academic *>(square);
+    Player *owner = academic->getOwner();
+    string monoBlock = academic->getMonoBlock();
+
+    vector<Academic *> brothers;
+    for (int i = 0; i < 40; ++i) {
+      Academic *ap = dynamic_cast<Academic *>(gameboard[i]);
+      if (ap) {   // bp is null if gameboard[i] is not Building
+        if (ap->getMonoBlock() == monoBlock) {
+          brothers.emplace_back(ap);
+        }
+      }
+    }
+
+    for (auto it = brothers.begin(); it != brothers.end(); ++it) {
+      if (test) cout << "Brother: " << (*it)->getName() << endl;
+      if (academic->getOwner() != (*it)->getOwner()) return 0;
+    }
+
+    for (auto it = brothers.begin(); it != brothers.end(); ++it) {
+      if ((*it)->getImpLevel() == -1) return 1;
+    }
+
+    for (auto it = brothers.begin(); it != brothers.end(); ++it) {
+      if ((*it)->getImpLevel() > 0) return 3;
+    }
+
+    return 2;
 }
 
 void Game::buyImprovement(Square *square, Player *player) {
@@ -716,8 +756,9 @@ void Game::mortgageBuilding(Square *square, Player *player) {
         cout << "You do not own this property." << endl;
         return;
     }
-    if (isMonopolized() == 3) {
+    if (isMonopolized(building) == 3) {
         cout << "You may not mortgage a building which has an improved building in its block." << endl;
+        return;
     }
     if (building->getImpLevel() == -1) {
         cout << "This property is already mortgaged." << endl;
@@ -817,7 +858,7 @@ void Game::forceBankruptcy(Player *landedPlayer, int fee) {
 }
 
 
-int Game::getAcademicIndex(string square) {
+int Game::getAcademicIndex(string square) const {
   for (int i = 0; i < 40; ++i) {
     Academic *ap = dynamic_cast<Academic *>(gameboard[i]);
     if (ap) {   // ap is null if gameboard[i] is not Academic
@@ -831,7 +872,7 @@ int Game::getAcademicIndex(string square) {
   return -1;
 }
 
-int Game::getBuildingIndex(string square) {
+int Game::getBuildingIndex(string square) const {
   for (int i = 0; i < 40; ++i) {
     Building *bp = dynamic_cast<Building *>(gameboard[i]);
     if (bp) {   // bp is null if gameboard[i] is not Building

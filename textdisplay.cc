@@ -258,7 +258,7 @@ void TextDisplay::notify(Building *b) {
 
   int level = b->getImpLevel(); // for displaying level
 
-  if (level > 0) {
+  if (level >= 0 && b->isAcademic()) {
     replaceChar(info_h, info_w, theDisplay, levelSymbol, ' ', maxLevel, true);
     replaceChar(info_h, info_w, theDisplay, ' ', levelSymbol, level, true);
   }
