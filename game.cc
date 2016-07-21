@@ -197,6 +197,7 @@ void Game::run(){
       } else if( command == "trade" || command == "Trade") {
 
         cout << "you will do a trade" << endl;
+        trade();
 
       } else if( command == "improve" || command == "Improve") {
 
@@ -346,72 +347,106 @@ void Game::askToBuy(Building *building, Player *buyer ) {
 }
 
 
-// void Game::trade() {
-//     string temp_trader;
-//     string give;
-//     string receive;
-//     int givenumber = 0;
-//     int receivenumber = 0;
-//     bool givemoney = false;
-//     bool receivemoney = false;
+void Game::trade() {
+    string temp_trader;
+    string give;
+    string receive;
+    int givenumber = 0;
+    int receivenumber = 0;
+    bool givemoney = false;
+    bool receivemoney = false;
 
-//     cin >> temp_trader;
-//     cin >> give;
-//     cin >> receive;
+    cin >> temp_trader;
+    cin >> give;
+    cin >> receive;
     
-//     istringstream give_s(give);
-//     if(give_s >> givenumber){
-//      givemoney = true;    
-//     }
+    istringstream give_s(give);
+    if(give_s >> givenumber){
+     givemoney = true;    
+    }
     
-//     istringstream receive_s(receive);
-//     if(receive_s >> receivenumber){
-//      receivemoney = true;    
-//     }
+    istringstream receive_s(receive);
+    if(receive_s >> receivenumber){
+     receivemoney = true;    
+    }
 
-//     if(givemoney == false){
-//       int trade_give_building_index = getBuildingIndex(give);
-//     }
+    if(givemoney == false){
+      int trade_give_building_index = getBuildingIndex(give);
+    }
 
-//     if(receivemoney == false){
-//       int trade_receive_building_index = getBuildingIndex(receive);
-//     }
+      int trade_receive_building_index = -1;
+    if(receivemoney == false){
+       trade_receive_building_index = getBuildingIndex(receive);
+    }
 
-//     int trader_index = getplayer(temp_trader);
-//     if (trader_index == -1){
-//       cout << "Sorry, the player you want to trade is not exist." << endl;
-//       return;
-//     }else if ( player[trader_index]->getName() == player[currentplayer]->getName()){
-//       cout << "You cannot trade with your mother." << endl;
-//       return;
-//     }else if ( givemoney && receivemoney){
-//       cout << "You can not trade money for money!" << endl;
-//       return;
-//     }
+    int trader_index = getplayer(temp_trader);
+    if (trader_index == -1){
+      cout << "Sorry, the player you want to trade is not exist." << endl;
+      return;
+    }else if ( player[trader_index]->getName() == player[currentplayer]->getName()){
+      cout << "You cannot trade with yourself." << endl;
+      return;
+    }else if ( givemoney && receivemoney){
+      cout << "You can not trade money for money!" << endl;
+      return;
+    }
+    
+    else if ( (givemoney== true )  && (receivemoney == false) ){
+      if(givenumber > player[currentplayer]->getBalance()){
+        cout << "You do not have enough money!" << endl;
+        return;
+      }
 
-//     else if ( (givemoney== true )  && (receivemoney == false) ){
-//       if(givenumber > player[currentplayer]->getBalance()){
-//         cout << "You do not have enough money!" << endl;
-//         return;
-//       }
-//       else if( trade_receive_building_index == -1){
-//         cout << "The building you want to trade is not exist!" << endl;
-//         return;
-//       }
-//       else {
-//         Building *bp = dynamic_cast<Building *>(gameboard[trade_receive_building_index]);
-//         if(bp->getOwner()->getName() != temp_trader){
-//           cout << "The person you want to trade does not own this building!" << endl;
-//           return;
-//         }
-//         //should check monopoly
-        
-//       }
+      else if( trade_receive_building_index == -1){
+        cout << "The building you want to trade is not exist!" << endl;
+        return;
+      }
+      else {
+        Building *bp = dynamic_cast<Building *>(gameboard[trade_receive_building_index]);
+        if(bp->getOwner() == nullptr){
+          cout << "The person you want to trade does not own this building!" << endl;
+          return;
+        }
+        if(bp->getOwner()->getName() != temp_trader){
+          cout << "The person you want to trade does not own this building!" << endl;
+          return;
+        }
+        //should check monopoly
+        else {
+          cout << player[trader_index]->getName() << ", you can choose to trade or not" << endl;
+          cout << player[currentplayer]->getName() <<  " wants to spend " << give << " to buy your" << bp->getName() << endl;
+          cout << "You can [accept]/[reject]/[assets]" << endl;
+          string command;
+          while(cin >> command){
+            if(command == "reject"){
+              cout << "Trade is rejected" << endl;
+              return;
+            }
+            else if(command == "assets"){
+             displayAssets(player[trader_index]);
+           }
+           else if(command == "accept"){
+             cout << "Trade successfully!" << endl;
+             player[currentplayer]->updateBalance(-1 * givenumber);
+             player[trader_index]->updateBalance(givenumber);
+             bp->setOwner(player[currentplayer]);
+             td->notify(bp);
+             td->display();
+             return;
+           }
+           else{
+            cout << "Invalid input! Please input [accept]/[reject]/[assets]" << endl;
+           }
+
+              // cout << "OK" << endl;
+            }
+          }
+
+        }
+      }
+}
 
 
-//     }
-
-// }
 
 
       
