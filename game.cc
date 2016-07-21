@@ -155,7 +155,7 @@ void Game::normalinit(){
   }
       
   for(int i = 0 ; i < numplayer ; i++){
-  player[i] = new Player(chosensymbol[i], playername[i],this);
+  player[i] = new Player(chosensymbol[i], playername[i]);
   }
 
   for(int i = 0 ; i < numplayer ; i++){       
@@ -872,7 +872,7 @@ bool Game::loadGame(string filename) {
         if (isStuckDC != 0) myfile >> playerDCTurn;
       }
 
-      player[i] = new Player(chosensymbol[i], playername[i], this, playerNumTimsCups, playerBalance, 
+      player[i] = new Player(chosensymbol[i], playername[i], playerNumTimsCups, playerBalance, 
       playerPosition, playerDCTurn);
     }
 
