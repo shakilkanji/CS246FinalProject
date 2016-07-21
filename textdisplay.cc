@@ -105,13 +105,14 @@ void setSquareDisplayInfo(int &info_h, int &info_w, int index) {
 }
 
 
-void replaceChar(int pos_h, int pos_w, char **theDisplay, char from, char to, int repeatTimes) {
+void replaceChar(int pos_h, int pos_w, char **theDisplay, 
+  char from, char to, int repeatTimes, bool isRepeated) {
   /* --- used for add or remove players --- */
   for (int i = 0; i < repeatTimes; ++i) {
     char c = theDisplay[pos_h - 1][pos_w - 1 + i];
     if (c == from) {
       theDisplay[pos_h - 1][pos_w - 1 + i] = to;
-      break;
+      if (!isRepeated) break;
     }
   }
 }
@@ -126,7 +127,7 @@ void TextDisplay::removePlayer(Player *p) {
   char symbol = p->getSymbol();
 
   setPlayerDisplayPos(pos_h, pos_w, pos);             // remove Player
-  replaceChar(pos_h, pos_w, theDisplay, symbol, ' ', maxPlayer);
+  replaceChar(pos_h, pos_w, theDisplay, symbol, ' ', maxPlayer, false);
 }
 
 
@@ -139,10 +140,10 @@ void TextDisplay::notify(Player *p, int oldPos) {
   char symbol = p->getSymbol();
 
   setPlayerDisplayPos(pos_h, pos_w, oldPos);           // remove Player from old pos
-  replaceChar(pos_h, pos_w, theDisplay, symbol, ' ', maxPlayer);
+  replaceChar(pos_h, pos_w, theDisplay, symbol, ' ', maxPlayer, false);
 
   setPlayerDisplayPos(pos_h, pos_w, pos);              // add Player to its new pos
-  replaceChar(pos_h, pos_w, theDisplay, ' ', symbol, maxPlayer);
+  replaceChar(pos_h, pos_w, theDisplay, ' ', symbol, maxPlayer, false);
 }
 
 
@@ -164,6 +165,6 @@ void TextDisplay::notify(Building *b) {
 
   int level = b->getImpLevel();
 
-  replaceChar(info_h, info_w, theDisplay, levelSymbol, ' ', maxLevel);
-  replaceChar(info_h, info_w, theDisplay, ' ', levelSymbol, level);
+  replaceChar(info_h, info_w, theDisplay, levelSymbol, ' ', maxLevel, true);
+  replaceChar(info_h, info_w, theDisplay, ' ', levelSymbol, level, true);
 }

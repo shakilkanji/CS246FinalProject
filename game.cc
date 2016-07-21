@@ -598,8 +598,10 @@ void Game::buyImprovement(Square *square, Player *player) {
     academic->setImpLevel(impLevel+1);
     owner->updateBalance(impCost * -1);
     td->notify(academic);
+    td->display();
     cout << academic->getName() << " now has " << academic->getImpLevel() << " improvements. ";
     cout << "Your balance decreased to " << player->getBalance() << "." << endl;
+    displayCommands();
 }
 
 
@@ -625,8 +627,10 @@ void Game::sellImprovement(Square *square, Player *player) {
     academic->setImpLevel(impLevel-1);
     owner->updateBalance(impCost/2);
     td->notify(academic);
+    td->display();
     cout << academic->getName() << " now has " << academic->getImpLevel() << " improvements. ";
     cout << "Your balance increased to " << player->getBalance() << "." << endl;
+    displayCommands();
 }
 
 void Game::mortgageBuilding(Square *square, Player *player) {
