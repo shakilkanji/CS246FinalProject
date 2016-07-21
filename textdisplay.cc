@@ -26,7 +26,7 @@ const int maxLevel  = 5;
 const char levelSymbol = 'I';
 
 
-// Colours: (from github.com/whitedevops/colors)
+// Colours: (reference from github.com/whitedevops/colors)
 
 const string ResetAll = "\033[0m";
 
@@ -94,7 +94,7 @@ void setPlayerDisplayPos(int &pos_h, int &pos_w, int pos) {
   } else if (pos < index_top_right) {
     pos_h = 5;
     pos_w = ((pos - index_top_left) * box_w) + 2;
-  } else {
+  } else if (pos < 40) {
     pos_h = ((pos - index_top_right) * box_h) + 5;
     pos_w = 92;
   }
@@ -112,7 +112,7 @@ void setSquareDisplayInfo(int &info_h, int &info_w, int index) {
   } else if (index < index_top_right) {
     info_h = 2;
     info_w = ((index - index_top_left) * box_w) + 2;
-  } else {
+  } else if (index < 40) {
     info_h = ((index - index_top_right) * box_h) + 2;
     info_w = 92;
   }
@@ -122,8 +122,10 @@ void setSquareDisplayInfo(int &info_h, int &info_w, int index) {
 void replaceChar(int pos_h, int pos_w, char **theDisplay, 
   char from, char to, int repeatTimes, bool isRepeated) {
   /* --- used for add or remove players --- */
+  char c;
   for (int i = 0; i < repeatTimes; ++i) {
-    char c = theDisplay[pos_h - 1][pos_w - 1 + i];
+    cout << "test1" << endl;
+    c = theDisplay[pos_h - 1][pos_w - 1 + i];
     if (c == from) {
       theDisplay[pos_h - 1][pos_w - 1 + i] = to;
       if (!isRepeated) break;
@@ -132,39 +134,41 @@ void replaceChar(int pos_h, int pos_w, char **theDisplay,
 }
 
 
-void displayColour(int row, int col) {
+void displayEffect(int row, int col) {
+  /* --- display effects --- */
   if (row == 51) {
     if (col == 64 || col == 82)
-      cout << BackgroundYellow;                // Arts1
+      cout << BackgroundYellow << Black;             // Arts1
     if (col == 10 || col == 19 || col == 37) 
-      cout << BackgroundLightYellow;           // Arts2
+      cout << BackgroundLightYellow << Black;        // Arts2
   }
 
   if (col == 1) {
     if (row == 31 || row == 36 || row == 46) 
-      cout << BackgroundMagenta;               // Eng
+      cout << BackgroundMagenta << Black;            // Eng
     if (row == 6 || row == 11 || row == 21) 
-      cout << BackgroundCyan;                  // Health
+      cout << BackgroundCyan << Black;               // Health
   }
 
   if (row == 1) {
     if (col == 10 || col == 28 || col == 37) 
-      cout << BackgroundLightGreen;            // Env
+      cout << BackgroundLightGreen << Black;         // Env
     if (col == 55 || col == 64 || col == 82) 
-      cout << BackgroundBlue;                  // Sci1
+      cout << BackgroundBlue << Black;               // Sci1
   }
 
   if (col == 91) {
     if (row == 6 || row == 11 || row == 21) 
-      cout << BackgroundLightBlue;             // Sci2
+      cout << BackgroundLightBlue << Black;          // Sci2
     if (row == 36 || row == 46) 
-      cout << BackgroundLightRed;              // Math
+      cout << BackgroundLightRed << Black;           // Math
   }
 }
 
 
-void resetColour(int row, int col) {
-  if (col % box_w == maxPlayer) cout << BackgroundDefault;
+void resetEffect(int col) {
+  /* --- reset effects --- */
+  if (col % box_w == maxPlayer) cout << Default << BackgroundDefault;
 }
 
 
@@ -202,12 +206,9 @@ void TextDisplay::display() {
   /* --- display (print) the board --- */
   for (int i = 0; i < height; ++i) {
     for (int j = 0; j < width; ++j) {
-      // display colours for Monopoly Blocks
-      displayColour(i, j);
-      // normal display
-      cout << theDisplay[i][j];
-      // end colour to default
-      resetColour(i, j);
+      displayEffect(i, j);        // display colours for Monopoly Blocks
+      cout << theDisplay[i][j];   // normal display
+      resetEffect(j);             // end colour to default
     }
   }
 }
@@ -215,8 +216,7 @@ void TextDisplay::display() {
 
 void TextDisplay::removePlayer(Player *p) {
   /* --- remove the player --- */
-  int pos_h;
-  int pos_w;
+  int pos_h, pos_w;
   int pos = p->getPos();
 
   char symbol = p->getSymbol();
@@ -228,8 +228,7 @@ void TextDisplay::removePlayer(Player *p) {
 
 void TextDisplay::notify(Player *p, int oldPos) {
   /* --- notify the player (change pos) --- */
-  int pos_h;
-  int pos_w;
+  int pos_h, pos_w;
   int pos = p->getPos();
 
   char symbol = p->getSymbol();
@@ -244,8 +243,7 @@ void TextDisplay::notify(Player *p, int oldPos) {
 
 void TextDisplay::notify(Building *b) {
   /* --- notify the square (display info) --- */
-  int info_h;
-  int info_w;
+  int info_h, info_w;
   int index = b->getIndex();
 
   setSquareDisplayInfo(info_h, info_w, index);
@@ -258,7 +256,7 @@ void TextDisplay::notify(Building *b) {
     theDisplay[info_h + 1][info_w + 5] = ':';
     theDisplay[info_h + 1][info_w + 6] = owner->getSymbol();
   }
-  
+
   int level = b->getImpLevel(); // for displaying level
 
   replaceChar(info_h, info_w, theDisplay, levelSymbol, ' ', maxLevel, true);
