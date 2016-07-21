@@ -250,7 +250,7 @@ void TextDisplay::notify(Building *b) {
 
   Player *owner = b->getOwner();
 
-  if (owner != nullptr) {    // only display ownership when the property is owned
+  if (owner != nullptr) {       // only display ownership when the property is owned
     theDisplay[info_h + 1][info_w + 4] = 'O';
     theDisplay[info_h + 1][info_w + 5] = ':';
     theDisplay[info_h + 1][info_w + 6] = owner->getSymbol();
