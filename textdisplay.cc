@@ -83,52 +83,43 @@ const string BackgroundWhite        = "\033[107m";
 
 // Helper Functions: ////////////////////////////////////////////////////////////
 
-void setPlayerDisplayPos(int &pos_h, int &pos_w, int pos) {
-  /* --- caculate pos on board for displaying players --- */
-  if (pos < index_bot_left) {
-    pos_h = 55;
-    pos_w = width - (pos * box_w) - 9;
-  } else if (pos < index_top_left) {
-    pos_h = height - ((pos - index_bot_left) * box_h) - 1;
-    pos_w = 2;
-  } else if (pos < index_top_right) {
-    pos_h = 5;
-    pos_w = ((pos - index_top_left) * box_w) + 2;
-  } else if (pos < 40) {
-    pos_h = ((pos - index_top_right) * box_h) + 5;
-    pos_w = 92;
-  }
-}
-
-
-void setSquareDisplayInfo(int &info_h, int &info_w, int index) {
-  /* --- caculate pos on board for displaying ownerships and levels --- */
+void setDisplayPosition(int &row, int &col, int index, bool isPlayer) {
+  /* --- caculate pos on board for first line in each square --- */
   if (index < index_bot_left) {
-    info_h = 52;
-    info_w = width - (index * box_w) - 9;
+    row = 52;
+    col = width - (index * box_w) - 9;
   } else if (index < index_top_left) {
-    info_h = height - ((index - index_bot_left) * box_h) - 4;
-    info_w = 2;
+    row = height - ((index - index_bot_left) * box_h) - 4;
+    col = 2;
   } else if (index < index_top_right) {
-    info_h = 2;
-    info_w = ((index - index_top_left) * box_w) + 2;
+    row = 2;
+    col = ((index - index_top_left) * box_w) + 2;
   } else if (index < 40) {
-    info_h = ((index - index_top_right) * box_h) + 2;
-    info_w = 92;
+    row = ((index - index_top_right) * box_h) + 2;
+    col = 92;
   }
+  if (isPlayer) row += 3;
 }
 
 
-void replaceChar(int pos_h, int pos_w, char **charArray, 
+void replaceChar(int row, int col, char **charArray, 
   char from, char to, int repeatTimes, bool isRepeated) {
   /* --- used for add or remove players --- */
   char c;
   for (int i = 0; i < repeatTimes; ++i) {
-    c = charArray[pos_h - 1][pos_w - 1 + i];
+    c = charArray[row - 1][col - 1 + i];
     if (c == from) {
-      charArray[pos_h - 1][pos_w - 1 + i] = to;
+      charArray[row - 1][col - 1 + i] = to;
       if (!isRepeated) break;
     }
+  }
+}
+
+
+void displayString(int row, int col, char **charArray, string s) {
+  int len = s.length();
+  for (int i = 0; i < len; ++i) {
+    charArray[row - 1][col - 1 + i] = s.at(i);
   }
 }
 
@@ -234,7 +225,7 @@ void TextDisplay::removePlayer(Player *p) {
 
   char symbol = p->getSymbol();
 
-  setPlayerDisplayPos(pos_h, pos_w, pos);              // remove Player
+  setDisplayPosition(pos_h, pos_w, pos, true);              // remove Player
   replaceChar(pos_h, pos_w, theDisplay, symbol, ' ', maxPlayer, false);
 }
 
@@ -246,10 +237,10 @@ void TextDisplay::notify(Player *p, int oldPos) {
 
   char symbol = p->getSymbol();
 
-  setPlayerDisplayPos(pos_h, pos_w, oldPos);           // remove Player from old pos
+  setDisplayPosition(pos_h, pos_w, oldPos, true);           // remove Player from old pos
   replaceChar(pos_h, pos_w, theDisplay, symbol, ' ', maxPlayer, false);
 
-  setPlayerDisplayPos(pos_h, pos_w, pos);              // add Player to its new pos
+  setDisplayPosition(pos_h, pos_w, pos, true);              // add Player to its new pos
   replaceChar(pos_h, pos_w, theDisplay, ' ', symbol, maxPlayer, false);
 }
 
@@ -259,15 +250,15 @@ void TextDisplay::notify(Building *b) {
   int info_h, info_w;
   int index = b->getIndex();
 
-  setSquareDisplayInfo(info_h, info_w, index);
-  if (!b->isAcademic()) info_h -= 2;
+  setDisplayPosition(info_h, info_w, index, false);
 
   Player *owner = b->getOwner();
 
   if (owner != nullptr) {       // only display ownership when the property is owned
-    theDisplay[info_h + 1][info_w + 4] = 'O';
-    theDisplay[info_h + 1][info_w + 5] = ':';
-    theDisplay[info_h + 1][info_w + 6] = owner->getSymbol();
+    if (b->isAcademic()) info_h += 2;
+    theDisplay[info_h - 1][info_w + 4] = 'O';
+    theDisplay[info_h - 1][info_w + 5] = ':';
+    theDisplay[info_h - 1][info_w + 6] = owner->getSymbol();
   }
 
   int level = b->getImpLevel(); // for displaying level
