@@ -525,6 +525,7 @@ void Game::trade() {
           cout << "The building you want to trade is not exist!" << endl;
            return;
           }
+
           else{
            Building *bp_give = dynamic_cast<Building *>(gameboard[trade_give_building_index]);
            Building *bp_receive = dynamic_cast<Building *>(gameboard[trade_receive_building_index]);
@@ -533,6 +534,13 @@ void Game::trade() {
             return;
            }
            else if(bp_receive->getOwner() == nullptr){
+            cout << "The player you want to trade do not own this building!" << endl;
+            return;
+           }
+           else if(bp_give->getOwner()->getName() != player[currentplayer]->getName()){
+            cout << "You do not own this building!" << endl;
+           }
+           else if(bp_receive->getOwner()->getName()!= player[trader_index]->getName()){
             cout << "The player you want to trade do not own this building!" << endl;
             return;
            }
@@ -564,7 +572,7 @@ void Game::trade() {
             td->notify(bp_receive);
             td->display();
             cout << "Trade successfully!" << endl;
-            cout << player[currentplayer] << "trade " << bp_give->getName() << " for " << bp_receive->getName() << endl;
+            cout << player[currentplayer]->getName() << "trade " << bp_give->getName() << " for " << bp_receive->getName() << endl;
             return;
            }
            else{
