@@ -448,7 +448,7 @@ void Game::trade() {
              td->notify(bp);
              td->display();
              cout << "Trade successfully!" << endl;
-
+             cout << player[currentplayer] << "spend " << givenumber << " to get " << bp->getName() << endl;
              return;
            }
            else{
@@ -499,12 +499,14 @@ void Game::trade() {
              displayAssets(player[trader_index]);
            }
            else if(command == "accept"){
-             cout << "Trade successfully!" << endl;
+             
              player[currentplayer]->updateBalance( receivenumber);
              player[trader_index]->updateBalance(-1 *receivenumber);
              bp->setOwner(player[trader_index]);
              td->notify(bp);
              td->display();
+             cout << "Trade successfully!" << endl;
+             cout << player[currentplayer] << "trade " << bp->getName() << " for " << receivenumber  << endl;
              return;
            }
            else{
@@ -525,7 +527,7 @@ void Game::trade() {
           }
           else{
            Building *bp_give = dynamic_cast<Building *>(gameboard[trade_give_building_index]);
-           Building *bp_receive = dynamic_cast<Building *>(gameboard[trade_give_building_index]);
+           Building *bp_receive = dynamic_cast<Building *>(gameboard[trade_receive_building_index]);
            if(bp_give->getOwner() == nullptr){
             cout << "You do not own this building!" << endl;
             return;
@@ -543,13 +545,36 @@ void Game::trade() {
            return;
            }  
            else{
-
-            
+          cout << player[trader_index]->getName() << ", you can choose to trade or not" << endl;
+          cout << player[currentplayer]->getName() <<  " wants to trade " << bp_give->getName() << " for" << bp_receive->getName() << endl;
+          cout << "You can [accept]/[reject]/[assets]" << endl;
+            string command;
+            while(cin >> command){
+            if(command == "reject"){
+              cout << "Trade is rejected" << endl;
+              return;
+            }
+            else if(command == "assets"){
+             displayAssets(player[trader_index]);
            }
-
-          }
+           else if(command == "accept"){             
+            bp_give->setOwner(player[trader_index]);
+            bp_receive->setOwner(player[currentplayer]);
+            td->notify(bp_give);
+            td->notify(bp_receive);
+            td->display();
+            cout << "Trade successfully!" << endl;
+            cout << player[currentplayer] << "trade " << bp_give->getName() << " for " << bp_receive->getName() << endl;
+            return;
+           }
+           else{
+            cout << "Invalid input! Please input [accept]/[reject]/[assets]" << endl;
+           }
+        }            
       }
+    }
   }
+}
 
 
 
