@@ -31,7 +31,7 @@ Academic::~Academic() {}
 
 int Academic::getFees() const {
 	if (getImpLevel() == -1) return 0;
-	if (game->isMonopolized(this) && impLevel == 0) return fees[impLevel]*2;
+	if (game->isMonopolized(this) == 2 && impLevel == 0) return fees[impLevel]*2;
 	return fees[impLevel];
 }
 
