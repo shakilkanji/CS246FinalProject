@@ -1198,3 +1198,39 @@ void Game::Needles(Player *landedPlayer){
   } 
 
 }
+
+
+// void Game::SLC(Player*  landedPlayer){
+//   srand(time(0));
+//   int random = rand()%100 + 1;
+//   if(random == 100){
+//     cout << "Instead of normal effect, you will get a Roll Up the Rim cup" << endl;
+//     if(roll_time == 0){
+//       cout << "Sorry, there is no more Roll Up the Rim cup right now, you will get other result" << endl;
+//       Needles(landedPlayer);
+//       return ;
+//     }
+//     else {
+//       int newimts = landedPlayer->getNumTimsCups();
+//       landedPlayer->setNumTimsCups(newimts+1) ;
+//       roll_time -= 1;
+//       cout << "You get Roll Up the Rim cup, you have " << landedPlayer->getNumTimsCups() << " now." << endl;
+//     }
+//   }  
+//   else{
+//    int random = rand()%24 + 1;
+//    if(random >= 1 && random <= 3){
+
+//    }
+//    else if(random >= 4 && random <= 7){
+    
+//    }
+//    else if(random >= 8 && random <= 11){
+    
+//    }
+//    else if(random >= 12 && random <= 7){
+    
+//    }
+
+//   }
+// }
