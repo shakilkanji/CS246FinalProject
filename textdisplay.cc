@@ -227,13 +227,13 @@ void TextDisplay::removePlayer(Player *p) {
   setDisplayPosition(pos_h, pos_w, pos, true);              // remove Player
   replaceChar(pos_h, pos_w, theDisplay, symbol, ' ', maxPlayer, false);
 
-  /*for (int i = 39; i < maxPlayer; ++i) {
-    char c = theDisplay[i][28];
+  for (int row = 39; row < 39 + maxPlayer; ++row) {
+    char c = theDisplay[row - 1][27];
     if (c == symbol) {
-      setString(i, 18, theDisplay, "                                              ");
+      setString(row, 28, theDisplay, "                                              ");
       break;
     }
-  }*/
+  }
 }
 
 
