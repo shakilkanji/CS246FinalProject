@@ -14,6 +14,7 @@ using namespace std;
 Game::Game():numplayer(0),currentplayer(0),rimcup(4),sumofdice(0),
 firstdice(0),seconddice(0),test(false),rolled(false),roll_time(0){
   td = new TextDisplay;
+  isWon = false;
 
   for(int i = 0 ; i < 8 ; i++){
     player[i] = nullptr;
@@ -169,10 +170,11 @@ void Game::normalinit(){
 void Game::run(){
 	string command;
     
-  while(true) {
+  while(!isWon) {
     next();
 
-    while(cin >> command) {
+    while(!isWon) {
+      cin >> command;
       if (command == "roll" || command == "Roll") {
 
         if (rolled == true) { // if the player has already roll the dice 
@@ -245,9 +247,6 @@ void Game::run(){
           unmortgageBuilding(bp, player[currentplayer]);
         } 
 
-      } else if(command == "bankrupt" || command == "Bankrupt") {
-        cout << "you will do a bankrupt" << endl;  
-
       } else if(command == "assets" || command == "Assets") {
 
         displayAssets(player[currentplayer]); 
@@ -264,7 +263,7 @@ void Game::run(){
         cin >> saveFile;
         saveGame(saveFile);
         cout << "Successfully saved in "<< saveFile << " !" << endl;
-
+ 
       } else if(command == "next" || command == "Next") {
 
         if (rolled == false){
@@ -308,6 +307,7 @@ void Game::next(){
 }
 
 void Game::displayCommands() {
+  if (!isWon) {
     cout << endl;
     cout << "Please choose from the following commands:" << endl;
     cout << "1. roll: roll two dice, and move your piece the sum of those dice." << endl;
@@ -319,6 +319,7 @@ void Game::displayCommands() {
     cout << "7. assets: displays the assets of the current player." << endl;
     cout << "8. all: displays the assets of every player." << endl;
     cout << "9. save <filename>: saves the current state of the game to the given file." << endl;
+  }
 }
 
 
@@ -881,7 +882,8 @@ void Game::forceBankruptcy(Player *landedPlayer, int fee, Player *ownerPlayer) {
 void Game::declareBankruptcy(Player *landedPlayer, Player *ownerPlayer) {
   if (numplayer == 2) { // game over
     cout << ownerPlayer->getName() << " has won the game. " << endl;
-    exit(0);
+    isWon = true;
+    return;
   }
 
   for (int i = 0; i < 40; ++i) {
