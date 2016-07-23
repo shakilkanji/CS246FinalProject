@@ -21,6 +21,7 @@ void Square::notify(Player *landedPlayer) {
 		// game->chooseTuition(landedPlayer);
 	} else if (index == 7 || index == 22 || index == 36) {	// Needles Hall
 		cout << "Landed on Needles Hall" << endl;
+		game->Needles(landedPlayer);
 	} else if (index == 10) {	// DC Tims
 		cout << "Landed on DC Tims, nothing happens." << endl;
 	} else if (index == 2 || index == 17 || index == 33) {	// SLC

@@ -1123,3 +1123,78 @@ void Game::saveGame(string filename) {
     }
   }
 }
+
+void Game::Needles(Player *landedPlayer){
+  srand(time(0));
+  int random = rand()%100 + 1;
+  if(random == 100){
+    cout << "Instead of normal effect, you will get a Roll Up the Rim cup" << endl;
+    if(roll_time == 0){
+      cout << "Sorry, there is no more Roll Up the Rim cup right now, you will get other result" << endl;
+      Needles(landedPlayer);
+      return ;
+    }
+    else {
+      int newimts = landedPlayer->getNumTimsCups();
+      landedPlayer->setNumTimsCups(newimts+1) ;
+      roll_time -= 1;
+      cout << "You get Roll Up the Rim cup, you have " << landedPlayer->getNumTimsCups() << " now." << endl;
+    }
+  }
+  else {
+    random = rand() % 18 + 1;
+    if(test) cout << "random numebr is " << random << endl;
+    if(random == 1){
+      cout << "You lost 200$" << endl;
+      if(landedPlayer->getBalance() < 200){
+        forceBankruptcy(landedPlayer,200);
+      }
+      else{
+        landedPlayer->updateBalance(-1 * 200);
+        cout << "You current balance is " << landedPlayer->getBalance() << endl;
+      }
+    }
+    else if( random == 2 || random == 3){
+      cout << "You lost 100$" << endl;
+      if(landedPlayer->getBalance() < 100){
+        forceBankruptcy(landedPlayer,100);
+      }
+      else{
+        landedPlayer->updateBalance(-1 * 100);
+        cout << "You current balance is " << landedPlayer->getBalance() << endl;
+      }
+    }
+    else if( random >= 4 || random <= 6){
+      cout << "You lost 50$" << endl;
+      if(landedPlayer->getBalance() < 50){
+        forceBankruptcy(landedPlayer,50);
+      }
+      else{
+        landedPlayer->updateBalance(-1 * 50);
+        cout << "You current balance is " << landedPlayer->getBalance() << endl;
+      }
+    }
+
+    else if( random >= 7 || random <= 12){
+      cout << "You get 25$" << endl;   
+      landedPlayer->updateBalance(25);
+      cout << "You current balance is " << landedPlayer->getBalance() << endl;      
+    }
+    else if( random >= 13 || random <= 15){
+      cout << "You get 50$" << endl;   
+      landedPlayer->updateBalance(50);
+      cout << "You current balance is " << landedPlayer->getBalance() << endl;      
+    }
+    else if( random >= 16 || random <= 17){
+      cout << "You get 100$" << endl;   
+      landedPlayer->updateBalance(100);
+      cout << "You current balance is " << landedPlayer->getBalance() << endl;      
+    }
+    else {
+      cout << "You get 200$" << endl;   
+      landedPlayer->updateBalance(200);
+      cout << "You current balance is " << landedPlayer->getBalance() << endl;      
+    }
+  } 
+
+}
