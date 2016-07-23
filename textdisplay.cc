@@ -4,7 +4,6 @@
 #include <fstream>
 #include "player.h"
 #include "building.h"
-#include "academic.h"
 using namespace std;
 
 
@@ -116,7 +115,7 @@ void replaceChar(int row, int col, char **charArray,
 }
 
 
-void displayString(int row, int col, char **charArray, string s) {
+void setString(int row, int col, char **charArray, string s) {
   int len = s.length();
   for (int i = 0; i < len; ++i) {
     charArray[row - 1][col - 1 + i] = s.at(i);
@@ -227,6 +226,14 @@ void TextDisplay::removePlayer(Player *p) {
 
   setDisplayPosition(pos_h, pos_w, pos, true);              // remove Player
   replaceChar(pos_h, pos_w, theDisplay, symbol, ' ', maxPlayer, false);
+
+  /*for (int i = 39; i < maxPlayer; ++i) {
+    char c = theDisplay[i][28];
+    if (c == symbol) {
+      setString(i, 18, theDisplay, "                                              ");
+      break;
+    }
+  }*/
 }
 
 
@@ -235,6 +242,7 @@ void TextDisplay::notify(Player *p, int oldPos) {
   int pos_h, pos_w;
   int pos = p->getPos();
 
+  string name = p->getName();
   char symbol = p->getSymbol();
 
   setDisplayPosition(pos_h, pos_w, oldPos, true);           // remove Player from old pos
@@ -242,6 +250,18 @@ void TextDisplay::notify(Player *p, int oldPos) {
 
   setDisplayPosition(pos_h, pos_w, pos, true);              // add Player to its new pos
   replaceChar(pos_h, pos_w, theDisplay, ' ', symbol, maxPlayer, false);
+
+  setString(37, 28, theDisplay, "Current Player(s):");
+
+  for (int row = 39; row < 39 + maxPlayer; ++row) {
+    char c = theDisplay[row - 1][27];
+    if (c == ' ') {
+      theDisplay[row - 1][27] = symbol;
+      theDisplay[row - 1][29] = '-';
+      setString(row, 32, theDisplay, name);
+      break;
+    }
+  }
 }
 
 
