@@ -182,17 +182,24 @@ void Game::run(){
         } else {  // player has not rolled
           int dice_result = diceroll();
           roll_time += 1;
-          move(dice_result);
 
           if(dicepair() == true) {
             if(roll_time == 3) {  // after 3 rolls, player is sent to DC tims line and cannot move
               cout << "You have rolled 3 doubles. Go to DC Tims Line! " << endl;
+              player[currentplayer]->setPos(10);
+              player[currentplayer]->setDCTurn(0);
               rolled = true;
             } else {
+              move(dice_result);
               cout << "You rolled a double, please roll again. " << endl;
             }    
           } else { // roll a nondouble dice 
-            displayCommands();
+            if (player[currentplayer]->getDCTurn() == -1) {
+              move(dice_result);
+              displayCommands();
+            } else {
+              cout << "You did not roll a double.  Stay in DC Tims Line." << endl;
+            }
             rolled = true;
           }
         }
@@ -280,6 +287,26 @@ void Game::run(){
           next();
         }
 
+      } else if ((command == "pay" || command == "Pay") && player[currentplayer]->getDCTurn() >= 0) {
+        if (player[currentplayer]->getBalance() >= 50) {
+          player[currentplayer]->updateBalance(-50);
+          player[currentplayer]->setDCTurn(-1);
+          cout << "Thank you for paying. Your new balance is $" << player[currentplayer]->getBalance() << "." << endl;
+          displayCommands();
+        } else {
+          cout << "You do not have enough funds to leave DC Tims Line." << endl;
+          displayCommands();
+        }
+      } else if ((command == "redeem" || command == "Redeem") && player[currentplayer]->getDCTurn() >= 0) {
+        int timsCups = player[currentplayer]->getNumTimsCups();
+        if (timsCups >= 1) {
+          player[currentplayer]->setNumTimsCups(timsCups-1);
+          player[currentplayer]->setDCTurn(-1);
+          displayCommands();
+        } else {
+          cout << "You do not have a Roll Up The Rim cup to leave DC Tims Line." << endl;
+          displayCommands();
+        }
       } else if(command == "exit" || command == "Exit") {
 
         cout << "You will exit the game now." << endl;
@@ -322,6 +349,8 @@ void Game::displayCommands() {
       cout << "7. assets: displays the assets of the current player." << endl;
       cout << "8. all: displays the assets of every player." << endl;
       cout << "9. save <filename>: saves the current state of the game to the given file." << endl;
+      cout << "10. pay: pay $50 to leave DC Tims Line." << endl;
+      cout << "11. redeem: redeem Roll Up The Rim to leave DC Tims Line." << endl;
     } else {
       cout << endl;
       cout << "Please choose from the following commands:" << endl;
