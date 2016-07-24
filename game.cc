@@ -184,7 +184,7 @@ void Game::run(){
       if (command == "roll" || command == "Roll") {
 
         if (rolled == true) { // if the player has already roll the dice 
-          cout << ">> You cannot roll the dice anymore in this turn" << endl;   
+          cout << ">> You cannot roll the dice anymore in this turn." << endl;   
         } else {  // player has not rolled
           int dice_result = diceroll();
           roll_time += 1;
@@ -192,10 +192,17 @@ void Game::run(){
 
           if(dicepair() == true) {
             if(roll_time == 3) {  // after 3 rolls, player is sent to DC tims line and cannot move
-              cout << ">> You have rolled 3 doubles. Go to DC Tims Line! " << endl;
+              cout << ">> You have rolled 3 doubles. Go to DC Tims Line!" << endl;
+              player[currentplayer]->setPos(10);
+              player[currentplayer]->setDCTurn(0);
+              rolled = true;
+            } else if (player[currentplayer]->getDCTurn() >= 0) {
+              cout << ">> Congratulations, you rolled a double. Escape the DC Tims Line!" << endl;
+              move(dice_result);
               rolled = true;
             } else {
-              cout << ">> You rolled a double, please roll again. " << endl;
+              move(dice_result);
+              cout << ">> You rolled a double, please roll again." << endl;
             }    
           } else { // roll a nondouble dice 
             displayCommands();
@@ -274,6 +281,8 @@ void Game::run(){
 
         if (rolled == false){
           cout << ">> You have not rolled, please roll to complete your turn." << endl;
+        } else if (player[currentplayer]->getDCTurn() >= 3) {
+          cout << ">> You must pay or redeem to leave DC Tims Line and complete your turn." << endl;
         } else {
           cout << ">> Turn complete." << endl;  
           
@@ -313,20 +322,41 @@ void Game::next(){
 }
 
 void Game::displayCommands() {
-  if (!isWon) {
-    cout << endl;
-    cout << ">> Please choose from the following commands:" << endl;
-    cout << ">> 1. roll: roll two dice, and move your piece the sum of those dice." << endl;
-    cout << ">> 2. next: give control to the next player. " << endl;
-    cout << ">> 3. trade <player> <give> <receive>: offers to trade property/cash with another player." << endl;
-    cout << ">> 4. improve <property> buy/sell: attempts to buy or sell an improvement for property." << endl;
-    cout << ">> 5. mortgage <property>: attempts to mortgage property." << endl;
-    cout << ">> 6. unmortgage <property>: attempts to unmortgage property." << endl;
-    cout << ">> 7. assets: displays the assets of the current player." << endl;
-    cout << ">> 8. all: displays the assets of every player." << endl;
-    cout << ">> 9. save <filename>: saves the current state of the game to the given file." << endl;
-  }
-}
+   if (!isWon) {
+     int currentplayerDCTurn = player[currentplayer]->getDCTurn();
+     if (currentplayerDCTurn >= 0 && currentplayerDCTurn <= 2) {
+       cout << endl;
+       cout << ">> You are stuck in DC Tims Line (Turn " << currentplayerDCTurn;
+       cout << "), please choose from the following commands:" << endl;
+       cout << "1. roll: roll two dice, and move your piece the sum of those dice if you get doubles." << endl;
+       cout << "2. next: give control to the next player. " << endl;
+       cout << "3. trade <player> <give> <receive>: offers to trade property/cash with another player." << endl;
+       cout << "4. improve <property> buy/sell: attempts to buy or sell an improvement for property." << endl;
+       cout << "5. mortgage <property>: attempts to mortgage property." << endl;
+       cout << "6. unmortgage <property>: attempts to unmortgage property." << endl;
+       cout << "7. assets: displays the assets of the current player." << endl;
+       cout << "8. all: displays the assets of every player." << endl;
+       cout << "9. save <filename>: saves the current state of the game to the given file." << endl;
+       cout << "10. pay: pay $50 to leave DC Tims Line." << endl;
+       cout << "11. redeem: redeem Roll Up The Rim to leave DC Tims Line." << endl;
+     } else if (currentplayerDCTurn >= 3) {
+       cout << "1. pay: pay $50 to leave DC Tims Line." << endl;
+       cout << "2. redeem: redeem Roll Up The Rim to leave DC Tims Line." << endl;
+     } else {
+       cout << endl;
+       cout << ">> Please choose from the following commands:" << endl;
+       cout << "1. roll: roll two dice, and move your piece the sum of those dice." << endl;
+       cout << "2. next: give control to the next player. " << endl;
+       cout << "3. trade <player> <give> <receive>: offers to trade property/cash with another player." << endl;
+       cout << "4. improve <property> buy/sell: attempts to buy or sell an improvement for property." << endl;
+       cout << "5. mortgage <property>: attempts to mortgage property." << endl;
+       cout << "6. unmortgage <property>: attempts to unmortgage property." << endl;
+       cout << "7. assets: displays the assets of the current player." << endl;
+       cout << "8. all: displays the assets of every player." << endl;
+       cout << "9. save <filename>: saves the current state of the game to the given file." << endl;
+     }
+   }
+ }
 
 
 void Game::askToBuy(Building *building, Player *buyer ) {
@@ -424,8 +454,8 @@ void Game::trade() {
           cout << ">> The person you want to trade does not own this building!" << endl;
           return;
         }
-        if(bp->getOwner()->getName() != temp_trader){
-          cout << ">> The person you want to trade does not own this building!" << endl;
+        else if(bp->getOwner()->getName() != temp_trader){
+           cout << ">> The person you want to trade does not own this building!" << endl;
           return;
         }
         //should check monopoly
@@ -449,6 +479,7 @@ void Game::trade() {
              td->notify(bp);
              td->display();
              cout << ">> Trade successfully!" << endl;
+             cout << ">> " << player[currentplayer] << "spend " << givenumber << " to get " << bp->getName() << endl;
              return;
            }
            else{
