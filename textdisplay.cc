@@ -127,30 +127,30 @@ void displayEffect(int row, int col) {
   /* --- display effects --- */
   if (row == 51) {
     if (col == 64 || col == 82)
-      cout << BackgroundYellow << Black;             // Arts1
+      cout << BackgroundYellow << Black;           // Arts1  - Yellow
     if (col == 10 || col == 19 || col == 37) 
-      cout << BackgroundLightYellow << Black;        // Arts2
+      cout << BackgroundLightYellow << Black;      // Arts2  - Light Yellow
   }
 
   if (col == 1) {
     if (row == 31 || row == 36 || row == 46) 
-      cout << BackgroundMagenta << Black;            // Eng
+      cout << BackgroundMagenta << Black;          // Eng    - Magenta
     if (row == 6 || row == 11 || row == 21) 
-      cout << BackgroundCyan << Black;               // Health
+      cout << BackgroundCyan << Black;             // Health - Cyan
   }
 
   if (row == 1) {
     if (col == 10 || col == 28 || col == 37) 
-      cout << BackgroundLightGreen << Black;         // Env
+      cout << BackgroundLightGreen << Black;       // Env    - Light Green
     if (col == 55 || col == 64 || col == 82) 
-      cout << BackgroundBlue << Black;               // Sci1
+      cout << BackgroundBlue << Black;             // Sci1   - Blue
   }
 
   if (col == 91) {
     if (row == 6 || row == 11 || row == 21) 
-      cout << BackgroundLightBlue << Black;          // Sci2
+      cout << BackgroundLightBlue << Black;        // Sci2   - Light Blue
     if (row == 36 || row == 46) 
-      cout << BackgroundLightRed << Black;           // Math
+      cout << BackgroundLightRed << Black;         // Math   - Light Red
   }
 }
 
@@ -183,10 +183,10 @@ TextDisplay::TextDisplay(){
   file.close();
 
   /* --- set rules --- */
-  setString(13, 43, theDisplay, "DISPLAY TIPS");
-  setString(15, 29, theDisplay, "1. O:P - owned by player with the symbol P.");
+  setString(13, 44, theDisplay, "DISPLAY TIPS");
+  setString(15, 29, theDisplay, "1. O:$ - owned by player with the symbol $.");
   setString(16, 29, theDisplay, "2. III - This property has three improvements.");
-  setString(17, 29, theDisplay, "3. ABC - This property is being mortgaged.");
+  setString(17, 29, theDisplay, "3. *MC - This property is being mortgaged.");
   setString(18, 29, theDisplay, "4. Properties with the same colour belong to");
   setString(19, 29, theDisplay, "   the same monopoly block.");
 }
@@ -205,16 +205,12 @@ void TextDisplay::display() {
     for (int j = 0; j < width; ++j) {
       displayEffect(i, j);        // display colours for Monopoly Blocks
 
-      if (theDisplay[i][j] == 'O' && theDisplay[i][j + 1] == ':') {
-        cout << Dim << Bold;
-      } else if (theDisplay[i][j] == '#') {
-        cout << Reverse << ' ';
-      }
+      if (theDisplay[i][j] == 'O' && theDisplay[i][j + 1] == ':') cout << Dim << Bold;
+      else if (theDisplay[i][j] == '#')  cout << Reverse << ' ';
 
-      if (theDisplay[i][j] != '#') cout << theDisplay[i][j];   // normal display
+      if (theDisplay[i][j] != '#') cout << theDisplay[i][j]; // normal display
 
-      if ((theDisplay[i][j - 2] == 'O' && theDisplay[i][j - 1] == ':') || 
-          (theDisplay[i][j] == '#')) {
+      if (theDisplay[i][j - 1] == ':' || theDisplay[i][j] == '#') {
         cout << ResetAll;
       }
 
@@ -262,7 +258,8 @@ void TextDisplay::notify(Player *p, int oldPos) {
 
   for (int row = 39; row < 39 + maxPlayer; ++row) {
     char c = theDisplay[row - 1][27];
-    if (c == ' ') {
+    if (c == symbol) break;
+    else if (c == ' ') {
       theDisplay[row - 1][27] = symbol;
       theDisplay[row - 1][29] = '-';
       setString(row, 32, theDisplay, name);
@@ -276,24 +273,35 @@ void TextDisplay::notify(Building *b) {
   /* --- notify the square (display info) --- */
   int info_h, info_w;
   int index = b->getIndex();
-
-  setDisplayPosition(info_h, info_w, index, false);
-
   Player *owner = b->getOwner();
   bool isAcademic = b->isAcademic();
 
+  setDisplayPosition(info_h, info_w, index, false);
+
+  int n = 0;
+  char symbol;
+
   if (owner != nullptr) {       // only display ownership when the property is owned
-    if (isAcademic) info_h += 2;
-    theDisplay[info_h - 1][info_w + 4] = 'O';
-    theDisplay[info_h - 1][info_w + 5] = ':';
-    theDisplay[info_h - 1][info_w + 6] = owner->getSymbol();
-    if (isAcademic) info_h -= 2;
+    if (isAcademic) n = 2; else n = 0;
+    symbol = owner->getSymbol();
+
+    string ownership = "O:";
+    ownership += symbol;
+    setString(info_h + n, info_w + 5, theDisplay, ownership);
   }
 
   int level = b->getImpLevel(); // for displaying level
 
-  if (level >= 0 && isAcademic) {
-    replaceChar(info_h, info_w, theDisplay, levelSymbol, ' ', maxLevel, true);
-    replaceChar(info_h, info_w, theDisplay, ' ', levelSymbol, level, true);
+  if (level >= 0) {
+    if (isAcademic) n = 2; else n = 0;
+    setString(info_h + n, info_w - 1, theDisplay, "|");
+
+    if (isAcademic) {
+      replaceChar(info_h, info_w, theDisplay, levelSymbol, ' ', maxLevel, true);
+      replaceChar(info_h, info_w, theDisplay, ' ', levelSymbol, level, true);
+    }
+  } else {            // for displaying mortgage
+    if (isAcademic) n = 2; else n = 0;
+    setString(info_h + n, info_w - 1, theDisplay, "*");
   }
 }
