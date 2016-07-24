@@ -44,7 +44,7 @@ int main(int argc, char* argv[]) {
 		string cur_argc = argv[i];
 		if (cur_argc == "-testing") {
 			g.settest();
-			cout << "Testing mode started." << endl;
+			cout << ">> Testing mode started." << endl;
 		} else if (cur_argc == "-load") {
 			if (i < argc-1) {
 				++i;
@@ -53,7 +53,7 @@ int main(int argc, char* argv[]) {
 					loaded = true;
 				}
 			} else {
-				cout << "Please specify file name." << endl;
+				cout << ">> Please specify file name." << endl;
 				return 0;
 			}
 		}
