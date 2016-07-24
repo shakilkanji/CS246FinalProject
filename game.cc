@@ -178,7 +178,7 @@ void Game::run(){
       if (command == "roll" || command == "Roll") {
 
         if (rolled == true) { // if the player has already roll the dice 
-          cout << "You cannot roll the dice anymore in this turn" << endl;   
+          cout << "You cannot roll the dice anymore in this turn." << endl;   
         } else {  // player has not rolled
           int dice_result = diceroll();
           roll_time += 1;
@@ -189,6 +189,10 @@ void Game::run(){
               player[currentplayer]->setPos(10);
               player[currentplayer]->setDCTurn(0);
               rolled = true;
+            } else if (player[currentplayer]->getDCTurn() >= 0) {
+              cout << "Congratulations, you rolled a double. Escape the DC Tims Line!" << endl;
+              move(dice_result);
+              rolled = true;
             } else {
               move(dice_result);
               cout << "You rolled a double, please roll again. " << endl;
@@ -197,8 +201,17 @@ void Game::run(){
             if (player[currentplayer]->getDCTurn() == -1) {
               move(dice_result);
               displayCommands();
+            } else if (player[currentplayer]->getDCTurn() == 2) {
+              player[currentplayer]->setDCTurn(3);
+              cout << "You did not roll a double. Please pay or redeem now to leave the DC Tims Line." << endl;
+              if (player[currentplayer]->getNumTimsCups() == 0 && player[currentplayer]->getBalance() < 50) {
+                forceBankruptcy(player[currentplayer], 50, nullptr);
+              } else {
+                displayCommands();
+              }
             } else {
-              cout << "You did not roll a double.  Stay in DC Tims Line." << endl;
+              player[currentplayer]->setDCTurn(player[currentplayer]->getDCTurn()+1);
+              cout << "You did not roll a double. Stay in DC Tims Line." << endl;
             }
             rolled = true;
           }
@@ -275,6 +288,8 @@ void Game::run(){
 
         if (rolled == false){
           cout << "You have not rolled, please roll to complete your turn." << endl;
+        } else if (player[currentplayer]->getDCTurn() >= 3) {
+          cout << "You must pay or redeem to leave DC Tims Line and complete your turn." << endl;
         } else {
           cout << "Turn complete." << endl;  
           
@@ -336,7 +351,7 @@ void Game::next(){
 void Game::displayCommands() {
   if (!isWon) {
     int currentplayerDCTurn = player[currentplayer]->getDCTurn();
-    if (currentplayerDCTurn >= 0) {
+    if (currentplayerDCTurn >= 0 && currentplayerDCTurn <= 2) {
       cout << endl;
       cout << "You are stuck in DC Tims Line (Turn " << currentplayerDCTurn;
       cout << "), please choose from the following commands:" << endl;
@@ -351,6 +366,9 @@ void Game::displayCommands() {
       cout << "9. save <filename>: saves the current state of the game to the given file." << endl;
       cout << "10. pay: pay $50 to leave DC Tims Line." << endl;
       cout << "11. redeem: redeem Roll Up The Rim to leave DC Tims Line." << endl;
+    } else if (currentplayerDCTurn >= 3) {
+      cout << "1. pay: pay $50 to leave DC Tims Line." << endl;
+      cout << "2. redeem: redeem Roll Up The Rim to leave DC Tims Line." << endl;
     } else {
       cout << endl;
       cout << "Please choose from the following commands:" << endl;
