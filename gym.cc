@@ -12,4 +12,5 @@ int Gym::getFees() const {
 	// if (owner->getNumGym() == 1) return game->getSumDice() * 4;
 	// if (owner->getNumGym() == 2) return game->getSumDice() * 10;
 	return 0;
+	
 }

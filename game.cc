@@ -357,7 +357,6 @@ void Game::askToBuy(Building *building, Player *buyer ) {
   }
 }
 
-
 void Game::trade() {
     string temp_trader;
     string give;
@@ -380,9 +379,10 @@ void Game::trade() {
     if(receive_s >> receivenumber){
      receivemoney = true;    
     }
-
-    if(givemoney == false){
+      
       int trade_give_building_index = getBuildingIndex(give);
+    if(givemoney == false){
+       trade_give_building_index = getBuildingIndex(give);
     }
 
       int trade_receive_building_index = -1;
@@ -402,6 +402,8 @@ void Game::trade() {
       return;
     }
     
+
+    //give money want to buy building
     else if ( (givemoney== true )  && (receivemoney == false) ){
       if(givenumber > player[currentplayer]->getBalance()){
         cout << "You do not have enough money!" << endl;
@@ -418,11 +420,14 @@ void Game::trade() {
           cout << "The person you want to trade does not own this building!" << endl;
           return;
         }
-        if(bp->getOwner()->getName() != temp_trader){
+        else if(bp->getOwner()->getName() != temp_trader){
           cout << "The person you want to trade does not own this building!" << endl;
           return;
         }
-        //should check monopoly
+        else if(isMonopolized(bp) == 3){
+          cout << "The building cannot be traded since there is improvement in its monopoly!" << endl;
+          return;
+        }
         else {
           cout << player[trader_index]->getName() << ", you can choose to trade or not" << endl;
           cout << player[currentplayer]->getName() <<  " wants to spend " << give << " to buy your" << bp->getName() << endl;
@@ -436,26 +441,152 @@ void Game::trade() {
             else if(command == "assets"){
              displayAssets(player[trader_index]);
            }
-           else if(command == "accept"){
-             cout << "Trade successfully!" << endl;
+           else if(command == "accept"){             
              player[currentplayer]->updateBalance(-1 * givenumber);
              player[trader_index]->updateBalance(givenumber);
              bp->setOwner(player[currentplayer]);
              td->notify(bp);
              td->display();
+             cout << "Trade successfully!" << endl;
+             cout << player[currentplayer] << "spend " << givenumber << " to get " << bp->getName() << endl;
              return;
            }
            else{
             cout << "Invalid input! Please input [accept]/[reject]/[assets]" << endl;
            }
-
-              // cout << "OK" << endl;
-            }
-          }
-
         }
       }
+
+    }
+  }
+  
+  //give building want to get money
+  else if( (givemoney== false )  && (receivemoney == true) ){
+      if(receivenumber > player[trader_index]->getBalance()){
+        cout << "The player you want to trade do not have enough money!" << endl;
+        return;
+      }     
+
+      else if( trade_give_building_index == -1){
+        cout << "The building you want to trade is not exist!" << endl;
+        return;
+      }
+      else{
+        Building *bp = dynamic_cast<Building *>(gameboard[trade_give_building_index]);
+        if(bp->getOwner() == nullptr){
+          cout << "You do not own this building!" << endl;
+          return;
+        }
+        else if(bp->getOwner()->getName() != player[currentplayer]->getName()){
+          cout << "You do not own this building!" << endl;
+          return;
+        }
+        else if(isMonopolized(bp) == 3){
+          cout << "The building cannot be traded since there is improvement in its monopoly!" << endl;
+          return;
+        }
+        else{
+          cout << player[trader_index]->getName() << ", you can choose to trade or not" << endl;
+          cout << player[currentplayer]->getName() <<  " wants to trade " << give << " for" << receivenumber << endl;
+          cout << "You can [accept]/[reject]/[assets]" << endl;
+          string command;
+          while(cin >> command){
+            if(command == "reject"){
+              cout << "Trade is rejected" << endl;
+              return;
+            }
+            else if(command == "assets"){
+             displayAssets(player[trader_index]);
+           }
+           else if(command == "accept"){
+             
+             player[currentplayer]->updateBalance( receivenumber);
+             player[trader_index]->updateBalance(-1 *receivenumber);
+             bp->setOwner(player[trader_index]);
+             td->notify(bp);
+             td->display();
+             cout << "Trade successfully!" << endl;
+             cout << player[currentplayer] << "trade " << bp->getName() << " for " << receivenumber  << endl;
+             return;
+           }
+           else{
+            cout << "Invalid input! Please input [accept]/[reject]/[assets]" << endl;
+           }
+        }
+      }
+      }
+      }
+      else if((givemoney == false)&& (receivemoney == false)){
+          if( trade_give_building_index == -1){
+          cout << "The building you want to trade is not exist!" << endl;
+           return;
+          }
+          else if( trade_receive_building_index == -1){
+          cout << "The building you want to trade is not exist!" << endl;
+           return;
+          }
+
+          else{
+           Building *bp_give = dynamic_cast<Building *>(gameboard[trade_give_building_index]);
+           Building *bp_receive = dynamic_cast<Building *>(gameboard[trade_receive_building_index]);
+           if(bp_give->getOwner() == nullptr){
+            cout << "You do not own this building!" << endl;
+            return;
+           }
+           else if(bp_receive->getOwner() == nullptr){
+            cout << "The player you want to trade do not own this building!" << endl;
+            return;
+           }
+           else if(bp_give->getOwner()->getName() != player[currentplayer]->getName()){
+            cout << "You do not own this building!" << endl;
+           }
+           else if(bp_receive->getOwner()->getName()!= player[trader_index]->getName()){
+            cout << "The player you want to trade do not own this building!" << endl;
+            return;
+           }
+           else if(isMonopolized(bp_give) == 3){
+            cout << "The building cannot be traded since there is improvement in its monopoly!" << endl;
+           return;
+           }
+           else if(isMonopolized(bp_receive) == 3){
+            cout << "The building cannot be traded since there is improvement in its monopoly!" << endl;
+           return;
+           }  
+           else{
+          cout << player[trader_index]->getName() << ", you can choose to trade or not" << endl;
+          cout << player[currentplayer]->getName() <<  " wants to trade " << bp_give->getName() << " for" << bp_receive->getName() << endl;
+          cout << "You can [accept]/[reject]/[assets]" << endl;
+            string command;
+            while(cin >> command){
+            if(command == "reject"){
+              cout << "Trade is rejected" << endl;
+              return;
+            }
+            else if(command == "assets"){
+             displayAssets(player[trader_index]);
+           }
+           else if(command == "accept"){             
+            bp_give->setOwner(player[trader_index]);
+            bp_receive->setOwner(player[currentplayer]);
+            td->notify(bp_give);
+            td->notify(bp_receive);
+            td->display();
+            cout << "Trade successfully!" << endl;
+            cout << player[currentplayer]->getName() << "trade " << bp_give->getName() << " for " << bp_receive->getName() << endl;
+            return;
+           }
+           else{
+            cout << "Invalid input! Please input [accept]/[reject]/[assets]" << endl;
+           }
+        }            
+      }
+    }
+  }
 }
+
+
+
+
 
 
 
@@ -1065,4 +1196,157 @@ void Game::saveGame(string filename) {
       }
     }
   }
+}
+
+void Game::Needles(Player *landedPlayer){
+  srand(time(0));
+  int random = rand()%100 + 1;
+  if(random == 100){
+    cout << "Instead of normal effect, you will get a Roll Up the Rim cup" << endl;
+    if(roll_time == 0){
+      cout << "Sorry, there is no more Roll Up the Rim cup right now, you will get other result" << endl;
+      Needles(landedPlayer);
+      return ;
+    }
+    else {
+      int newimts = landedPlayer->getNumTimsCups();
+      landedPlayer->setNumTimsCups(newimts+1) ;
+      roll_time -= 1;
+      cout << "You get Roll Up the Rim cup, you have " << landedPlayer->getNumTimsCups() << " now." << endl;
+    }
+  }
+  else {
+    if(test) {
+    cout << "You can set the result now [1-18]" << endl;
+    cin >> random;
+    }
+   if(!test) {
+    random = rand() % 18 + 1;
+   }
+    
+    if(test) cout << "random numebr is " << random << endl;
+    if(random == 1){
+      cout << "You lost 200$" << endl;
+      if(landedPlayer->getBalance() < 200){
+        forceBankruptcy(landedPlayer,200);
+      }
+      else{
+        landedPlayer->updateBalance(-1 * 200);
+        cout << "You current balance is " << landedPlayer->getBalance() << endl;
+      }
+    }
+    else if( random == 2 || random == 3){
+      cout << "You lost 100$" << endl;
+      if(landedPlayer->getBalance() < 100){
+        forceBankruptcy(landedPlayer,100);
+      }
+      else{
+        landedPlayer->updateBalance(-1 * 100);
+        cout << "You current balance is " << landedPlayer->getBalance() << endl;
+      }
+    }
+    else if( random >= 4 || random <= 6){
+      cout << "You lost 50$" << endl;
+      if(landedPlayer->getBalance() < 50){
+        forceBankruptcy(landedPlayer,50);
+      }
+      else{
+        landedPlayer->updateBalance(-1 * 50);
+        cout << "You current balance is " << landedPlayer->getBalance() << endl;
+      }
+    }
+
+    else if( random >= 7 || random <= 12){
+      cout << "You get 25$" << endl;   
+      landedPlayer->updateBalance(25);
+      cout << "You current balance is " << landedPlayer->getBalance() << endl;      
+    }
+    else if( random >= 13 || random <= 15){
+      cout << "You get 50$" << endl;   
+      landedPlayer->updateBalance(50);
+      cout << "You current balance is " << landedPlayer->getBalance() << endl;      
+    }
+    else if( random >= 16 || random <= 17){
+      cout << "You get 100$" << endl;   
+      landedPlayer->updateBalance(100);
+      cout << "You current balance is " << landedPlayer->getBalance() << endl;      
+    }
+    else {
+      cout << "You get 200$" << endl;   
+      landedPlayer->updateBalance(200);
+      cout << "You current balance is " << landedPlayer->getBalance() << endl;      
+    }
+  } 
+
+}
+
+
+void Game::SLC(Player*  landedPlayer){
+  srand(time(0));
+  int random = rand()%100 + 1;
+  if(random == 100){
+    cout << "Instead of normal effect, you will get a Roll Up the Rim cup" << endl;
+    if(roll_time == 0){
+      cout << "Sorry, there is no more Roll Up the Rim cup right now, you will get other result" << endl;
+      SLC(landedPlayer);
+      return ;
+    }
+    else {
+      int newimts = landedPlayer->getNumTimsCups();
+      landedPlayer->setNumTimsCups(newimts+1) ;
+      roll_time -= 1;
+      cout << "You get Roll Up the Rim cup, you have " << landedPlayer->getNumTimsCups() << " now." << endl;
+    }
+  }  
+  else{
+   if(test) {
+    cout << "You can set the result now [1-24]" << endl;
+    cin >> random;
+   }
+   if(!test) {
+     random = rand()%24 + 1;
+  }
+   if(random >= 1 && random <= 3){
+   cout << "You go back 3" << endl;
+   if(landedPlayer->getPos() == 2){
+    move(37);
+   }
+   else{
+    move(-3);
+   }
+   
+   }
+   else if(random >= 4 && random <= 7){
+   cout << "You go back 2" << endl;
+   move(-2);
+   }
+   else if(random >= 8 && random <= 11){
+   cout << "You go back 1" << endl;
+   move(-1);
+   }
+   else if(random >= 12 && random <= 14){
+   cout << "You go forward 1" << endl;
+   move(1);
+ }
+   else if(random >= 15 && random <= 18){
+   cout << "You go forward 2" << endl;
+   move(2);
+   }
+   else if(random >= 19 && random <= 22){
+   cout << "You go forward 3" << endl;
+   move(3);
+  }
+  else if(random == 23){
+   cout << "You will go to OSAP" << endl;
+   int old_pos = landedPlayer->getPos();
+   landedPlayer->setPos(0);
+   td->notify(landedPlayer,old_pos);
+   td->display();
+   gameboard[0]->notify(landedPlayer);
+ }
+   
+  else {
+    cout <<"You will go to DC tims" << endl;
+  }
+ }
 }
