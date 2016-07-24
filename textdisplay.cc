@@ -181,6 +181,14 @@ TextDisplay::TextDisplay(){
   }
 
   file.close();
+
+  /* --- set rules --- */
+  setString(13, 43, theDisplay, "DISPLAY TIPS");
+  setString(15, 29, theDisplay, "1. O:P - owned by player with the symbol P.");
+  setString(16, 29, theDisplay, "2. III - This property has three improvements.");
+  setString(17, 29, theDisplay, "3. ABC - This property is being mortgaged.");
+  setString(18, 29, theDisplay, "4. Properties with the same colour belong to");
+  setString(19, 29, theDisplay, "   the same monopoly block.");
 }
 
 
@@ -272,17 +280,19 @@ void TextDisplay::notify(Building *b) {
   setDisplayPosition(info_h, info_w, index, false);
 
   Player *owner = b->getOwner();
+  bool isAcademic = b->isAcademic();
 
   if (owner != nullptr) {       // only display ownership when the property is owned
-    if (b->isAcademic()) info_h += 2;
+    if (isAcademic) info_h += 2;
     theDisplay[info_h - 1][info_w + 4] = 'O';
     theDisplay[info_h - 1][info_w + 5] = ':';
     theDisplay[info_h - 1][info_w + 6] = owner->getSymbol();
+    if (isAcademic) info_h -= 2;
   }
 
   int level = b->getImpLevel(); // for displaying level
 
-  if (level >= 0 && b->isAcademic()) {
+  if (level >= 0 && isAcademic) {
     replaceChar(info_h, info_w, theDisplay, levelSymbol, ' ', maxLevel, true);
     replaceChar(info_h, info_w, theDisplay, ' ', levelSymbol, level, true);
   }
