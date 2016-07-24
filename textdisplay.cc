@@ -184,11 +184,12 @@ TextDisplay::TextDisplay(){
 
   /* --- set rules --- */
   setString(13, 44, theDisplay, "DISPLAY TIPS");
-  setString(15, 29, theDisplay, "1. O:$ - owned by player with the symbol $.");
-  setString(16, 29, theDisplay, "2. III - This property has three improvements.");
-  setString(17, 29, theDisplay, "3. *MC - This property is being mortgaged.");
-  setString(18, 29, theDisplay, "4. Properties with the same colour belong to");
-  setString(19, 29, theDisplay, "   the same monopoly block.");
+  setString(15, 29, theDisplay, "1. O:$ - This property is owned by the player");
+  setString(16, 29, theDisplay, "   with the symbol $.");
+  setString(17, 29, theDisplay, "2. III - This property has 3 improvements.");
+  setString(18, 29, theDisplay, "3. *MC - This property is being mortgaged.");
+  setString(19, 29, theDisplay, "4. Properties with the same colour belong to");
+  setString(20, 29, theDisplay, "   the same monopoly block.");
 }
 
 
