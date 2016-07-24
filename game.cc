@@ -125,7 +125,7 @@ void Game::normalinit(){
 
     //initial player's character 
     cout << endl;
-    cout << "Hello, " << playername[current] << "! please choose an character whcih represents you." << endl;
+    cout << "Hello, " << playername[current] << "! please choose an character which represents you." << endl;
     cout << "You can choose from:" << endl;
     cout << "G (Goose) / B (GRT BUS) / D (Tim Hortons Doughnut) / P (Professor)" <<endl;
     cout << "S (Student) / $ (Money) / L (Laptop) / T (Pink tie)" << endl;
@@ -186,8 +186,11 @@ void Game::run(){
           if(dicepair() == true) {
             if(roll_time == 3) {  // after 3 rolls, player is sent to DC tims line and cannot move
               cout << "You have rolled 3 doubles. Go to DC Tims Line! " << endl;
+              int old_pos = player[currentplayer]->getPos();
               player[currentplayer]->setPos(10);
               player[currentplayer]->setDCTurn(0);
+              td->notify(player[currentplayer], old_pos);
+              td->display();
               rolled = true;
             } else if (player[currentplayer]->getDCTurn() >= 0) {
               cout << "Congratulations, you rolled a double. Escape the DC Tims Line!" << endl;
@@ -322,7 +325,7 @@ void Game::run(){
           cout << "You do not have a Roll Up The Rim cup to leave DC Tims Line." << endl;
           displayCommands();
         }
-      } else if(command == "exit" || command == "Exit") {
+      } else if(command == "exit" || command == "Exit" || command == "quit" || command == "Quit") {
 
         cout << "You will exit the game now." << endl;
         return;
@@ -464,7 +467,6 @@ void Game::trade() {
       return;
     }
     
-
     //give money want to buy building
     else if ( (givemoney== true )  && (receivemoney == false) ){
       if(givenumber > player[currentplayer]->getBalance()){
@@ -646,15 +648,6 @@ void Game::trade() {
   }
 }
 
-
-
-
-
-
-
-
-      
-  
   
 //get index of player
 int Game::getplayer(string name){
@@ -830,7 +823,8 @@ int Game::diceroll(){
     cin >> firstdice >> seconddice;
   }
   int sum = firstdice + seconddice;
-  cout << "You have rolled a " << sum << "." << endl;
+  cout << "First dice rolled: " << firstdice << ", Second dice rolled: " << seconddice << ". ";
+  cout << "Sum: " << sum << "." << endl;
   return sum;
 }
 
@@ -1411,6 +1405,11 @@ void Game::SLC(Player*  landedPlayer){
    
   else {
     cout <<"You will go to DC tims" << endl;
+    int old_pos = landedPlayer->getPos();
+    landedPlayer->setPos(10);
+    landedPlayer->setDCTurn(0);
+    td->notify(landedPlayer, old_pos);
+    td->display();
   }
  }
 }
