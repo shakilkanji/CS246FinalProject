@@ -1292,7 +1292,7 @@ void Game::Needles(Player *landedPlayer){
     if(random == 1){
       cout << "You lost 200$" << endl;
       if(landedPlayer->getBalance() < 200){
-        forceBankruptcy(landedPlayer,200);
+        forceBankruptcy(landedPlayer,200, nullptr);
       }
       else{
         landedPlayer->updateBalance(-1 * 200);
@@ -1302,7 +1302,7 @@ void Game::Needles(Player *landedPlayer){
     else if( random == 2 || random == 3){
       cout << "You lost 100$" << endl;
       if(landedPlayer->getBalance() < 100){
-        forceBankruptcy(landedPlayer,100);
+        forceBankruptcy(landedPlayer,100, nullptr);
       }
       else{
         landedPlayer->updateBalance(-1 * 100);
@@ -1312,7 +1312,7 @@ void Game::Needles(Player *landedPlayer){
     else if( random >= 4 || random <= 6){
       cout << "You lost 50$" << endl;
       if(landedPlayer->getBalance() < 50){
-        forceBankruptcy(landedPlayer,50);
+        forceBankruptcy(landedPlayer,50, nullptr);
       }
       else{
         landedPlayer->updateBalance(-1 * 50);
