@@ -1,4 +1,5 @@
 #include "gym.h"
+#include "game.h"
 using namespace std;
 
 Gym::Gym(Game *game, int index, string name, int cost) : Building(game, index, name, cost) {}
@@ -9,8 +10,9 @@ Gym::Gym(Game *game, int index, string name, int cost, Player *owner, bool mortg
 Gym::~Gym() {}
 
 int Gym::getFees() const {
-	// if (owner->getNumGym() == 1) return game->getSumDice() * 4;
-	// if (owner->getNumGym() == 2) return game->getSumDice() * 10;
+	cout << owner->getName() << " has " << game->getNumGym(owner) << endl;
+	if (game->getNumGym(owner) == 1) return game->getsumdice() * 4;
+	if (game->getNumGym(owner) == 2) return game->getsumdice() * 10;
 	return 0;
 	
 }

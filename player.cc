@@ -36,17 +36,18 @@ int Player::getBalance() const {
 }
 
 
-void Player::setNumGym(int n) { 
-  numGym = n; 
-}
+// void Player::setNumGym(int n) { 
+//   numGym = n; 
+// }
 int Player::getNumGym() const { 
+  
   return numGym; 
 }
 
 
-void Player::setNumRes(int n) { 
-  numRes = n; 
-}
+// void Player::setNumRes(int n) { 
+//   numRes = n; 
+// }
 int Player::getNumRes() const { 
   return numRes; 
 }
