@@ -355,41 +355,41 @@ void Game::next(){
 }
 
 void Game::displayCommands() {
-  if (!isWon) {
-    int currentplayerDCTurn = player[currentplayer]->getDCTurn();
-    if (currentplayerDCTurn >= 0 && currentplayerDCTurn <= 2) {
-      cout << endl;
-      cout << ">> You are stuck in DC Tims Line (Turn " << currentplayerDCTurn;
-      cout << "), please choose from the following commands:" << endl;
-      cout << "1. roll: roll two dice, and move your piece the sum of those dice if you get doubles." << endl;
-      cout << "2. next: give control to the next player. " << endl;
-      cout << "3. trade <player> <give> <receive>: offers to trade property/cash with another player." << endl;
-      cout << "4. improve <property> buy/sell: attempts to buy or sell an improvement for property." << endl;
-      cout << "5. mortgage <property>: attempts to mortgage property." << endl;
-      cout << "6. unmortgage <property>: attempts to unmortgage property." << endl;
-      cout << "7. assets: displays the assets of the current player." << endl;
-      cout << "8. all: displays the assets of every player." << endl;
-      cout << "9. save <filename>: saves the current state of the game to the given file." << endl;
-      cout << "10. pay: pay $50 to leave DC Tims Line." << endl;
-      cout << "11. redeem: redeem Roll Up The Rim to leave DC Tims Line." << endl;
-    } else if (currentplayerDCTurn >= 3) {
-      cout << "1. pay: pay $50 to leave DC Tims Line." << endl;
-      cout << "2. redeem: redeem Roll Up The Rim to leave DC Tims Line." << endl;
-    } else {
-      cout << endl;
-      cout << ">> Please choose from the following commands:" << endl;
-      cout << "1. roll: roll two dice, and move your piece the sum of those dice." << endl;
-      cout << "2. next: give control to the next player. " << endl;
-      cout << "3. trade <player> <give> <receive>: offers to trade property/cash with another player." << endl;
-      cout << "4. improve <property> buy/sell: attempts to buy or sell an improvement for property." << endl;
-      cout << "5. mortgage <property>: attempts to mortgage property." << endl;
-      cout << "6. unmortgage <property>: attempts to unmortgage property." << endl;
-      cout << "7. assets: displays the assets of the current player." << endl;
-      cout << "8. all: displays the assets of every player." << endl;
-      cout << "9. save <filename>: saves the current state of the game to the given file." << endl;
-    }
-  }
-}
+   if (!isWon) {
+     int currentplayerDCTurn = player[currentplayer]->getDCTurn();
+     if (currentplayerDCTurn >= 0 && currentplayerDCTurn <= 2) {
+       cout << endl;
+       cout << ">> You are stuck in DC Tims Line (Turn " << currentplayerDCTurn;
+       cout << "), please choose from the following commands:" << endl;
+       cout << "1. roll: roll two dice, and move your piece the sum of those dice if you get doubles." << endl;
+       cout << "2. next: give control to the next player. " << endl;
+       cout << "3. trade <player> <give> <receive>: offers to trade property/cash with another player." << endl;
+       cout << "4. improve <property> buy/sell: attempts to buy or sell an improvement for property." << endl;
+       cout << "5. mortgage <property>: attempts to mortgage property." << endl;
+       cout << "6. unmortgage <property>: attempts to unmortgage property." << endl;
+       cout << "7. assets: displays the assets of the current player." << endl;
+       cout << "8. all: displays the assets of every player." << endl;
+       cout << "9. save <filename>: saves the current state of the game to the given file." << endl;
+       cout << "10. pay: pay $50 to leave DC Tims Line." << endl;
+       cout << "11. redeem: redeem Roll Up The Rim to leave DC Tims Line." << endl;
+     } else if (currentplayerDCTurn >= 3) {
+       cout << "1. pay: pay $50 to leave DC Tims Line." << endl;
+       cout << "2. redeem: redeem Roll Up The Rim to leave DC Tims Line." << endl;
+     } else {
+       cout << endl;
+       cout << ">> Please choose from the following commands:" << endl;
+       cout << "1. roll: roll two dice, and move your piece the sum of those dice." << endl;
+       cout << "2. next: give control to the next player. " << endl;
+       cout << "3. trade <player> <give> <receive>: offers to trade property/cash with another player." << endl;
+       cout << "4. improve <property> buy/sell: attempts to buy or sell an improvement for property." << endl;
+       cout << "5. mortgage <property>: attempts to mortgage property." << endl;
+       cout << "6. unmortgage <property>: attempts to unmortgage property." << endl;
+       cout << "7. assets: displays the assets of the current player." << endl;
+       cout << "8. all: displays the assets of every player." << endl;
+       cout << "9. save <filename>: saves the current state of the game to the given file." << endl;
+     }
+   }
+ }
 
 
 void Game::askToBuy(Building *building, Player *buyer ) {
@@ -494,7 +494,7 @@ void Game::trade() {
           return;
         }
         else if(isMonopolized(bp) == 3){
-          cout << "The building cannot be traded since there is improvement in its monopoly!" << endl;
+          cout << ">> The building cannot be traded since there is improvement in its monopoly!" << endl;
           return;
         }
         else {
