@@ -1142,7 +1142,14 @@ void Game::Needles(Player *landedPlayer){
     }
   }
   else {
+    if(test) {
+    cout << "You can set the result now [1-18]" << endl;
+    cin >> random;
+    }
+   if(!test) {
     random = rand() % 18 + 1;
+   }
+    
     if(test) cout << "random numebr is " << random << endl;
     if(random == 1){
       cout << "You lost 200$" << endl;
@@ -1200,37 +1207,72 @@ void Game::Needles(Player *landedPlayer){
 }
 
 
-// void Game::SLC(Player*  landedPlayer){
-//   srand(time(0));
-//   int random = rand()%100 + 1;
-//   if(random == 100){
-//     cout << "Instead of normal effect, you will get a Roll Up the Rim cup" << endl;
-//     if(roll_time == 0){
-//       cout << "Sorry, there is no more Roll Up the Rim cup right now, you will get other result" << endl;
-//       Needles(landedPlayer);
-//       return ;
-//     }
-//     else {
-//       int newimts = landedPlayer->getNumTimsCups();
-//       landedPlayer->setNumTimsCups(newimts+1) ;
-//       roll_time -= 1;
-//       cout << "You get Roll Up the Rim cup, you have " << landedPlayer->getNumTimsCups() << " now." << endl;
-//     }
-//   }  
-//   else{
-//    int random = rand()%24 + 1;
-//    if(random >= 1 && random <= 3){
-
-//    }
-//    else if(random >= 4 && random <= 7){
-    
-//    }
-//    else if(random >= 8 && random <= 11){
-    
-//    }
-//    else if(random >= 12 && random <= 7){
-    
-//    }
-
-//   }
-// }
+void Game::SLC(Player*  landedPlayer){
+  srand(time(0));
+  int random = rand()%100 + 1;
+  if(random == 100){
+    cout << "Instead of normal effect, you will get a Roll Up the Rim cup" << endl;
+    if(roll_time == 0){
+      cout << "Sorry, there is no more Roll Up the Rim cup right now, you will get other result" << endl;
+      SLC(landedPlayer);
+      return ;
+    }
+    else {
+      int newimts = landedPlayer->getNumTimsCups();
+      landedPlayer->setNumTimsCups(newimts+1) ;
+      roll_time -= 1;
+      cout << "You get Roll Up the Rim cup, you have " << landedPlayer->getNumTimsCups() << " now." << endl;
+    }
+  }  
+  else{
+   if(test) {
+    cout << "You can set the result now [1-24]" << endl;
+    cin >> random;
+   }
+   if(!test) {
+     random = rand()%24 + 1;
+  }
+   if(random >= 1 && random <= 3){
+   cout << "You go back 3" << endl;
+   if(landedPlayer->getPos() == 2){
+    move(37);
+   }
+   else{
+    move(-3);
+   }
+   
+   }
+   else if(random >= 4 && random <= 7){
+   cout << "You go back 2" << endl;
+   move(-2);
+   }
+   else if(random >= 8 && random <= 11){
+   cout << "You go back 1" << endl;
+   move(-1);
+   }
+   else if(random >= 12 && random <= 14){
+   cout << "You go forward 1" << endl;
+   move(1);
+ }
+   else if(random >= 15 && random <= 18){
+   cout << "You go forward 2" << endl;
+   move(2);
+   }
+   else if(random >= 19 && random <= 22){
+   cout << "You go forward 3" << endl;
+   move(3);
+  }
+  else if(random == 23){
+   cout << "You will go to OSAP" << endl;
+   int old_pos = landedPlayer->getPos();
+   landedPlayer->setPos(0);
+   td->notify(landedPlayer,old_pos);
+   td->display();
+   gameboard[0]->notify(landedPlayer);
+ }
+   
+  else {
+    cout <<"You will go to DC tims" << endl;
+  }
+ }
+}
