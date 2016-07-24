@@ -200,11 +200,10 @@ void TextDisplay::display() {
       if (theDisplay[i][j] == 'O' && theDisplay[i][j + 1] == ':') {
         cout << Dim << Bold;
       } else if (theDisplay[i][j] == '#') {
-        cout << Reverse;
+        cout << Reverse << ' ';
       }
 
-      if (theDisplay[i][j] == '#') cout << ' ';
-      else cout << theDisplay[i][j];   // normal display
+      if (theDisplay[i][j] != '#') cout << theDisplay[i][j];   // normal display
 
       if ((theDisplay[i][j - 2] == 'O' && theDisplay[i][j - 1] == ':') || 
           (theDisplay[i][j] == '#')) {
@@ -251,7 +250,7 @@ void TextDisplay::notify(Player *p, int oldPos) {
   setDisplayPosition(pos_h, pos_w, pos, true);              // add Player to its new pos
   replaceChar(pos_h, pos_w, theDisplay, ' ', symbol, maxPlayer, false);
 
-  setString(37, 28, theDisplay, "Current Player(s):");
+  setString(37, 28, theDisplay, "Current Players:");
 
   for (int row = 39; row < 39 + maxPlayer; ++row) {
     char c = theDisplay[row - 1][27];
