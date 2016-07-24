@@ -851,7 +851,7 @@ int Game::isMonopolized(const Square *square ) const {
     int academicIndex = getAcademicIndex(square->getName());
     if (academicIndex == -1) return -1;
     const Academic *academic = static_cast<const Academic *>(square);
-    Player *owner = academic->getOwner();
+    // Player *owner = academic->getOwner();
     string monoBlock = academic->getMonoBlock();
 
     vector<Academic *> brothers;
@@ -1462,4 +1462,5 @@ int Game::getNumGym(Player *player){
       result += 1;
     }
    }
+   return result;
 }
