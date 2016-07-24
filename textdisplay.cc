@@ -4,7 +4,6 @@
 #include <fstream>
 #include "player.h"
 #include "building.h"
-#include "academic.h"
 using namespace std;
 
 
@@ -83,52 +82,43 @@ const string BackgroundWhite        = "\033[107m";
 
 // Helper Functions: ////////////////////////////////////////////////////////////
 
-void setPlayerDisplayPos(int &pos_h, int &pos_w, int pos) {
-  /* --- caculate pos on board for displaying players --- */
-  if (pos < index_bot_left) {
-    pos_h = 55;
-    pos_w = width - (pos * box_w) - 9;
-  } else if (pos < index_top_left) {
-    pos_h = height - ((pos - index_bot_left) * box_h) - 1;
-    pos_w = 2;
-  } else if (pos < index_top_right) {
-    pos_h = 5;
-    pos_w = ((pos - index_top_left) * box_w) + 2;
-  } else if (pos < 40) {
-    pos_h = ((pos - index_top_right) * box_h) + 5;
-    pos_w = 92;
-  }
-}
-
-
-void setSquareDisplayInfo(int &info_h, int &info_w, int index) {
-  /* --- caculate pos on board for displaying ownerships and levels --- */
+void setDisplayPosition(int &row, int &col, int index, bool isPlayer) {
+  /* --- caculate pos on board for first line in each square --- */
   if (index < index_bot_left) {
-    info_h = 52;
-    info_w = width - (index * box_w) - 9;
+    row = 52;
+    col = width - (index * box_w) - 9;
   } else if (index < index_top_left) {
-    info_h = height - ((index - index_bot_left) * box_h) - 4;
-    info_w = 2;
+    row = height - ((index - index_bot_left) * box_h) - 4;
+    col = 2;
   } else if (index < index_top_right) {
-    info_h = 2;
-    info_w = ((index - index_top_left) * box_w) + 2;
+    row = 2;
+    col = ((index - index_top_left) * box_w) + 2;
   } else if (index < 40) {
-    info_h = ((index - index_top_right) * box_h) + 2;
-    info_w = 92;
+    row = ((index - index_top_right) * box_h) + 2;
+    col = 92;
   }
+  if (isPlayer) row += 3;
 }
 
 
-void replaceChar(int pos_h, int pos_w, char **charArray, 
+void replaceChar(int row, int col, char **charArray, 
   char from, char to, int repeatTimes, bool isRepeated) {
   /* --- used for add or remove players --- */
   char c;
   for (int i = 0; i < repeatTimes; ++i) {
-    c = charArray[pos_h - 1][pos_w - 1 + i];
+    c = charArray[row - 1][col - 1 + i];
     if (c == from) {
-      charArray[pos_h - 1][pos_w - 1 + i] = to;
+      charArray[row - 1][col - 1 + i] = to;
       if (!isRepeated) break;
     }
+  }
+}
+
+
+void setString(int row, int col, char **charArray, string s) {
+  int len = s.length();
+  for (int i = 0; i < len; ++i) {
+    charArray[row - 1][col - 1 + i] = s.at(i);
   }
 }
 
@@ -137,30 +127,30 @@ void displayEffect(int row, int col) {
   /* --- display effects --- */
   if (row == 51) {
     if (col == 64 || col == 82)
-      cout << BackgroundYellow << Black;             // Arts1
+      cout << BackgroundYellow << Black;           // Arts1  - Yellow
     if (col == 10 || col == 19 || col == 37) 
-      cout << BackgroundLightYellow << Black;        // Arts2
+      cout << BackgroundLightYellow << Black;      // Arts2  - Light Yellow
   }
 
   if (col == 1) {
     if (row == 31 || row == 36 || row == 46) 
-      cout << BackgroundMagenta << Black;            // Eng
+      cout << BackgroundMagenta << Black;          // Eng    - Magenta
     if (row == 6 || row == 11 || row == 21) 
-      cout << BackgroundCyan << Black;               // Health
+      cout << BackgroundCyan << Black;             // Health - Cyan
   }
 
   if (row == 1) {
     if (col == 10 || col == 28 || col == 37) 
-      cout << BackgroundLightGreen << Black;         // Env
+      cout << BackgroundLightGreen << Black;       // Env    - Light Green
     if (col == 55 || col == 64 || col == 82) 
-      cout << BackgroundBlue << Black;               // Sci1
+      cout << BackgroundBlue << Black;             // Sci1   - Blue
   }
 
   if (col == 91) {
     if (row == 6 || row == 11 || row == 21) 
-      cout << BackgroundLightBlue << Black;          // Sci2
+      cout << BackgroundLightBlue << Black;        // Sci2   - Light Blue
     if (row == 36 || row == 46) 
-      cout << BackgroundLightRed << Black;           // Math
+      cout << BackgroundLightRed << Black;         // Math   - Light Red
   }
 }
 
@@ -191,6 +181,14 @@ TextDisplay::TextDisplay(){
   }
 
   file.close();
+
+  /* --- set rules --- */
+  setString(13, 44, theDisplay, "DISPLAY TIPS");
+  setString(15, 29, theDisplay, "1. O:$ - owned by player with the symbol $.");
+  setString(16, 29, theDisplay, "2. III - This property has three improvements.");
+  setString(17, 29, theDisplay, "3. *MC - This property is being mortgaged.");
+  setString(18, 29, theDisplay, "4. Properties with the same colour belong to");
+  setString(19, 29, theDisplay, "   the same monopoly block.");
 }
 
 
@@ -207,17 +205,12 @@ void TextDisplay::display() {
     for (int j = 0; j < width; ++j) {
       displayEffect(i, j);        // display colours for Monopoly Blocks
 
-      if (theDisplay[i][j] == 'O' && theDisplay[i][j + 1] == ':') {
-        cout << Dim << Bold;
-      } else if (theDisplay[i][j] == '#') {
-        cout << Reverse;
-      }
+      if (theDisplay[i][j] == 'O' && theDisplay[i][j + 1] == ':') cout << Dim << Bold;
+      else if (theDisplay[i][j] == '#')  cout << Reverse << ' ';
 
-      if (theDisplay[i][j] == '#') cout << ' ';
-      else cout << theDisplay[i][j];   // normal display
+      if (theDisplay[i][j] != '#') cout << theDisplay[i][j]; // normal display
 
-      if ((theDisplay[i][j - 2] == 'O' && theDisplay[i][j - 1] == ':') || 
-          (theDisplay[i][j] == '#')) {
+      if (theDisplay[i][j - 1] == ':' || theDisplay[i][j] == '#') {
         cout << ResetAll;
       }
 
@@ -234,8 +227,16 @@ void TextDisplay::removePlayer(Player *p) {
 
   char symbol = p->getSymbol();
 
-  setPlayerDisplayPos(pos_h, pos_w, pos);              // remove Player
+  setDisplayPosition(pos_h, pos_w, pos, true);              // remove Player
   replaceChar(pos_h, pos_w, theDisplay, symbol, ' ', maxPlayer, false);
+
+  for (int row = 39; row < 39 + maxPlayer; ++row) {
+    char c = theDisplay[row - 1][27];
+    if (c == symbol) {
+      setString(row, 28, theDisplay, "                                              ");
+      break;
+    }
+  }
 }
 
 
@@ -244,13 +245,27 @@ void TextDisplay::notify(Player *p, int oldPos) {
   int pos_h, pos_w;
   int pos = p->getPos();
 
+  string name = p->getName();
   char symbol = p->getSymbol();
 
-  setPlayerDisplayPos(pos_h, pos_w, oldPos);           // remove Player from old pos
+  setDisplayPosition(pos_h, pos_w, oldPos, true);           // remove Player from old pos
   replaceChar(pos_h, pos_w, theDisplay, symbol, ' ', maxPlayer, false);
 
-  setPlayerDisplayPos(pos_h, pos_w, pos);              // add Player to its new pos
+  setDisplayPosition(pos_h, pos_w, pos, true);              // add Player to its new pos
   replaceChar(pos_h, pos_w, theDisplay, ' ', symbol, maxPlayer, false);
+
+  setString(37, 28, theDisplay, "Current Players:");
+
+  for (int row = 39; row < 39 + maxPlayer; ++row) {
+    char c = theDisplay[row - 1][27];
+    if (c == symbol) break;
+    else if (c == ' ') {
+      theDisplay[row - 1][27] = symbol;
+      theDisplay[row - 1][29] = '-';
+      setString(row, 32, theDisplay, name);
+      break;
+    }
+  }
 }
 
 
@@ -258,22 +273,35 @@ void TextDisplay::notify(Building *b) {
   /* --- notify the square (display info) --- */
   int info_h, info_w;
   int index = b->getIndex();
-
-  setSquareDisplayInfo(info_h, info_w, index);
-  if (!b->isAcademic()) info_h -= 2;
-
   Player *owner = b->getOwner();
+  bool isAcademic = b->isAcademic();
+
+  setDisplayPosition(info_h, info_w, index, false);
+
+  int n = 0;
+  char symbol;
 
   if (owner != nullptr) {       // only display ownership when the property is owned
-    theDisplay[info_h + 1][info_w + 4] = 'O';
-    theDisplay[info_h + 1][info_w + 5] = ':';
-    theDisplay[info_h + 1][info_w + 6] = owner->getSymbol();
+    if (isAcademic) n = 2; else n = 0;
+    symbol = owner->getSymbol();
+
+    string ownership = "O:";
+    ownership += symbol;
+    setString(info_h + n, info_w + 5, theDisplay, ownership);
   }
 
   int level = b->getImpLevel(); // for displaying level
 
-  if (level >= 0 && b->isAcademic()) {
-    replaceChar(info_h, info_w, theDisplay, levelSymbol, ' ', maxLevel, true);
-    replaceChar(info_h, info_w, theDisplay, ' ', levelSymbol, level, true);
+  if (level >= 0) {
+    if (isAcademic) n = 2; else n = 0;
+    setString(info_h + n, info_w - 1, theDisplay, "|");
+
+    if (isAcademic) {
+      replaceChar(info_h, info_w, theDisplay, levelSymbol, ' ', maxLevel, true);
+      replaceChar(info_h, info_w, theDisplay, ' ', levelSymbol, level, true);
+    }
+  } else {            // for displaying mortgage
+    if (isAcademic) n = 2; else n = 0;
+    setString(info_h + n, info_w - 1, theDisplay, "*");
   }
 }

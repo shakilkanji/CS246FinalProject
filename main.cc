@@ -4,24 +4,40 @@
 #include <sstream>
 #include <iostream>
 #include "game.h"
-
 using namespace std;
+
+const int welcome_h = 13;
+const int welcome_w = 101;
+
+const string ResetAll = "\033[0m";
+const string Reverse    = "\033[7m";
+
+
+void displayWelcome() {
+
+	ifstream file;
+  file.open("welcome.txt");
+
+  char c;
+
+  for (int i = 0; i < welcome_h; ++i) {
+    for (int j = 0; j < welcome_w; ++j) {
+      file.get(c);
+      if (c == '*') cout << Reverse << ' ';
+      if (c != '*') cout << c;
+      if (c == '*') cout << ResetAll;
+    }
+  }
+
+  file.close();
+}
 
 
 int main(int argc, char* argv[]) {
 	Game g;
 	// Dice d;
 
-	cout <<"   _____________________        "  <<endl;
-	cout <<"  ( Welcome to Watopoly )       "  <<endl;
-	cout <<"   ---------------------        "  <<endl;
-	cout <<"          o   ^__^              "  <<endl;
-	cout <<"           o  (oo)________      "  <<endl;
-	cout <<"              (__)      ) |--   "  <<endl;
-	cout <<"                  ||----w |     "  <<endl;
-	cout <<"                  ||     ||     "  <<endl;
-	cout <<"                                "  <<endl;
-
+	displayWelcome();
 
 	bool loaded = false;
 	for (int i = 0; i < argc; ++i) {
@@ -45,5 +61,3 @@ int main(int argc, char* argv[]) {
 	if (!loaded) g.normalinit();
 	g.run();
 }
-
-    
