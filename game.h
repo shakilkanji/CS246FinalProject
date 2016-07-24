@@ -66,6 +66,9 @@ class Game {
    void SLC(Player *landedPlayer);
    bool loadGame(std::string filename);
    void saveGame(std::string filename);
+
+   int getNumRes(Player *player);
+   int getNumGym(Player *player);
 };
 
 /***************

@@ -1276,3 +1276,43 @@ void Game::SLC(Player*  landedPlayer){
   }
  }
 }
+
+int Game::getNumRes(Player *player){
+
+   int result = 0;
+   if(dynamic_cast<Building *>(gameboard[5])->getOwner() == player){
+    if(dynamic_cast<Building *>(gameboard[5])->getImpLevel() != -1){
+      result += 1;
+    }
+   }
+   if(dynamic_cast<Building *>(gameboard[15])->getOwner() == player){
+    if(dynamic_cast<Building *>(gameboard[15])->getImpLevel() != -1){
+      result += 1;
+    }
+   }
+   if(dynamic_cast<Building *>(gameboard[25])->getOwner() == player){
+    if(dynamic_cast<Building *>(gameboard[25])->getImpLevel() != -1){
+      result += 1;
+    }
+   }
+   if(dynamic_cast<Building *>(gameboard[35])->getOwner() == player){
+    if(dynamic_cast<Building *>(gameboard[35])->getImpLevel() != -1){
+      result += 1;
+    }
+   }
+   return result;
+}
+
+int Game::getNumGym(Player *player){
+   int result = 0;
+   if(dynamic_cast<Building *>(gameboard[12])->getOwner() == player){
+    if(dynamic_cast<Building *>(gameboard[12])->getImpLevel() != -1){
+      result += 1;
+    }
+   }
+   if(dynamic_cast<Building *>(gameboard[28])->getOwner() == player){
+    if(dynamic_cast<Building *>(gameboard[28])->getImpLevel() != -1){
+      result += 1;
+    }
+   }
+}
