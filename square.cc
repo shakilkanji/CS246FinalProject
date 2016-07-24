@@ -32,7 +32,7 @@ void Square::notify(Player *landedPlayer) {
 		cout << "You are attacked by a flock of geese, but nothing happens." << endl;
 	} else if (index == 30) {	// Go To Tims
 		landedPlayer->setPos(10);
-		landedPlayer->setDCTurn(1);
+		landedPlayer->setDCTurn(0);
 		// make sure to end landedPlayer's turn (if they rolled doubles)
 	} else if (index == 38) {	// Co-op Fee
 		if (landedPlayer->getBalance() < 150) {

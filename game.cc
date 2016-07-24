@@ -178,21 +178,41 @@ void Game::run(){
       if (command == "roll" || command == "Roll") {
 
         if (rolled == true) { // if the player has already roll the dice 
-          cout << "You cannot roll the dice anymore in this turn" << endl;   
+          cout << "You cannot roll the dice anymore in this turn." << endl;   
         } else {  // player has not rolled
           int dice_result = diceroll();
           roll_time += 1;
-          move(dice_result);
 
           if(dicepair() == true) {
             if(roll_time == 3) {  // after 3 rolls, player is sent to DC tims line and cannot move
               cout << "You have rolled 3 doubles. Go to DC Tims Line! " << endl;
+              player[currentplayer]->setPos(10);
+              player[currentplayer]->setDCTurn(0);
+              rolled = true;
+            } else if (player[currentplayer]->getDCTurn() >= 0) {
+              cout << "Congratulations, you rolled a double. Escape the DC Tims Line!" << endl;
+              move(dice_result);
               rolled = true;
             } else {
+              move(dice_result);
               cout << "You rolled a double, please roll again. " << endl;
             }    
           } else { // roll a nondouble dice 
-            displayCommands();
+            if (player[currentplayer]->getDCTurn() == -1) {
+              move(dice_result);
+              displayCommands();
+            } else if (player[currentplayer]->getDCTurn() == 2) {
+              player[currentplayer]->setDCTurn(3);
+              cout << "You did not roll a double. Please pay or redeem now to leave the DC Tims Line." << endl;
+              if (player[currentplayer]->getNumTimsCups() == 0 && player[currentplayer]->getBalance() < 50) {
+                forceBankruptcy(player[currentplayer], 50, nullptr);
+              } else {
+                displayCommands();
+              }
+            } else {
+              player[currentplayer]->setDCTurn(player[currentplayer]->getDCTurn()+1);
+              cout << "You did not roll a double. Stay in DC Tims Line." << endl;
+            }
             rolled = true;
           }
         }
@@ -268,6 +288,8 @@ void Game::run(){
 
         if (rolled == false){
           cout << "You have not rolled, please roll to complete your turn." << endl;
+        } else if (player[currentplayer]->getDCTurn() >= 3) {
+          cout << "You must pay or redeem to leave DC Tims Line and complete your turn." << endl;
         } else {
           cout << "Turn complete." << endl;  
           
@@ -280,6 +302,26 @@ void Game::run(){
           next();
         }
 
+      } else if ((command == "pay" || command == "Pay") && player[currentplayer]->getDCTurn() >= 0) {
+        if (player[currentplayer]->getBalance() >= 50) {
+          player[currentplayer]->updateBalance(-50);
+          player[currentplayer]->setDCTurn(-1);
+          cout << "Thank you for paying. Your new balance is $" << player[currentplayer]->getBalance() << "." << endl;
+          displayCommands();
+        } else {
+          cout << "You do not have enough funds to leave DC Tims Line." << endl;
+          displayCommands();
+        }
+      } else if ((command == "redeem" || command == "Redeem") && player[currentplayer]->getDCTurn() >= 0) {
+        int timsCups = player[currentplayer]->getNumTimsCups();
+        if (timsCups >= 1) {
+          player[currentplayer]->setNumTimsCups(timsCups-1);
+          player[currentplayer]->setDCTurn(-1);
+          displayCommands();
+        } else {
+          cout << "You do not have a Roll Up The Rim cup to leave DC Tims Line." << endl;
+          displayCommands();
+        }
       } else if(command == "exit" || command == "Exit") {
 
         cout << "You will exit the game now." << endl;
@@ -308,20 +350,40 @@ void Game::next(){
 
 void Game::displayCommands() {
   if (!isWon) {
-    cout << endl;
-    cout << "Please choose from the following commands:" << endl;
-    cout << "1. roll: roll two dice, and move your piece the sum of those dice." << endl;
-    cout << "2. next: give control to the next player. " << endl;
-    cout << "3. trade <player> <give> <receive>: offers to trade property/cash with another player." << endl;
-    cout << "4. improve <property> buy/sell: attempts to buy or sell an improvement for property." << endl;
-    cout << "5. mortgage <property>: attempts to mortgage property." << endl;
-    cout << "6. unmortgage <property>: attempts to unmortgage property." << endl;
-    cout << "7. assets: displays the assets of the current player." << endl;
-    cout << "8. all: displays the assets of every player." << endl;
-    cout << "9. save <filename>: saves the current state of the game to the given file." << endl;
+    int currentplayerDCTurn = player[currentplayer]->getDCTurn();
+    if (currentplayerDCTurn >= 0 && currentplayerDCTurn <= 2) {
+      cout << endl;
+      cout << "You are stuck in DC Tims Line (Turn " << currentplayerDCTurn;
+      cout << "), please choose from the following commands:" << endl;
+      cout << "1. roll: roll two dice, and move your piece the sum of those dice if you get doubles." << endl;
+      cout << "2. next: give control to the next player. " << endl;
+      cout << "3. trade <player> <give> <receive>: offers to trade property/cash with another player." << endl;
+      cout << "4. improve <property> buy/sell: attempts to buy or sell an improvement for property." << endl;
+      cout << "5. mortgage <property>: attempts to mortgage property." << endl;
+      cout << "6. unmortgage <property>: attempts to unmortgage property." << endl;
+      cout << "7. assets: displays the assets of the current player." << endl;
+      cout << "8. all: displays the assets of every player." << endl;
+      cout << "9. save <filename>: saves the current state of the game to the given file." << endl;
+      cout << "10. pay: pay $50 to leave DC Tims Line." << endl;
+      cout << "11. redeem: redeem Roll Up The Rim to leave DC Tims Line." << endl;
+    } else if (currentplayerDCTurn >= 3) {
+      cout << "1. pay: pay $50 to leave DC Tims Line." << endl;
+      cout << "2. redeem: redeem Roll Up The Rim to leave DC Tims Line." << endl;
+    } else {
+      cout << endl;
+      cout << "Please choose from the following commands:" << endl;
+      cout << "1. roll: roll two dice, and move your piece the sum of those dice." << endl;
+      cout << "2. next: give control to the next player. " << endl;
+      cout << "3. trade <player> <give> <receive>: offers to trade property/cash with another player." << endl;
+      cout << "4. improve <property> buy/sell: attempts to buy or sell an improvement for property." << endl;
+      cout << "5. mortgage <property>: attempts to mortgage property." << endl;
+      cout << "6. unmortgage <property>: attempts to unmortgage property." << endl;
+      cout << "7. assets: displays the assets of the current player." << endl;
+      cout << "8. all: displays the assets of every player." << endl;
+      cout << "9. save <filename>: saves the current state of the game to the given file." << endl;
+    }
   }
 }
-
 
 void Game::askToBuy(Building *building, Player *buyer ) {
   if(buyer->getBalance() < building->getCost()){
@@ -1117,7 +1179,9 @@ bool Game::loadGame(string filename) {
 
       if (playerPosition == 10) {
         myfile >> isStuckDC;
-        if (isStuckDC != 0) myfile >> playerDCTurn;
+        if (isStuckDC == 1) {
+          myfile >> playerDCTurn;
+        }
       }
 
       player[i] = new Player(chosensymbol[i], playername[i], playerNumTimsCups, playerBalance, 
