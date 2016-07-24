@@ -63,7 +63,7 @@ void Building::notify(Player *landedPlayer) {
 		int fees = getFees();
 		cout << "You must pay " << "$" << fees << "." << endl;
 		if (landedPlayer->getBalance() < fees) {
-			// game->forceBankruptcy(landedPlayer, owner, fees);
+			game->forceBankruptcy(landedPlayer, fees, owner);
 		} else {
 			landedPlayer->updateBalance(fees * -1);
 			owner->updateBalance(fees);

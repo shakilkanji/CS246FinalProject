@@ -28,9 +28,10 @@ class Game {
    bool test;
    bool rolled;
    int roll_time;
-   bool isWon;
    // TextDisplay
    TextDisplay *td;
+
+   bool isWon;
 
    int getAcademicIndex(std::string square) const;
    int getBuildingIndex(std::string square) const;
@@ -55,7 +56,8 @@ class Game {
    int getsumdice();
    int diceroll(); 
    void move(int move_blocks);
-   void forceBankruptcy(Player *landedPlayer, int fee);   // Player owes bank more than their current balance
+   void forceBankruptcy(Player *landedPlayer, int fee, Player *ownerPlayer);   // Player owes more than their current balance
+   void declareBankruptcy(Player *landedPlayer, Player *ownerPlayer); // if landedPlayer owes bank, ownerPlayer is null
 
    void buyImprovement(Square *square, Player *player);
    void sellImprovement(Square *square, Player *player);

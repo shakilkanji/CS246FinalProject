@@ -36,7 +36,7 @@ void Square::notify(Player *landedPlayer) {
 		// make sure to end landedPlayer's turn (if they rolled doubles)
 	} else if (index == 38) {	// Co-op Fee
 		if (landedPlayer->getBalance() < 150) {
-			game->forceBankruptcy(landedPlayer, 150);
+			game->forceBankruptcy(landedPlayer, 150, nullptr);
 		} else {
 			landedPlayer->updateBalance(-150);
 		}

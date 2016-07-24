@@ -14,6 +14,7 @@ using namespace std;
 Game::Game():numplayer(0),currentplayer(0),rimcup(4),sumofdice(0),
 firstdice(0),seconddice(0),test(false),rolled(false),roll_time(0){
   td = new TextDisplay;
+  isWon = false;
 
   for(int i = 0 ; i < 8 ; i++){
     player[i] = nullptr;
@@ -172,7 +173,8 @@ void Game::run(){
   while(!isWon) {
     next();
 
-    while(cin >> command) {
+    while(!isWon) {
+      cin >> command;
       if (command == "roll" || command == "Roll") {
 
         if (rolled == true) { // if the player has already roll the dice 
@@ -245,9 +247,6 @@ void Game::run(){
           unmortgageBuilding(bp, player[currentplayer]);
         } 
 
-      } else if(command == "bankrupt" || command == "Bankrupt") {
-        cout << "you will do a bankrupt" << endl;  
-
       } else if(command == "assets" || command == "Assets") {
 
         displayAssets(player[currentplayer]); 
@@ -264,7 +263,7 @@ void Game::run(){
         cin >> saveFile;
         saveGame(saveFile);
         cout << "Successfully saved in "<< saveFile << " !" << endl;
-
+ 
       } else if(command == "next" || command == "Next") {
 
         if (rolled == false){
@@ -288,7 +287,6 @@ void Game::run(){
       }
     }
   }
-  cout << "Somebody has won!" << endl;
 }
 
 void Game::next(){
@@ -309,6 +307,7 @@ void Game::next(){
 }
 
 void Game::displayCommands() {
+  if (!isWon) {
     cout << endl;
     cout << "Please choose from the following commands:" << endl;
     cout << "1. roll: roll two dice, and move your piece the sum of those dice." << endl;
@@ -320,6 +319,7 @@ void Game::displayCommands() {
     cout << "7. assets: displays the assets of the current player." << endl;
     cout << "8. all: displays the assets of every player." << endl;
     cout << "9. save <filename>: saves the current state of the game to the given file." << endl;
+  }
 }
 
 
@@ -794,7 +794,6 @@ int Game::isMonopolized(const Square *square ) const {
     }
 
     for (auto it = brothers.begin(); it != brothers.end(); ++it) {
-      if (test) cout << "Brother: " << (*it)->getName() << endl;
       if (academic->getOwner() != (*it)->getOwner()) return 0;
     }
 
@@ -929,29 +928,41 @@ void Game::unmortgageBuilding(Square *square, Player *player) {
     cout << "Your balance decreased to " << player->getBalance() << "." << endl;
 }
 
-void Game::forceBankruptcy(Player *landedPlayer, int fee) {
+void Game::forceBankruptcy(Player *landedPlayer, int fee, Player *ownerPlayer) {
   int playerBalance = landedPlayer->getBalance();
-  cout << "You owe the Bank " << fee << " dollars. " ;
-  cout << "You only have " << playerBalance << " dollars. " << endl;
-  int bankruptcyValue = 0;
-
-  for (int i = 0; i < 40; ++i) {
-    Building *bp = dynamic_cast<Building *>(gameboard[i]);
-    if (bp) {   // bp is null if gameboard[i] is not building
-      if (bp->getOwner() == landedPlayer) {
-        bankruptcyValue += bp->getValue() / 2;
-      }
-    }
+  if (ownerPlayer) {
+    cout << "You owe " << ownerPlayer->getName() << " " << fee << " dollars. " ;
+    cout << "You only have " << playerBalance << " dollars. " << endl;
+  } else {
+    cout << "You owe the Bank " << fee << " dollars. " ;
+    cout << "You only have " << playerBalance << " dollars. " << endl;
   }
 
   while (fee > landedPlayer->getBalance()) {
+    int bankruptcyValue = 0;
+    for (int i = 0; i < 40; ++i) {
+      Building *bp = dynamic_cast<Building *>(gameboard[i]);
+      if (bp) {   // bp is null if gameboard[i] is not building
+        if (bp->getOwner() == landedPlayer) {
+          bankruptcyValue += bp->getValue() / 2;
+        }
+      }
+    }
+    bankruptcyValue += landedPlayer->getBalance();
+
     if (bankruptcyValue < fee) {
-      cout<<"improve <property> buy/sell: attempts to buy or sell an improvement for property"<<endl;
-      cout<<"mortgage <property>: attempts to mortgage property."<<endl;
-      cout<<"bankrupt: player declares bankruptcy."<<endl;
+      cout << "bankruptcyValue: " << bankruptcyValue << endl;
+      cout << "fee: " << fee << endl;
+      cout << "1. improve <property> buy/sell: attempts to buy or sell an improvement for property." << endl;
+      cout << "2. mortgage <property>: attempts to mortgage property." << endl;
+      cout << "3. assets: displays the assets of the current player." << endl;
+      cout << "4. all: displays the assets of every player." << endl;
+      cout << "5. bankrupt: player declares bankruptcy." << endl;
     } else {
-      cout<<"improve <property> buy/sell: attempts to buy or sell an improvement for property"<<endl;
-      cout<<"mortgage <property>: attempts to mortgage property."<<endl;
+      cout << "1. improve <property> buy/sell: attempts to buy or sell an improvement for property." << endl;
+      cout << "2. mortgage <property>: attempts to mortgage property." << endl;
+      cout << "3. assets: displays the assets of the current player." << endl;
+      cout << "4. all: displays the assets of every player." << endl;
     }
 
     string command;
@@ -980,12 +991,75 @@ void Game::forceBankruptcy(Player *landedPlayer, int fee) {
         Building *bp = static_cast<Building *>(gameboard[propertyIndex]);
         mortgageBuilding(bp, landedPlayer);
       }
+    } else if (command == "assets" || command == "Assets") {
+      displayAssets(landedPlayer);
+    } else if (command == "all" || command == "All") {
+      displayAllAssets();
+    } else if ((command == "bankrupt" || command == "Bankrupt") && (bankruptcyValue < fee)) {
+      if (ownerPlayer) declareBankruptcy(landedPlayer, ownerPlayer);
+      else declareBankruptcy(landedPlayer, nullptr);
+      return;
     }
   }
 
-  cout << "You now have enough funds to pay the bank." << endl;
+  cout << "You now have enough funds to pay your debt." << endl;
   landedPlayer->updateBalance(fee * -1);
+  if (ownerPlayer) {
+    ownerPlayer->updateBalance(fee);
+  }
   cout << "Your new balance is " << landedPlayer->getBalance() << "." << endl;
+}
+
+void Game::declareBankruptcy(Player *landedPlayer, Player *ownerPlayer) {
+  if (numplayer == 2) { // game over
+    cout << ownerPlayer->getName() << " has won the game. " << endl;
+    isWon = true;
+    return;
+  }
+
+  for (int i = 0; i < 40; ++i) {
+    Building *bp = dynamic_cast<Building *>(gameboard[i]);
+    if (bp) {
+      if (bp->getOwner() == landedPlayer) {
+        if (ownerPlayer) { 
+          bp->setOwner(ownerPlayer);
+          if (bp->getImpLevel() == -1) {
+            string command;
+            while (true) {
+              cout << "Would you like to unmortgage " << bp->getName() << "? [yes/no]" << endl;
+              cin >> command;
+              if (command == "yes" || command == "Yes") {
+                int unmortgageCost = bp->getCost() / 10 * 6;
+                if (ownerPlayer->getBalance() >= unmortgageCost) {
+                  unmortgageBuilding(bp, ownerPlayer);
+                  break;
+                } else {
+                  cout << "You do not have enough funds to unmortgage this property." << endl;
+                }
+              } else if (command == "no" || command == "No") {
+                int mortgageTransferCost = bp->getCost() / 10;
+                if (ownerPlayer->getBalance() >= mortgageTransferCost) {
+                  ownerPlayer->updateBalance(mortgageTransferCost * -1);
+                  break;
+                } else {
+                  forceBankruptcy(ownerPlayer, mortgageTransferCost, nullptr);
+                  break;
+                }
+              }
+            }
+          }
+        } else {
+          if (bp->getImpLevel() == -1) bp->setImpLevel(0);
+          auctionProperty(bp);
+        }
+      }
+    }
+  }
+  int landedPlayerBalance = landedPlayer->getBalance();
+  ownerPlayer->updateBalance(landedPlayerBalance);
+
+  --numplayer;
+  delete landedPlayer;
 }
 
 
