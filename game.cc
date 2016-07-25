@@ -213,7 +213,7 @@ void Game::run(){
               displayCommands();
             } else if (player[currentplayer]->getDCTurn() == 2) {
               player[currentplayer]->setDCTurn(3);
-              cout << "You did not roll a double. Please pay or redeem now to leave the DC Tims Line." << endl;
+              cout << ">> You did not roll a double. Please pay or redeem now to leave the DC Tims Line." << endl;
               if (player[currentplayer]->getNumTimsCups() == 0 && player[currentplayer]->getBalance() < 50) {
                 forceBankruptcy(player[currentplayer], 50, nullptr);
               } else {
@@ -221,7 +221,7 @@ void Game::run(){
               }
             } else {
               player[currentplayer]->setDCTurn(player[currentplayer]->getDCTurn()+1);
-              cout << "You did not roll a double. Stay in DC Tims Line." << endl;
+              cout << ">> You did not roll a double. Stay in DC Tims Line." << endl;
             }
             rolled = true;
           }
@@ -316,10 +316,10 @@ void Game::run(){
         if (player[currentplayer]->getBalance() >= 50) {
           player[currentplayer]->updateBalance(-50);
           player[currentplayer]->setDCTurn(-1);
-          cout << "Thank you for paying. Your new balance is $" << player[currentplayer]->getBalance() << "." << endl;
+          cout << ">> Thank you for paying. Your new balance is $" << player[currentplayer]->getBalance() << "." << endl;
           displayCommands();
         } else {
-          cout << "You do not have enough funds to leave DC Tims Line." << endl;
+          cout << ">> You do not have enough funds to leave DC Tims Line." << endl;
           displayCommands();
         }
       } else if ((command == "redeem" || command == "Redeem") && player[currentplayer]->getDCTurn() >= 0) {
@@ -330,7 +330,7 @@ void Game::run(){
           rimcup++;
           displayCommands();
         } else {
-          cout << "You do not have a Roll Up The Rim cup to leave DC Tims Line." << endl;
+          cout << ">> You do not have a Roll Up The Rim cup to leave DC Tims Line." << endl;
           displayCommands();
         }
       } else if(command == "exit" || command == "Exit" || command == "quit" || command == "Quit") {
@@ -880,9 +880,9 @@ void Game::chooseTuition(Player *landedPlayer) {
       }
     }
   }
-  cout << "Please choose between paying $300 or 10 percent of your total worth." << endl;
-  cout << "1. Fixed: Pay $300." << endl;
-  cout << "2. Percent: Pay 10 percent of your total worth." << endl;
+  cout << ">> Please choose between paying $300 or 10 percent of your total worth." << endl;
+  cout << ">> 1. Fixed: Pay $300." << endl;
+  cout << ">> 2. Percent: Pay 10 percent of your total worth." << endl;
   if (test) cout << "Total worth is $" << playerWorth << "." << endl;
   int percent = playerWorth / 10;
   while (true) {
@@ -890,22 +890,22 @@ void Game::chooseTuition(Player *landedPlayer) {
     cin >> command;
     if (command == "fixed" || command == "Fixed") {
       if (landedPlayer->getBalance() < 300) {
-        cout << "You do not have enough funds to pay the $300 fee." << endl;
+        cout << ">> You do not have enough funds to pay the $300 fee." << endl;
         forceBankruptcy(landedPlayer, 300, nullptr);
         break;
       } else {
         landedPlayer->updateBalance(-300);
-        cout << "Thank you for paying $300 tuition." << endl;
+        cout << ">> Thank you for paying $300 tuition." << endl;
         break;
       }
     } else if (command == "percent" || command == "Percent") {
       if (landedPlayer->getBalance() < percent) {
-        cout << "You do not have enough funds to pay 10 percent of your worth." << endl;
+        cout << ">> You do not have enough funds to pay 10 percent of your worth." << endl;
         forceBankruptcy(landedPlayer, percent, nullptr);
         break;
       } else {
         landedPlayer->updateBalance(percent);
-        cout << "Thank you for paying " << playerWorth/10 << "." << endl;
+        cout << ">> Thank you for paying " << playerWorth/10 << "." << endl;
         break;
       }
     }
