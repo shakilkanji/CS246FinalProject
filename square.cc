@@ -32,9 +32,9 @@ void Square::notify(Player *landedPlayer) {
 	} else if (index == 20) {	// Goose Nesting
 		cout << ">> You are attacked by a flock of geese, but nothing happens." << endl;
 	} else if (index == 30) {	// Go To Tims
+		cout << ">> You landed on Go To Tims." << endl;
 		landedPlayer->setPos(10);
 		landedPlayer->setDCTurn(0);
-		// make sure to end landedPlayer's turn (if they rolled doubles)
 	} else if (index == 38) {	// Co-op Fee
 		if (landedPlayer->getBalance() < 150) {
 			game->forceBankruptcy(landedPlayer, 150, nullptr);
