@@ -52,7 +52,7 @@ int Building::getCost() const {
 }
 
 void Building::notify(Player *landedPlayer) {
-	cout << "You have landed on " << getName() << ". ";
+	cout << ">> You have landed on " << getName() << ". ";
 	if (owner == nullptr) {
 		cout << "It is unowned." << endl;
 		game->askToBuy(this, landedPlayer);
@@ -67,7 +67,7 @@ void Building::notify(Player *landedPlayer) {
 		} else {
 			landedPlayer->updateBalance(fees * -1);
 			owner->updateBalance(fees);
-			cout << "Your new balance is $" <<  landedPlayer->getBalance() << "." << endl;
+			cout << ">> Your new balance is $" <<  landedPlayer->getBalance() << "." << endl;
 		}
 	}
 }
