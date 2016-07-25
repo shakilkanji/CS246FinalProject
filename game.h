@@ -11,66 +11,68 @@
 #include "textdisplay.h"
 
 class Game {
- // std::vector<std::vector<Player>> Players;
   std::string playername[8];
   char chosensymbol[8];
   Player *player[8];
   int numplayer;
   int currentplayer; 
   Square *gameboard[40];
-  // Dice *dice;
+
   int rimcup;
-  // BoardDisplay * display;
-  int sumofdice;
-  //dice part
-   int firstdice;
-   int seconddice;
-   bool test;
-   bool rolled;
-   int roll_time;
-   // TextDisplay
-   TextDisplay *td;
+  int firstdice;
+  int seconddice;
+  bool test;
+  bool rolled;
+  int roll_time;
+  TextDisplay *td;
 
-   bool isWon;
+  bool isWon;
 
-   int getAcademicIndex(std::string square) const;
-   int getBuildingIndex(std::string square) const;
-   int getplayer(std::string name);
-   void displayCommands();
+  int getAcademicIndex(std::string square) const;
+  int getBuildingIndex(std::string square) const;
+  int getplayer(std::string name);
+  void displayCommands();
 
-  public:
-  	Game();
-	  ~Game();
+  void displayAssets(Player *player);
+  void displayAllAssets();
+
+  bool dicepair();
+  int diceroll(); 
+
+ public:
+  Game();
+  ~Game();
    
-   void run();
-   void normalinit();
-   void next();
-   void settest();
-   void askToBuy(Building *building, Player *buyer);
-   void auctionProperty(Building *building);
-   void displayAssets(Player *player);
-   void displayAllAssets();
-   void trade();
-   int isMonopolized(const Square *square) const;
-   bool dicepair();
-   int getsumdice();
-   int diceroll(); 
-   void move(int move_blocks);
-   void forceBankruptcy(Player *landedPlayer, int fee, Player *ownerPlayer);   // Player owes more than their current balance
-   void declareBankruptcy(Player *landedPlayer, Player *ownerPlayer); // if landedPlayer owes bank, ownerPlayer is null
+  void run();
+  void normalinit();
+  void next();
+  void settest();
+  void askToBuy(Building *building, Player *buyer);
+  void auctionProperty(Building *building);
 
-   void buyImprovement(Square *square, Player *player);
-   void sellImprovement(Square *square, Player *player);
+  int getsumdice();
 
-   void mortgageBuilding(Square *square, Player *player);
-   void unmortgageBuilding(Square *square, Player *player);
-   void Needles(Player *landedPlayer);
-   void SLC(Player *landedPlayer);
-   bool loadGame(std::string filename);
-   void saveGame(std::string filename);
+  void trade();
+  int isMonopolized(const Square *square) const;
 
-   int getNumRes(Player *player);
-   int getNumGym(Player *player);
+  void move(int move_blocks);
+  void forceBankruptcy(Player *landedPlayer, int fee, Player *ownerPlayer);   // Player owes more than their current balance
+  void declareBankruptcy(Player *landedPlayer, Player *ownerPlayer); // if landedPlayer owes bank, ownerPlayer is null
+
+  void buyImprovement(Square *square, Player *player);
+  void sellImprovement(Square *square, Player *player);
+
+  void mortgageBuilding(Square *square, Player *player);
+  void unmortgageBuilding(Square *square, Player *player);
+  void Needles(Player *landedPlayer);
+  void SLC(Player *landedPlayer);
+  void chooseTuition(Player *landedPlayer);
+
+  bool loadGame(std::string filename);
+  void saveGame(std::string filename);
+
+  int getNumRes(Player *player);
+  int getNumGym(Player *player);
 };
 
 /***************
