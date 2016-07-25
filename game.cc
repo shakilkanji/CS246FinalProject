@@ -1129,9 +1129,18 @@ void Game::forceBankruptcy(Player *landedPlayer, int fee, Player *ownerPlayer) {
 
 void Game::declareBankruptcy(Player *landedPlayer, Player *ownerPlayer) {
   if (numplayer == 2) { // game over
-    cout << ">> " << ownerPlayer->getName() << " has won the game. " << endl;
-    isWon = true;
-    return;
+    if (ownerPlayer) {
+      cout << ">> " << ownerPlayer->getName() << " has won the game. " << endl;
+      isWon = true;
+      return;
+    } else {
+      while (player[currentplayer] == nullptr) {
+        currentplayer = (currentplayer + 1) % 8;
+      }
+      cout << ">> " << player[currentplayer]->getName() << " has won the game." << endl;
+      isWon = true;
+      return;
+    }
   }
 
   if (ownerPlayer) {
