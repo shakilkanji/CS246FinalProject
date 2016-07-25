@@ -6,7 +6,7 @@
 #include "game.h"
 using namespace std;
 
-const int welcome_h = 13;
+const int welcome_h = 12;
 const int welcome_w = 101;
 
 const string ResetAll = "\033[0m";
@@ -28,6 +28,7 @@ void displayWelcome() {
       if (c == '*') cout << ResetAll;
     }
   }
+  cout << endl;
 
   file.close();
 }
