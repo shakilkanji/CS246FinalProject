@@ -233,7 +233,12 @@ void TextDisplay::removePlayer(Player *p) {
   for (int row = 39; row < 39 + maxPlayer; ++row) {
     char c = theDisplay[row - 1][27];
     if (c == symbol) {
-      setString(row, 28, "                                              ");
+      int n = 27;
+      while (true) {
+        if (theDisplay[row - 1][n] == ' ') break;
+        ++n;
+      }
+      setString(row, n, " (declared bankruptcy)");
       break;
     }
   }
