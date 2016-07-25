@@ -1128,7 +1128,7 @@ void Game::declareBankruptcy(Player *landedPlayer, Player *ownerPlayer) {
     int landedTimsCup = landedPlayer->getNumTimsCups();
     ownerPlayer->setNumTimsCups(ownerTimsCups+landedTimsCup);
   } else {
-    timsCups += landedPlayer->getNumTimsCups();
+    rimcup += landedPlayer->getNumTimsCups();
   }
 
   for (int i = 0; i < 40; ++i) {
