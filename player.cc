@@ -10,11 +10,14 @@ Player::Player(char symbol, string playerName) : symbol(symbol), playerName(play
   position = 0;
   DCTurn = -1;
   numTimsCups = 0;
+  bankrupt = false;
 }
 
 Player::Player(char symbol, string playerName, int numTimsCups, int balance, int position, int DCTurn) : 
   symbol(symbol), playerName(playerName), numTimsCups(numTimsCups), balance(balance), position(position), 
-  DCTurn(DCTurn) {}
+  DCTurn(DCTurn) {
+    bankrupt = false;
+  }
 
 Player::~Player() {}
 
@@ -75,3 +78,10 @@ int Player::getPos() const {
   return position; 
 }
 
+bool Player::isBankrupt() const {
+  return bankrupt;
+}
+
+void Player::setBankrupt() {
+  bankrupt = true;
+}

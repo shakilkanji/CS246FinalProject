@@ -752,17 +752,30 @@ void Game::auctionProperty(Building *building){
   cout << ">> Auction for " << building->getName() << " start!" << endl;
   int playerLeft = numplayer;
   int highestPrice = 0;
-  int current_auction_player = currentplayer;
-  int highestPlayer = current_auction_player;
+  int current_auction_player;
+  int highestPlayer;
   bool active[8];
 
   //In the begining of a auction, all the players are active
   for(int i = 0 ; i < 8 ;i ++){
     if(player[i] != nullptr){
-      active[i] = true;
+      if (player[i]->isBankrupt()) {
+        playerLeft -= 1;
+        active[i] = false;
+      } else {
+        active[i] = true;
+      }
     }
     else{
       active[i] = false;
+    }
+  }
+
+  for (int i = 0; i < 8; ++i) {
+    if (active[i]) {
+      current_auction_player = i;
+      highestPlayer = i;
+      break;
     }
   }
 
@@ -1128,6 +1141,10 @@ void Game::forceBankruptcy(Player *landedPlayer, int fee, Player *ownerPlayer) {
 }
 
 void Game::declareBankruptcy(Player *landedPlayer, Player *ownerPlayer) {
+  td->removePlayer(landedPlayer);
+  td->display();
+  landedPlayer->setBankrupt();
+
   if (numplayer == 2) { // game over
     if (ownerPlayer) {
       cout << ">> " << ownerPlayer->getName() << " has won the game. " << endl;

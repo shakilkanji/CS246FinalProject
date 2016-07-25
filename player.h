@@ -19,6 +19,8 @@ class Player {
 
   int DCTurn;
 
+  bool bankrupt;
+
  public:
   Player(char symbol, std::string playerName);
   Player(char symbol, std::string playerName, int numTimsCups, int balance, int position, int DCTurn);
@@ -44,6 +46,9 @@ class Player {
 
   void setPos(int n);
   int getPos() const;
+
+  bool isBankrupt() const;
+  void setBankrupt(); // will only be set immediately before a player is to be deleted from the game
 };
 
 #endif
