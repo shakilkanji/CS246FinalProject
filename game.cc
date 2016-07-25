@@ -11,7 +11,7 @@
 
 using namespace std;
 
-Game::Game() : numplayer(0), currentplayer(0), rimcup(4), firstdice(0), seconddice(0),
+Game::Game() : numplayer(0), currentplayer(0), rimcup(0), firstdice(0), seconddice(0),
   test(false), rolled(false), roll_time(0) {
 
   td = new TextDisplay;
@@ -198,6 +198,7 @@ void Game::run(){
               player[currentplayer]->setDCTurn(0);
               td->notify(player[currentplayer], old_pos);
               td->display();
+              displayCommands();
               rolled = true;
             } else if (player[currentplayer]->getDCTurn() >= 0) {
               cout << ">> Congratulations, you rolled a double. Escape the DC Tims Line!" << endl;
@@ -205,12 +206,15 @@ void Game::run(){
               rolled = true;
             } else {
               move(dice_result);
-              cout << ">> You rolled a double, please roll again." << endl;
+              if (player[currentplayer]->getDCTurn() != 0) {
+                cout << ">> You rolled a double, please roll again." << endl;
+              }
             }    
           } else { // roll a nondouble dice 
             if (player[currentplayer]->getDCTurn() == -1) {
               move(dice_result);
               displayCommands();
+              rolled = true;
             } else if (player[currentplayer]->getDCTurn() == 2) {
               player[currentplayer]->setDCTurn(3);
               cout << "You did not roll a double. Please pay or redeem now to leave the DC Tims Line." << endl;
@@ -222,8 +226,8 @@ void Game::run(){
             } else {
               player[currentplayer]->setDCTurn(player[currentplayer]->getDCTurn()+1);
               cout << "You did not roll a double. Stay in DC Tims Line." << endl;
+              rolled = true;
             }
-            rolled = true;
           }
         }
 
@@ -327,7 +331,7 @@ void Game::run(){
         if (timsCups >= 1) {
           player[currentplayer]->setNumTimsCups(timsCups-1);
           player[currentplayer]->setDCTurn(-1);
-          rimcup++;
+          rimcup--;
           displayCommands();
         } else {
           cout << "You do not have a Roll Up The Rim cup to leave DC Tims Line." << endl;
@@ -521,7 +525,7 @@ void Game::trade() {
              td->notify(bp);
              td->display();
              cout << ">> Trade successfully!" << endl;
-             cout << ">> " << player[currentplayer] << "spend " << givenumber << " to get " << bp->getName() << endl;
+             cout << ">> " << player[currentplayer]->getName() << " spend " << givenumber << " to get " << bp->getName() << endl;
              return;
            }
            else{
@@ -701,6 +705,13 @@ void Game::move(int move_blocks){
 
   td->display();
   gameboard[current_pos]->notify(player[currentplayer]);
+
+  if (current_pos == 30) {
+    td->notify(player[currentplayer], 30);
+    td->display();
+    rolled = true;
+    displayCommands();
+  }
 }
 
 
@@ -726,6 +737,7 @@ void Game::displayAssets(Player *player){
 }
 
 void Game::displayAllAssets() {
+  cout << "Total Tims Cups in circulation: " << rimcup << "." << endl;
   for (int i = 0; i < 8; ++i) {
     if (player[i]) {
       cout << ">> " << player[i]->getName() << endl;
@@ -1128,7 +1140,7 @@ void Game::declareBankruptcy(Player *landedPlayer, Player *ownerPlayer) {
     int landedTimsCup = landedPlayer->getNumTimsCups();
     ownerPlayer->setNumTimsCups(ownerTimsCups+landedTimsCup);
   } else {
-    rimcup += landedPlayer->getNumTimsCups();
+    rimcup -= landedPlayer->getNumTimsCups();
   }
 
   for (int i = 0; i < 40; ++i) {
@@ -1169,8 +1181,6 @@ void Game::declareBankruptcy(Player *landedPlayer, Player *ownerPlayer) {
       }
     }
   }
-  int landedPlayerBalance = landedPlayer->getBalance();
-  ownerPlayer->updateBalance(landedPlayerBalance);
 
   --numplayer;
   delete landedPlayer;
@@ -1222,6 +1232,7 @@ bool Game::loadGame(string filename) {
       myfile >> chosensymbol[i];
       int playerNumTimsCups;
       myfile >> playerNumTimsCups;
+      rimcup += playerNumTimsCups;
       int playerBalance;
       myfile >> playerBalance;
       int playerPosition;
@@ -1316,10 +1327,18 @@ void Game::saveGame(string filename) {
 
 void Game::Needles(Player *landedPlayer){
   srand(time(0));
-  int random = rand()%100 + 1;
+  int random;
+  if(test) {
+    cout << ">> You can set the result now [1-100]" << endl;
+    cin >> random;
+    }
+    else{
+      random = rand()%100 + 1;
+    }
+  
   if(random == 100){
     cout << ">> Instead of normal effect, you will get a Roll Up the Rim cup" << endl;
-    if(rimcup == 0){
+    if(rimcup == 4){
       cout << ">> Sorry, there is no more Roll Up the Rim cup right now, you will get other result" << endl;
       Needles(landedPlayer);
       return ;
@@ -1327,7 +1346,7 @@ void Game::Needles(Player *landedPlayer){
     else {
       int newimts = landedPlayer->getNumTimsCups();
       landedPlayer->setNumTimsCups(newimts+1) ;
-      rimcup -= 1;
+      rimcup += 1;
       cout << ">> You get Roll Up the Rim cup, you have " << landedPlayer->getNumTimsCups() << " now." << endl;
     }
   }
@@ -1341,7 +1360,7 @@ void Game::Needles(Player *landedPlayer){
    }
     
     if(test) cout << ">> random numebr is " << random << endl;
-    if(random == 1){
+    if(random <= 1){
       cout << ">> You lost 200$" << endl;
       if(landedPlayer->getBalance() < 200){
         forceBankruptcy(landedPlayer,200, nullptr);
@@ -1351,7 +1370,7 @@ void Game::Needles(Player *landedPlayer){
         cout << ">> You current balance is " << landedPlayer->getBalance() << endl;
       }
     }
-    else if( random == 2 || random == 3){
+    else if( random >= 2 && random <= 3){
       cout << ">> You lost 100$" << endl;
       if(landedPlayer->getBalance() < 100){
         forceBankruptcy(landedPlayer,100, nullptr);
@@ -1361,7 +1380,7 @@ void Game::Needles(Player *landedPlayer){
         cout << ">> You current balance is " << landedPlayer->getBalance() << endl;
       }
     }
-    else if( random >= 4 || random <= 6){
+    else if( random >= 4 && random <= 6){
       cout << ">> You lost 50$" << endl;
       if(landedPlayer->getBalance() < 50){
         forceBankruptcy(landedPlayer,50, nullptr);
@@ -1372,17 +1391,17 @@ void Game::Needles(Player *landedPlayer){
       }
     }
 
-    else if( random >= 7 || random <= 12){
+    else if( random >= 7 && random <= 12){
       cout << ">> You get 25$" << endl;   
       landedPlayer->updateBalance(25);
       cout << ">> You current balance is " << landedPlayer->getBalance() << endl;      
     }
-    else if( random >= 13 || random <= 15){
+    else if( random >= 13 && random <= 15){
       cout << ">> You get 50$" << endl;   
       landedPlayer->updateBalance(50);
       cout << ">> You current balance is " << landedPlayer->getBalance() << endl;      
     }
-    else if( random >= 16 || random <= 17){
+    else if( random >= 16 && random <= 17){
       cout << ">> You get 100$" << endl;   
       landedPlayer->updateBalance(100);
       cout << ">> You current balance is " << landedPlayer->getBalance() << endl;      
@@ -1399,29 +1418,33 @@ void Game::Needles(Player *landedPlayer){
 
 void Game::SLC(Player*  landedPlayer){
   srand(time(0));
-  int random = rand()%100 + 1;
+  int random;
+  if(test) {
+    cout << ">> You can set the result now [1-100]" << endl;
+    cin >> random;
+  } else {
+      random = rand()%100 + 1;
+  }
+
   if(random == 100){
     cout << ">> Instead of normal effect, you will get a Roll Up the Rim cup" << endl;
-    if(rimcup == 0){
+    if(rimcup == 4){
       cout << ">> Sorry, there is no more Roll Up the Rim cup right now, you will get other result" << endl;
       SLC(landedPlayer);
       return ;
-    }
-    else {
+    } else {
       int newimts = landedPlayer->getNumTimsCups();
       landedPlayer->setNumTimsCups(newimts+1) ;
-      rimcup -= 1;
+      rimcup += 1;
       cout << ">> You get Roll Up the Rim cup, you have " << landedPlayer->getNumTimsCups() << " now." << endl;
     }
-  }  
-  else{
-   if(test) {
-    cout << ">> You can set the result now [1-24]" << endl;
-    cin >> random;
-   }
-   if(!test) {
+  } else {
+     if (test) {
+      cout << ">> You can set the result now [1-24]" << endl;
+      cin >> random;
+     } else {
      random = rand()%24 + 1;
-  }
+     }
    if(random >= 1 && random <= 3){
    cout << ">> You go back 3" << endl;
    if(landedPlayer->getPos() == 2){
