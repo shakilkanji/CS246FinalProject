@@ -66,6 +66,8 @@ class Game {
    void unmortgageBuilding(Square *square, Player *player);
    void Needles(Player *landedPlayer);
    void SLC(Player *landedPlayer);
+   void chooseTuition(Player *landedPlayer);
+
    bool loadGame(std::string filename);
    void saveGame(std::string filename);
 
