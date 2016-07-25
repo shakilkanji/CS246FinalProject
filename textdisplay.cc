@@ -101,28 +101,6 @@ void setDisplayPosition(int &row, int &col, int index, bool isPlayer) {
 }
 
 
-void replaceChar(int row, int col, char **charArray, 
-  char from, char to, int repeatTimes, bool isRepeated) {
-  /* --- used for add or remove players --- */
-  char c;
-  for (int i = 0; i < repeatTimes; ++i) {
-    c = charArray[row - 1][col - 1 + i];
-    if (c == from) {
-      charArray[row - 1][col - 1 + i] = to;
-      if (!isRepeated) break;
-    }
-  }
-}
-
-
-void setString(int row, int col, char **charArray, string s) {
-  int len = s.length();
-  for (int i = 0; i < len; ++i) {
-    charArray[row - 1][col - 1 + i] = s.at(i);
-  }
-}
-
-
 void displayEffect(int row, int col) {
   /* --- display effects --- */
   if (row == 51) {
@@ -163,6 +141,27 @@ void resetEffect(int col) {
 
 // Class Functions: /////////////////////////////////////////////////////////////
 
+void TextDisplay::replaceChar(int row, int col, char from, char to,int repeatTimes, bool isRepeated) {
+  /* --- used for add or remove players --- */
+  char c;
+  for (int i = 0; i < repeatTimes; ++i) {
+    c = theDisplay[row - 1][col - 1 + i];
+    if (c == from) {
+      theDisplay[row - 1][col - 1 + i] = to;
+      if (!isRepeated) break;
+    }
+  }
+}
+
+
+void TextDisplay::setString(int row, int col, string s) {
+  int len = s.length();
+  for (int i = 0; i < len; ++i) {
+    theDisplay[row - 1][col - 1 + i] = s.at(i);
+  }
+}
+
+
 TextDisplay::TextDisplay(){
   /* --- set up the board --- */
   theDisplay = new char *[height];
@@ -183,13 +182,13 @@ TextDisplay::TextDisplay(){
   file.close();
 
   /* --- set rules --- */
-  setString(13, 44, theDisplay, "DISPLAY TIPS");
-  setString(15, 29, theDisplay, "1. O:$ - This property is owned by the player");
-  setString(16, 29, theDisplay, "   with the symbol $.");
-  setString(17, 29, theDisplay, "2. III - This property has 3 improvements.");
-  setString(18, 29, theDisplay, "3. *MC - This property is being mortgaged.");
-  setString(19, 29, theDisplay, "4. Properties with the same colour belong to");
-  setString(20, 29, theDisplay, "   the same monopoly block.");
+  setString(13, 44, "DISPLAY TIPS");
+  setString(15, 29, "1. O:$ - This property is owned by the player");
+  setString(16, 29, "   with the symbol $.");
+  setString(17, 29, "2. III - This property has 3 improvements.");
+  setString(18, 29, "3. *MC - This property is being mortgaged.");
+  setString(19, 29, "4. Properties with the same colour belong to");
+  setString(20, 29, "   the same monopoly block.");
 }
 
 
@@ -229,12 +228,12 @@ void TextDisplay::removePlayer(Player *p) {
   char symbol = p->getSymbol();
 
   setDisplayPosition(pos_h, pos_w, pos, true);              // remove Player
-  replaceChar(pos_h, pos_w, theDisplay, symbol, ' ', maxPlayer, false);
+  replaceChar(pos_h, pos_w, symbol, ' ', maxPlayer, false);
 
   for (int row = 39; row < 39 + maxPlayer; ++row) {
     char c = theDisplay[row - 1][27];
     if (c == symbol) {
-      setString(row, 28, theDisplay, "                                              ");
+      setString(row, 28, "                                              ");
       break;
     }
   }
@@ -250,12 +249,12 @@ void TextDisplay::notify(Player *p, int oldPos) {
   char symbol = p->getSymbol();
 
   setDisplayPosition(pos_h, pos_w, oldPos, true);           // remove Player from old pos
-  replaceChar(pos_h, pos_w, theDisplay, symbol, ' ', maxPlayer, false);
+  replaceChar(pos_h, pos_w, symbol, ' ', maxPlayer, false);
 
   setDisplayPosition(pos_h, pos_w, pos, true);              // add Player to its new pos
-  replaceChar(pos_h, pos_w, theDisplay, ' ', symbol, maxPlayer, false);
+  replaceChar(pos_h, pos_w, ' ', symbol, maxPlayer, false);
 
-  setString(37, 28, theDisplay, "Current Players:");
+  setString(37, 28, "Current Players:");
 
   for (int row = 39; row < 39 + maxPlayer; ++row) {
     char c = theDisplay[row - 1][27];
@@ -263,7 +262,7 @@ void TextDisplay::notify(Player *p, int oldPos) {
     else if (c == ' ') {
       theDisplay[row - 1][27] = symbol;
       theDisplay[row - 1][29] = '-';
-      setString(row, 32, theDisplay, name);
+      setString(row, 32, name);
       break;
     }
   }
@@ -288,21 +287,21 @@ void TextDisplay::notify(Building *b) {
 
     string ownership = "O:";
     ownership += symbol;
-    setString(info_h + n, info_w + 5, theDisplay, ownership);
+    setString(info_h + n, info_w + 5, ownership);
   }
 
   int level = b->getImpLevel(); // for displaying level
 
   if (level >= 0) {
     if (isAcademic) n = 2; else n = 0;
-    setString(info_h + n, info_w - 1, theDisplay, "|");
+    setString(info_h + n, info_w - 1, "|");
 
     if (isAcademic) {
-      replaceChar(info_h, info_w, theDisplay, levelSymbol, ' ', maxLevel, true);
-      replaceChar(info_h, info_w, theDisplay, ' ', levelSymbol, level, true);
+      replaceChar(info_h, info_w, levelSymbol, ' ', maxLevel, true);
+      replaceChar(info_h, info_w, ' ', levelSymbol, level, true);
     }
   } else {            // for displaying mortgage
     if (isAcademic) n = 2; else n = 0;
-    setString(info_h + n, info_w - 1, theDisplay, "*");
+    setString(info_h + n, info_w - 1, "*");
   }
 }

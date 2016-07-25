@@ -10,7 +10,8 @@ const int welcome_h = 12;
 const int welcome_w = 101;
 
 const string ResetAll = "\033[0m";
-const string Reverse    = "\033[7m";
+const string Blink    = "\033[5m";
+const string Reverse  = "\033[7m";
 
 
 void displayWelcome() {
@@ -23,9 +24,9 @@ void displayWelcome() {
   for (int i = 0; i < welcome_h; ++i) {
     for (int j = 0; j < welcome_w; ++j) {
       file.get(c);
-      if (c == '*') cout << Reverse << ' ';
-      if (c != '*') cout << c;
-      if (c == '*') cout << ResetAll;
+      if (c == '#') cout << Blink << Reverse;
+      cout << c;
+      if (c == '#') cout << ResetAll;
     }
   }
   cout << endl;
