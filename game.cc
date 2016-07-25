@@ -11,8 +11,9 @@
 
 using namespace std;
 
-Game::Game():numplayer(0),currentplayer(0),rimcup(4),sumofdice(0),
-firstdice(0),seconddice(0),test(false),rolled(false),roll_time(0){
+Game::Game() : numplayer(0), currentplayer(0), rimcup(4), firstdice(0), seconddice(0),
+  test(false), rolled(false), roll_time(0) {
+
   td = new TextDisplay;
   isWon = false;
 
@@ -326,6 +327,7 @@ void Game::run(){
         if (timsCups >= 1) {
           player[currentplayer]->setNumTimsCups(timsCups-1);
           player[currentplayer]->setDCTurn(-1);
+          rimcup++;
           displayCommands();
         } else {
           cout << "You do not have a Roll Up The Rim cup to leave DC Tims Line." << endl;
@@ -1120,6 +1122,15 @@ void Game::declareBankruptcy(Player *landedPlayer, Player *ownerPlayer) {
     return;
   }
 
+  if (ownerPlayer) {
+    ownerPlayer->updateBalance(landedPlayer->getBalance());
+    int ownerTimsCups = ownerPlayer->getNumTimsCups();
+    int landedTimsCup = landedPlayer->getNumTimsCups();
+    ownerPlayer->setNumTimsCups(ownerTimsCups+landedTimsCup);
+  } else {
+    timsCups += landedPlayer->getNumTimsCups();
+  }
+
   for (int i = 0; i < 40; ++i) {
     Building *bp = dynamic_cast<Building *>(gameboard[i]);
     if (bp) {
@@ -1308,7 +1319,7 @@ void Game::Needles(Player *landedPlayer){
   int random = rand()%100 + 1;
   if(random == 100){
     cout << ">> Instead of normal effect, you will get a Roll Up the Rim cup" << endl;
-    if(roll_time == 0){
+    if(rimcup == 0){
       cout << ">> Sorry, there is no more Roll Up the Rim cup right now, you will get other result" << endl;
       Needles(landedPlayer);
       return ;
@@ -1316,7 +1327,7 @@ void Game::Needles(Player *landedPlayer){
     else {
       int newimts = landedPlayer->getNumTimsCups();
       landedPlayer->setNumTimsCups(newimts+1) ;
-      roll_time -= 1;
+      rimcup -= 1;
       cout << ">> You get Roll Up the Rim cup, you have " << landedPlayer->getNumTimsCups() << " now." << endl;
     }
   }
@@ -1391,7 +1402,7 @@ void Game::SLC(Player*  landedPlayer){
   int random = rand()%100 + 1;
   if(random == 100){
     cout << ">> Instead of normal effect, you will get a Roll Up the Rim cup" << endl;
-    if(roll_time == 0){
+    if(rimcup == 0){
       cout << ">> Sorry, there is no more Roll Up the Rim cup right now, you will get other result" << endl;
       SLC(landedPlayer);
       return ;
@@ -1399,7 +1410,7 @@ void Game::SLC(Player*  landedPlayer){
     else {
       int newimts = landedPlayer->getNumTimsCups();
       landedPlayer->setNumTimsCups(newimts+1) ;
-      roll_time -= 1;
+      rimcup -= 1;
       cout << ">> You get Roll Up the Rim cup, you have " << landedPlayer->getNumTimsCups() << " now." << endl;
     }
   }  
