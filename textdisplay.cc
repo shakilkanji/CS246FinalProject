@@ -238,7 +238,7 @@ void TextDisplay::removePlayer(Player *p) {
         if (theDisplay[row - 1][n] == ' ' && theDisplay[row - 1][n + 1] == ' ') break;
         ++n;
       }
-      setString(row, n, " (declared bankruptcy)");
+      setString(row, n + 1, " (declared bankruptcy)");
       break;
     }
   }
