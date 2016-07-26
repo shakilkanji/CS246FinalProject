@@ -15,9 +15,7 @@ string Square::getName() const {
 }
 
 void Square::notify(Player *landedPlayer) {
-	if (index == 0) {	// Collect OSAP
-		landedPlayer->updateBalance(200);
-		cout << ">> You Collect 200" << endl;
+	if (index == 0) {	// Game class will handle adding $200 to player balance
 	} else if (index == 4) {	// Tuition
 		cout << ">> Landed on Tuition." << endl;
 		game->chooseTuition(landedPlayer);

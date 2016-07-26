@@ -220,6 +220,7 @@ void Game::run(){
               cout << ">> You did not roll a double. Please pay or redeem now to leave the DC Tims Line." << endl;
               if (player[currentplayer]->getNumTimsCups() == 0 && player[currentplayer]->getBalance() < 50) {
                 forceBankruptcy(player[currentplayer], 50, nullptr);
+                break;
               } else {
                 displayCommands();
               }
@@ -347,6 +348,19 @@ void Game::run(){
 }
 
 void Game::next(){
+  if (player[currentplayer]->isBankrupt()) {
+    delete player[currentplayer];
+    player[currentplayer] = nullptr;
+
+    //find next player 
+    do { 
+      currentplayer = (currentplayer + 1) % 8;
+    }        
+    while (player[currentplayer] == nullptr);
+
+    numplayer -= 1;
+  }
+
   for (int i = 0 ; i < 8; i++) {
     if(player[i] != nullptr){
       int pos = player[i]->getPos();
@@ -752,17 +766,30 @@ void Game::auctionProperty(Building *building){
   cout << ">> Auction for " << building->getName() << " start!" << endl;
   int playerLeft = numplayer;
   int highestPrice = 0;
-  int current_auction_player = currentplayer;
-  int highestPlayer = current_auction_player;
+  int current_auction_player;
+  int highestPlayer;
   bool active[8];
 
   //In the begining of a auction, all the players are active
   for(int i = 0 ; i < 8 ;i ++){
     if(player[i] != nullptr){
-      active[i] = true;
+      if (player[i]->isBankrupt()) {
+        playerLeft -= 1;
+        active[i] = false;
+      } else {
+        active[i] = true;
+      }
     }
     else{
       active[i] = false;
+    }
+  }
+
+  for (int i = 0; i < 8; ++i) {
+    if (active[i]) {
+      current_auction_player = i;
+      highestPlayer = i;
+      break;
     }
   }
 
@@ -1128,10 +1155,23 @@ void Game::forceBankruptcy(Player *landedPlayer, int fee, Player *ownerPlayer) {
 }
 
 void Game::declareBankruptcy(Player *landedPlayer, Player *ownerPlayer) {
+  td->removePlayer(landedPlayer);
+  td->display();
+  landedPlayer->setBankrupt();
+
   if (numplayer == 2) { // game over
-    cout << ">> " << ownerPlayer->getName() << " has won the game. " << endl;
-    isWon = true;
-    return;
+    if (ownerPlayer) {
+      cout << ">> " << ownerPlayer->getName() << " has won the game. " << endl;
+      isWon = true;
+      return;
+    } else {
+      while (player[currentplayer] == nullptr) {
+        currentplayer = (currentplayer + 1) % 8;
+      }
+      cout << ">> " << player[currentplayer]->getName() << " has won the game." << endl;
+      isWon = true;
+      return;
+    }
   }
 
   if (ownerPlayer) {
@@ -1181,9 +1221,6 @@ void Game::declareBankruptcy(Player *landedPlayer, Player *ownerPlayer) {
       }
     }
   }
-
-  --numplayer;
-  delete landedPlayer;
 }
 
 
