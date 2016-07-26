@@ -235,7 +235,7 @@ void TextDisplay::removePlayer(Player *p) {
     if (c == symbol) {
       int n = 27;
       while (true) {
-        if (theDisplay[row - 1][n] == ' ') break;
+        if (theDisplay[row - 1][n] == ' ' && theDisplay[row - 1][n + 1] == ' ') break;
         ++n;
       }
       setString(row, n, " (declared bankruptcy)");
