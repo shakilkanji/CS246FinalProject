@@ -200,27 +200,31 @@ void Game::run(){
               td->display();
               displayCommands();
               rolled = true;
+              if (player[currentplayer]->isBankrupt()) break;
             } else if (player[currentplayer]->getDCTurn() >= 0) {
               cout << ">> Congratulations, you rolled a double. Escape the DC Tims Line!" << endl;
               move(dice_result);
               rolled = true;
+              if (player[currentplayer]->isBankrupt()) break;
             } else {
               move(dice_result);
               if (player[currentplayer]->getDCTurn() != 0) {
                 cout << ">> You rolled a double, please roll again." << endl;
               }
+              if (player[currentplayer]->isBankrupt()) break;
             }    
           } else { // roll a nondouble dice 
             if (player[currentplayer]->getDCTurn() == -1) {
               move(dice_result);
               displayCommands();
               rolled = true;
+              if (player[currentplayer]->isBankrupt()) break;
             } else if (player[currentplayer]->getDCTurn() == 2) {
               player[currentplayer]->setDCTurn(3);
               cout << ">> You did not roll a double. Please pay or redeem now to leave the DC Tims Line." << endl;
               if (player[currentplayer]->getNumTimsCups() == 0 && player[currentplayer]->getBalance() < 50) {
                 forceBankruptcy(player[currentplayer], 50, nullptr);
-                break;
+                if (player[currentplayer]->isBankrupt()) break;
               } else {
                 displayCommands();
               }
@@ -228,6 +232,7 @@ void Game::run(){
               player[currentplayer]->setDCTurn(player[currentplayer]->getDCTurn()+1);
               cout << ">> You did not roll a double. Stay in DC Tims Line." << endl;
               rolled = true;
+              if (player[currentplayer]->isBankrupt()) break;
             }
           }
         }
