@@ -1,12 +1,12 @@
  __________________________________________________________________________________________________ 
 /                                                                                                  \
-|        #       #   #########   #           #########   #########   #########   #########         |
-|        #       #   #           #           #           #       #   #   #   #   #                 |
-|        #   #   #   #           #           #           #       #   #   #   #   #                 |
-|        #   #   #   #########   #           #           #       #   #   #   #   #########         |
-|        #   #   #   #           #           #           #       #   #   #   #   #                 |
-|        #   #   #   #           #           #           #       #   #   #   #   #                 |
-|        #########   #########   #########   #########   #########   #   #   #   #########         |
+|        Y       Y   PPPPPPPPP   C           GGGGGGGGG   BBBBBBBBB   RRRRRRRRR   LLLLLLLLL         |
+|        Y       Y   P           C           G           B       B   R   R   R   L                 |
+|        Y   Y   Y   P           C           G           B       B   R   R   R   L                 |
+|        Y   Y   Y   PPPPPPPPP   C           G           B       B   R   R   R   LLLLLLLLL         |
+|        Y   Y   Y   P           C           G           B       B   R   R   R   L                 |
+|        Y   Y   Y   P           C           G           B       B   R   R   R   L                 |
+|        YYYYYYYYY   PPPPPPPPP   CCCCCCCCC   GGGGGGGGG   BBBBBBBBB   R   R   R   LLLLLLLLL         |
 |                                                                                                  |
 |                                  2016 © Jerry, Steven, Shakil                                    |
 \__________________________________________________________________________________________________/

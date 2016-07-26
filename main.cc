@@ -9,9 +9,14 @@ using namespace std;
 const int welcome_h = 12;
 const int welcome_w = 101;
 
-const string ResetAll = "\033[0m";
-const string Blink    = "\033[5m";
-const string Reverse  = "\033[7m";
+const string BackgroundDefault      = "\033[49m";
+const string BackgroundLightGray    = "\033[47m";
+const string BackgroundLightRed     = "\033[101m";
+const string BackgroundLightGreen   = "\033[102m";
+const string BackgroundLightYellow  = "\033[103m";
+const string BackgroundLightBlue    = "\033[104m";
+const string BackgroundLightMagenta = "\033[105m";
+const string BackgroundLightCyan    = "\033[106m";
 
 
 void displayWelcome() {
@@ -24,9 +29,18 @@ void displayWelcome() {
   for (int i = 0; i < welcome_h; ++i) {
     for (int j = 0; j < welcome_w; ++j) {
       file.get(c);
-      if (c == '#') cout << Blink << Reverse;
-      cout << c;
-      if (c == '#') cout << ResetAll;
+
+      if (c == 'Y') cout << BackgroundLightYellow;
+      else if (c == 'P') cout << BackgroundLightMagenta;
+      else if (c == 'C') cout << BackgroundLightCyan;
+      else if (c == 'G') cout << BackgroundLightGreen;
+      else if (c == 'B') cout << BackgroundLightBlue;
+      else if (c == 'R') cout << BackgroundLightRed;
+      else if (c == 'L') cout << BackgroundLightGray;
+
+      if (c == 'Y' || c == 'P' || c == 'C' || c == 'G' || c == 'B' || c == 'R' || c == 'L')
+        cout << ' ' << BackgroundDefault;
+      else cout << c;
     }
   }
   cout << endl;
