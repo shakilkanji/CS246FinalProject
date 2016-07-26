@@ -220,6 +220,7 @@ void Game::run(){
               cout << ">> You did not roll a double. Please pay or redeem now to leave the DC Tims Line." << endl;
               if (player[currentplayer]->getNumTimsCups() == 0 && player[currentplayer]->getBalance() < 50) {
                 forceBankruptcy(player[currentplayer], 50, nullptr);
+                break;
               } else {
                 displayCommands();
               }
@@ -347,6 +348,19 @@ void Game::run(){
 }
 
 void Game::next(){
+  if (player[currentplayer]->isBankrupt()) {
+    delete player[currentplayer];
+    player[currentplayer] = nullptr;
+
+    //find next player 
+    do { 
+      currentplayer = (currentplayer + 1) % 8;
+    }        
+    while (player[currentplayer] == nullptr);
+
+    numplayer -= 1;
+  }
+
   for (int i = 0 ; i < 8; i++) {
     if(player[i] != nullptr){
       int pos = player[i]->getPos();
@@ -1207,9 +1221,6 @@ void Game::declareBankruptcy(Player *landedPlayer, Player *ownerPlayer) {
       }
     }
   }
-
-  --numplayer;
-  delete landedPlayer;
 }
 
 
